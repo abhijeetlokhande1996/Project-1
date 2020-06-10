@@ -6,7 +6,10 @@ const routes: Routes = [
   {
     path: "home",
     component: HomeComponent,
-  },
+  }, {
+    path: 'monthly-sip',
+    component:
+  }
   {
     path: "",
     redirectTo: "home",

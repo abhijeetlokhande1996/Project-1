@@ -9,8 +9,8 @@ import { HttpClientModule } from "@angular/common/http";
 import { AppRoutingModule } from "./app-routing.module";
 
 import { AppComponent } from "./app.component";
-import { HomeComponent } from './feature/home/home.component';
-import { TopNavBarComponent } from './core/top-nav-bar/top-nav-bar.component';
+import { HomeComponent } from "./feature/home/home.component";
+import { TopNavBarComponent } from "./core/top-nav-bar/top-nav-bar.component";
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, TopNavBarComponent],
