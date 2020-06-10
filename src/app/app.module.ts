@@ -6,13 +6,14 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 
-import { AppRoutingModule } from "./app-routing.module";
+import { AppRoutingModule, componentArr } from "./app-routing.module";
 
 import { AppComponent } from "./app.component";
-import { HomeComponent } from './feature/home/home.component';
+
+import { TopNavBarComponent } from "./core/top-nav-bar/top-nav-bar.component";
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent],
+  declarations: [AppComponent, TopNavBarComponent, componentArr],
   imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
   providers: [],
   bootstrap: [AppComponent],

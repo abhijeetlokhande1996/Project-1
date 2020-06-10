@@ -1,15 +1,30 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-import { HomeComponent } from "./feature/home/home.component";
+import { MonthlySipComponent } from "./feature/monthly-sip/monthly-sip.component";
+import { IncomeComponent } from "./feature/income/income.component";
+import { EquityComponent } from "./feature/equity/equity.component";
+import { MutualFundComponent } from "./feature/mutual-fund/mutual-fund.component";
 
 const routes: Routes = [
   {
-    path: "home",
-    component: HomeComponent,
+    path: "mutual-fund",
+    component: MutualFundComponent,
+  },
+  {
+    path: "monthly-sip",
+    component: MonthlySipComponent,
+  },
+  {
+    path: "income",
+    component: IncomeComponent,
+  },
+  {
+    path: "equity",
+    component: EquityComponent,
   },
   {
     path: "",
-    redirectTo: "home",
+    redirectTo: "mutual-fund",
     pathMatch: "full",
   },
 ];
@@ -19,3 +34,11 @@ const routes: Routes = [
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
+
+const componentArr = [
+  MonthlySipComponent,
+  IncomeComponent,
+  EquityComponent,
+  MutualFundComponent,
+];
+export { componentArr };
