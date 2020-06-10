@@ -15,16 +15,30 @@
   <div class="collapse navbar-collapse" id="navbarColor01">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link">Mutual Fund</a>
+        <a
+          class="nav-link"
+          [routerLink]="['mutual-fund']"
+          routerLinkActive="active"
+          >Mutual Fund</a
+        >
       </li>
       <li class="nav-item">
-        <a class="nav-link">Equity</a>
+        <a class="nav-link" [routerLink]="['equity']" routerLinkActive="active"
+          >Equity</a
+        >
       </li>
       <li class="nav-item">
-        <a class="nav-link">Monthly Sip</a>
+        <a
+          class="nav-link"
+          [routerLink]="['monthly-sip']"
+          routerLinkActive="active"
+          >Monthly Sip</a
+        >
       </li>
       <li class="nav-item">
-        <a class="nav-link">Income</a>
+        <a class="nav-link" [routerLink]="['income']" routerLinkActive="active"
+          >Income</a
+        >
       </li>
     </ul>
     <form class="form-inline my-2 my-lg-0">
