@@ -14,11 +14,11 @@
   <tbody>
     <ng-container *ngFor="let item of _sipDataToShow">
       <tr *ngFor="let el of item.schemes">
-        <td>{{ item.clientName }}</td>
+        <td>{{ item.clientName | titlecase }}</td>
         <td>{{ item.regDate | date: "longDate" }}</td>
         <td>{{ item.folioNo }}</td>
-        <td>{{ el.schemeName }}</td>
-        <td>{{ el.freqType }}</td>
+        <td>{{ el.schemeName | titlecase }}</td>
+        <td>{{ el.freqType | titlecase }}</td>
         <td>{{ el.startDate | date: "longDate" }}</td>
         <td>{{ el.endDate | date: "longDate" }}</td>
         <td>{{ el.installmentAmt | currency: "INR" }}</td>
