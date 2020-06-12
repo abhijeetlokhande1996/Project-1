@@ -1,0 +1,58 @@
+[
+  {
+    "clientName": "Parth Girish Maindarkar",
+    "regDate": "Thu May 21 2020 00:00:00 GMT+0530 (India Standard Time)",
+    "folioNo": 12345,
+    "schemes": [
+      {
+        "schemeName": "Axis bluchip fund - regular growth",
+        "freqType": "monthly",
+        "startDate": "Thu Jun 25 2020 00:00:00 GMT+0530 (India Standard Time)",
+        "endDate": "Wed Feb 24 2021 00:00:00 GMT+0530 (India Standard Time)",
+        "installmentAmt": 30000
+      },
+      {
+        "schemeName": "SBI bluchip fund - regular growth",
+        "freqType": "monthly",
+        "startDate": "Thu Jun 25 2020 00:00:00 GMT+0530 (India Standard Time)",
+        "endDate": "Mon Feb 24 2025 00:00:00 GMT+0530 (India Standard Time)",
+        "installmentAmt": 40000
+      },
+      {
+        "schemeName": "Kotak bluchip fund - regular growth",
+        "freqType": "monthly",
+        "startDate": "Wed Jun 24 2020 00:00:00 GMT+0530 (India Standard Time)",
+        "endDate": "Thu Feb 24 2028 00:00:00 GMT+0530 (India Standard Time)",
+        "installmentAmt": 50000
+      }
+    ]
+  },
+  {
+    "clientName": "Jon Papa",
+    "regDate": "21-Feb-2020",
+    "folioNo": 45678,
+    "schemes": [
+      {
+        "schemeName": "Axis bluchip fund - regular growth",
+        "freqType": "monthly",
+        "startDate": "25-June-2020",
+        "endDate": "24-Feb-2021",
+        "installmentAmt": 30000
+      },
+      {
+        "schemeName": "SBI bluchip fund - regular growth",
+        "freqType": "monthly",
+        "startDate": "25-June-2020",
+        "endDate": "24-Feb-2025",
+        "installmentAmt": 40000
+      },
+      {
+        "schemeName": "Kotak bluchip fund - regular growth",
+        "freqType": "monthly",
+        "startDate": "25-June-2020",
+        "endDate": "24-Feb-2028",
+        "installmentAmt": 50000
+      }
+    ]
+  }
+]

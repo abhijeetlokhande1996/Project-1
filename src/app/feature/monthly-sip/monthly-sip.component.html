@@ -1,1 +1,25 @@
-<p>monthly-sip works!</p>
+<div class="row mt-2">
+  <div class="col-md-4 col-sm-12"></div>
+  <div class="col-md-4 col-sm-12">
+    <form [formGroup]="folioForm">
+      <div class="form-group">
+        <label>Enter Folio Number</label>
+        <input
+          type="number"
+          class="form-control"
+          [formControlName]="'folioNo'"
+          appAutoFocus
+        />
+      </div>
+    </form>
+  </div>
+  <div class="col-md-4 col-sm-12"></div>
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <app-monthly-sip-table
+      [sipDataToShow]="filteredSipData"
+    ></app-monthly-sip-table>
+  </div>
+</div>
