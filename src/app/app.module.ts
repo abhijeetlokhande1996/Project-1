@@ -11,9 +11,10 @@ import { AppRoutingModule, componentArr } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 
 import { TopNavBarComponent } from "./core/top-nav-bar/top-nav-bar.component";
+import { AutoFocusDirective } from './directives/auto-focus.directive';
 
 @NgModule({
-  declarations: [AppComponent, TopNavBarComponent, componentArr],
+  declarations: [AppComponent, TopNavBarComponent, componentArr, AutoFocusDirective],
   imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
   providers: [],
   bootstrap: [AppComponent],

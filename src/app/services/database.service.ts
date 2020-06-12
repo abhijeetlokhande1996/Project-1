@@ -4,7 +4,8 @@ import { HttpClient } from "@angular/common/http";
   providedIn: "root",
 })
 export class DatabaseService {
-  constructor(private http: HttpClient) {
-    console.log(this.http);
+  constructor(private http: HttpClient) {}
+  getSipData() {
+    return this.http.get("assets/json/sip.json");
   }
 }
