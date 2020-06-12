@@ -1,0 +1,33 @@
+<table class="table" *ngIf="_sipDataToShow">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Registration Date</th>
+      <th>Folio Number</th>
+      <th>Scheme Name</th>
+      <th>Frequency Type</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+      <th>Installment Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let item of _sipDataToShow">
+      <tr *ngFor="let el of item.schemes">
+        <td>{{ item.clientName }}</td>
+        <td>{{ item.regDate | date: "longDate" }}</td>
+        <td>{{ item.folioNo }}</td>
+        <td>{{ el.schemeName }}</td>
+        <td>{{ el.freqType }}</td>
+        <td>{{ el.startDate | date: "longDate" }}</td>
+        <td>{{ el.endDate | date: "longDate" }}</td>
+        <td>{{ el.installmentAmt | currency: "INR" }}</td>
+      </tr>
+    </ng-container>
+    <tr *ngIf="_sipDataToShow.length == 0">
+      <th class="text-danger text-center" colspan="8">
+        No data found or enter folio number
+      </th>
+    </tr>
+  </tbody>
+</table>
