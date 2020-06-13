@@ -14,6 +14,7 @@ export class ChartComponent implements OnInit {
   @Input() chartLabels: Array<Label>;
   @Input() chartOptions: ChartOptions;
   @Input() chartColor: Array<{}>;
+  @Input() chartPlugins: Array<any>;
   constructor() {}
 
   ngOnInit(): void {}

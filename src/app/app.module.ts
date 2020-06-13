@@ -17,6 +17,7 @@ import { MonthlySipTableComponent } from "./feature/monthly-sip/monthly-sip-tabl
 import { ChartsModule } from "ng2-charts";
 import { ChartComponent } from "./shared/chart/chart.component";
 import { TableModule } from "primeng/table";
+import { ToggleButtonModule } from "primeng/togglebutton";
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { TableModule } from "primeng/table";
     ReactiveFormsModule,
     ChartsModule,
     TableModule,
+    ToggleButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

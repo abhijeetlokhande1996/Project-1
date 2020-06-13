@@ -1,4 +1,4 @@
-<div *ngIf="chartData">
+<div *ngIf="chartData" style="position: relative; height: 40vh; width: 80vw;">
   <canvas
     baseChart
     [data]="chartData"
@@ -7,5 +7,6 @@
     [legend]="chartLegend"
     [options]="chartOptions"
     [colors]="chartColor"
+    [plugins]="chartPlugins"
   ></canvas>
 </div>

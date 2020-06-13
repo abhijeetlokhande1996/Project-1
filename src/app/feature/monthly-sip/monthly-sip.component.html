@@ -13,18 +13,34 @@
       </div>
     </form>
   </div>
-  <div class="col-md-4 col-sm-12"></div>
+  <div
+    class="col-md-4 col-sm-12"
+    *ngIf="folioForm.get('folioNo').value && filteredSipData.length > 0"
+  >
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Display As</label>
+          <select class="form-control" [(ngModel)]="selectedDisplay">
+            <option *ngFor="let el of displayAs" [ngValue]="el">{{
+              el | titlecase
+            }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="row">
-  <div class="col-md-12 col-sm-12">
+<div class="row" *ngIf="selectedDisplay == 'table'">
+  <div class="col-md-12 col-sm-12 mx-auto">
     <app-monthly-sip-table
       [sipDataToShow]="filteredSipData"
     ></app-monthly-sip-table>
   </div>
 </div>
 
-<div class="row mt-2 border-black">
+<div class="row mt-2 border-black" *ngIf="selectedDisplay == 'graph'">
   <div class="col-md-12 col-sm-12">
     <app-chart
       [chartOptions]="chartOptions"
@@ -33,6 +49,7 @@
       [chartLabels]="chartLabel"
       [chartData]="chartData"
       [chartColor]="chartColor"
+      [chartPlugins]="chartPlugins"
     ></app-chart>
   </div>
 </div>
