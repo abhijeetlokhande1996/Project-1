@@ -18,6 +18,12 @@ import { ChartsModule } from "ng2-charts";
 import { ChartComponent } from "./shared/chart/chart.component";
 import { TableModule } from "primeng/table";
 
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireDatabaseModule, AngularFireDatabase } from '@angular/fire/database';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { firebaseConfig } from "../environments/environment";
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,6 +32,7 @@ import { TableModule } from "primeng/table";
     AutoFocusDirective,
     MonthlySipTableComponent,
     ChartComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -36,8 +43,12 @@ import { TableModule } from "primeng/table";
     ReactiveFormsModule,
     ChartsModule,
     TableModule,
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFirestoreModule,
+    AngularFireDatabaseModule,
+
   ],
-  providers: [],
+  providers: [AngularFireDatabase],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

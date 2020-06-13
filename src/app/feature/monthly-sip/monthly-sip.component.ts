@@ -20,7 +20,7 @@ export class MonthlySipComponent implements OnInit {
   chartLabel: Array<Label>;
   chartData: Array<number>;
   chartColor: Array<{}>;
-  constructor(private dbService: DatabaseService) {}
+  constructor(private dbService: DatabaseService) { }
 
   ngOnInit(): void {
     this.chartType = "pie";
@@ -46,6 +46,17 @@ export class MonthlySipComponent implements OnInit {
         this.sipData = resp;
         this.distillSipData(null);
       });
+
+    // this.dbService.getUser().subscribe(res => console.log(res));
+    this.dbService.getUsers().subscribe(users => {
+      let data = users.map(item => {
+        return item.payload.doc.data()
+      });
+      console.log(data);
+    });
+
+    // this.dbService.addSip().then(res => console.log(res));
+
   }
 
   getFlattenData(dataToFlat: Array<SipInterface>) {
