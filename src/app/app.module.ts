@@ -11,7 +11,9 @@ import { AppComponent } from "./app.component";
 
 import { TopNavBarComponent } from "./core/top-nav-bar/top-nav-bar.component";
 import { AutoFocusDirective } from "./directives/auto-focus.directive";
-import { MonthlySipTableComponent } from './feature/monthly-sip/monthly-sip-table/monthly-sip-table.component';
+import { MonthlySipTableComponent } from "./feature/monthly-sip/monthly-sip-table/monthly-sip-table.component";
+import { ChartsModule } from "ng2-charts";
+import { ChartComponent } from './shared/chart/chart.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +22,7 @@ import { MonthlySipTableComponent } from './feature/monthly-sip/monthly-sip-tabl
     componentArr,
     AutoFocusDirective,
     MonthlySipTableComponent,
+    ChartComponent,
   ],
   imports: [
     BrowserModule,
@@ -27,6 +30,7 @@ import { MonthlySipTableComponent } from './feature/monthly-sip/monthly-sip-tabl
     HttpClientModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    ChartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
