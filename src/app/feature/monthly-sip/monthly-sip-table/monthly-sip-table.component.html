@@ -1,14 +1,14 @@
-<p-table [value]="_sipDataToShow">
+<p-table [value]="_sipDataToShow" sortMode="multiple">
   <ng-template pTemplate="header">
     <tr>
-      <th>Name</th>
-      <th>Registration Date</th>
-      <th>Folio Number</th>
-      <th>Scheme Name</th>
-      <th>Frequency Type</th>
-      <th>Start Date</th>
-      <th>End Date</th>
-      <th>Installment Amount</th>
+      <th [pSortableColumn]="'clientName'">Name</th>
+      <th [pSortableColumn]="'regDate'">Registration Date</th>
+      <th [pSortableColumn]="'folioNo'">Folio Number</th>
+      <th [pSortableColumn]="'schemeName'">Scheme Name</th>
+      <th [pSortableColumn]="'freqType'">Frequency Type</th>
+      <th [pSortableColumn]="'startDate'">Start Date</th>
+      <th [pSortableColumn]="'endDate'">End Date</th>
+      <th [pSortableColumn]="'installmentAmt'">Installment Amount</th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-item>
