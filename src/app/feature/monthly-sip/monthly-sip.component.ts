@@ -5,6 +5,8 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { SipInterface } from "../../interfaces/sip.interface";
 import { ChartType, ChartOptions } from "chart.js";
 import { Label } from "ng2-charts";
+import * as pluginDataLabels from "chartjs-plugin-datalabels";
+
 @Component({
   selector: "app-monthly-sip",
   templateUrl: "./monthly-sip.component.html",
@@ -20,7 +22,12 @@ export class MonthlySipComponent implements OnInit {
   chartLabel: Array<Label>;
   chartData: Array<number>;
   chartColor: Array<{}>;
-  constructor(private dbService: DatabaseService) { }
+  displayAs = ["table", "graph"];
+  selectedDisplay = "table";
+  chartPlugins = [pluginDataLabels];
+  
+  
+  constructor(private dbService: DatabaseService) {}
 
   ngOnInit(): void {
     this.chartType = "pie";
@@ -85,13 +92,17 @@ export class MonthlySipComponent implements OnInit {
         this.sipData.filter((item) => item.folioNo == folioNo)
       );
       this.filteredSipData = this.getFlattenData(tmpData);
-      //this.generateChartData(this.filteredSipData);
+      if (folioNo) {
+        this.generateChartData(this.filteredSipData);
+      }
     } else {
       this.filteredSipData = this.getFlattenData(this.sipData);
-      // this.generateChartData(this.filteredSipData);
+      if (folioNo) {
+        this.generateChartData(this.filteredSipData);
+      }
     }
   }
-  generateChartData(data: Array<SipInterface>) {
+  generateChartData(data: Array<{}>) {
     this.chartColor = null;
     this.chartLabel = null;
     this.chartData = null;
@@ -99,11 +110,12 @@ export class MonthlySipComponent implements OnInit {
     this.chartData = [];
     this.chartColor = [{ backgroundColor: [] }];
     for (const item of data) {
-      item.schemes.forEach((el) => {
-        this.chartLabel.push(el.schemeName.toUpperCase());
-        this.chartData.push(el.installmentAmt);
-        this.chartColor[0]["backgroundColor"].push(this.getRandomColor());
-      });
+      if (this.chartLabel.indexOf(item["schemeName"].toUpperCase()) < 0) {
+        this.chartLabel.push(item["schemeName"].toUpperCase());
+      }
+
+      this.chartData.push(item["installmentAmt"]);
+      this.chartColor[0]["backgroundColor"].push(this.getRandomColor());
     }
     console.log(this.chartLabel, this.chartData);
   }

@@ -17,6 +17,7 @@ import { MonthlySipTableComponent } from "./feature/monthly-sip/monthly-sip-tabl
 import { ChartsModule } from "ng2-charts";
 import { ChartComponent } from "./shared/chart/chart.component";
 import { TableModule } from "primeng/table";
+import { ToggleButtonModule } from "primeng/togglebutton";
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule, AngularFireDatabase } from '@angular/fire/database';
@@ -46,7 +47,7 @@ import { firebaseConfig } from "../environments/environment";
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule,
     AngularFireDatabaseModule,
-
+    ToggleButtonModule
   ],
   providers: [AngularFireDatabase],
   bootstrap: [AppComponent],
