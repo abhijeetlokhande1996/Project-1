@@ -59,9 +59,9 @@ export class MonthlySipComponent implements OnInit {
           objToPush["startDate"] = el["startDate"];
           objToPush["endDate"] = el["endDate"];
           objToPush["installmentAmt"] = el["installmentAmt"];
+          result.push(this.getDeepCopy(objToPush));
         }
       }
-      result.push(objToPush);
     }
     return result;
   }
