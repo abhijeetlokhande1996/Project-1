@@ -42,7 +42,10 @@ export class MonthlySipComponent implements OnInit {
     this.dbService
       .getSipData()
       .pipe(take(1))
-      .subscribe((resp) => (this.sipData = resp));
+      .subscribe((resp) => {
+        this.sipData = resp;
+        this.distillSipData(null);
+      });
   }
 
   getFlattenData(dataToFlat: Array<SipInterface>) {
