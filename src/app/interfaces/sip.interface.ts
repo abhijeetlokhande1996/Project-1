@@ -1,4 +1,4 @@
-interface Scheme {
+export interface Scheme {
   schemeName: string;
   freqType: string;
   startDate: Date;

@@ -96,8 +96,11 @@
   "dependencies": {
     "@angular/animations": "9.1.11",
     "@angular/cdk": "9.2.4",
+    "@angular/fire": "6.0.0",
+    "angularfire2": "5.4.2",
     "bootstrap": "4.5.0",
     "chart.js": "2.9.3",
+    "firebase": "7.15.1"
     "chartjs-plugin-datalabels": "0.7.0",
     "jquery": "3.5.1",
     "ng2-charts": "2.3.2",
