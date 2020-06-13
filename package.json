@@ -94,9 +94,13 @@
     "node": ">=10.13.0"
   },
   "dependencies": {
+    "@angular/animations": "9.1.11",
+    "@angular/cdk": "9.2.4",
     "bootstrap": "4.5.0",
     "chart.js": "2.9.3",
     "jquery": "3.5.1",
-    "ng2-charts": "2.3.2"
+    "ng2-charts": "2.3.2",
+    "primeicons": "4.0.0-rc.2",
+    "primeng": "9.1.0"
   }
 }

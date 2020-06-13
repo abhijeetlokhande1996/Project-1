@@ -42,17 +42,42 @@ export class MonthlySipComponent implements OnInit {
     this.dbService
       .getSipData()
       .pipe(take(1))
-      .subscribe((resp) => (this.sipData = resp));
+      .subscribe((resp) => {
+        this.sipData = resp;
+        this.distillSipData(null);
+      });
+  }
+
+  getFlattenData(dataToFlat: Array<SipInterface>) {
+    const result = [];
+    for (const item of dataToFlat) {
+      const objToPush = {};
+      objToPush["clientName"] = item["clientName"];
+      objToPush["regDate"] = item["regDate"];
+      objToPush["folioNo"] = item["folioNo"];
+      if (item["schemes"]) {
+        for (const el of item.schemes) {
+          objToPush["schemeName"] = el["schemeName"];
+          objToPush["freqType"] = el["freqType"];
+          objToPush["startDate"] = el["startDate"];
+          objToPush["endDate"] = el["endDate"];
+          objToPush["installmentAmt"] = el["installmentAmt"];
+          result.push(this.getDeepCopy(objToPush));
+        }
+      }
+    }
+    return result;
   }
   distillSipData(folioNo: number) {
     if (folioNo) {
-      this.filteredSipData = this.getDeepCopy(
+      const tmpData = this.getDeepCopy(
         this.sipData.filter((item) => item.folioNo == folioNo)
       );
-      this.generateChartData(this.filteredSipData);
+      this.filteredSipData = this.getFlattenData(tmpData);
+      //this.generateChartData(this.filteredSipData);
     } else {
-      this.filteredSipData = this.getDeepCopy(this.sipData);
-      this.generateChartData(this.filteredSipData);
+      this.filteredSipData = this.getFlattenData(this.sipData);
+      // this.generateChartData(this.filteredSipData);
     }
   }
   generateChartData(data: Array<SipInterface>) {
