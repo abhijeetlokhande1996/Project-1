@@ -19,11 +19,13 @@ import { ChartComponent } from "./shared/chart/chart.component";
 import { TableModule } from "primeng/table";
 import { ToggleButtonModule } from "primeng/togglebutton";
 
-import { AngularFireModule } from '@angular/fire';
-import { AngularFireDatabaseModule, AngularFireDatabase } from '@angular/fire/database';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireModule } from "@angular/fire";
+import {
+  AngularFireDatabaseModule,
+  AngularFireDatabase,
+} from "@angular/fire/database";
+import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { firebaseConfig } from "../environments/environment";
-
 
 @NgModule({
   declarations: [
@@ -33,7 +35,6 @@ import { firebaseConfig } from "../environments/environment";
     AutoFocusDirective,
     MonthlySipTableComponent,
     ChartComponent,
-
   ],
   imports: [
     BrowserModule,
@@ -47,9 +48,9 @@ import { firebaseConfig } from "../environments/environment";
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule,
     AngularFireDatabaseModule,
-    ToggleButtonModule
+    ToggleButtonModule,
   ],
   providers: [AngularFireDatabase],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
