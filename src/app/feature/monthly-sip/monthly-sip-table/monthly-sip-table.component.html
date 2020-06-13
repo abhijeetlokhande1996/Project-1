@@ -1,5 +1,5 @@
-<table class="table" *ngIf="_sipDataToShow">
-  <thead>
+<p-table [value]="_sipDataToShow">
+  <ng-template pTemplate="header">
     <tr>
       <th>Name</th>
       <th>Registration Date</th>
@@ -10,24 +10,18 @@
       <th>End Date</th>
       <th>Installment Amount</th>
     </tr>
-  </thead>
-  <tbody>
-    <ng-container *ngFor="let item of _sipDataToShow">
-      <tr *ngFor="let el of item.schemes">
-        <td>{{ item.clientName | titlecase }}</td>
-        <td>{{ item.regDate | date: "longDate" }}</td>
-        <td>{{ item.folioNo }}</td>
-        <td>{{ el.schemeName | titlecase }}</td>
-        <td>{{ el.freqType | titlecase }}</td>
-        <td>{{ el.startDate | date: "longDate" }}</td>
-        <td>{{ el.endDate | date: "longDate" }}</td>
-        <td>{{ el.installmentAmt | currency: "INR" }}</td>
-      </tr>
-    </ng-container>
-    <tr *ngIf="_sipDataToShow.length == 0">
-      <th class="text-danger text-center" colspan="8">
-        No data found or enter folio number
-      </th>
+  </ng-template>
+  <ng-template pTemplate="body" let-item>
+    <tr>
+      <td>{{ item.clientName | titlecase }}</td>
+      <td>{{ item.regDate | date: "longDate" }}</td>
+      <td>{{ item.folioNo }}</td>
+
+      <td>{{ item.schemeName | titlecase }}</td>
+      <td>{{ item.freqType | titlecase }}</td>
+      <td>{{ item.startDate | date: "longDate" }}</td>
+      <td>{{ item.endDate | date: "longDate" }}</td>
+      <td>{{ item.installmentAmt | currency: "INR" }}</td>
     </tr>
-  </tbody>
-</table>
+  </ng-template>
+</p-table>
