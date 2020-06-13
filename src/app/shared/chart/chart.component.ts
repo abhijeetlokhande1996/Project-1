@@ -13,7 +13,7 @@ export class ChartComponent implements OnInit {
   @Input() chartLegend: boolean;
   @Input() chartLabels: Array<Label>;
   @Input() chartOptions: ChartOptions;
-
+  @Input() chartColor: Array<{}>;
   constructor() {}
 
   ngOnInit(): void {}
