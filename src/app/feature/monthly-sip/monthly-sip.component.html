@@ -4,26 +4,52 @@
       <form [formGroup]="folioForm">
         <div class="form-group">
           <label>Enter Folio Number</label>
-          <input type="number" class="form-control" [formControlName]="'folioNo'" appAutoFocus />
+          <input
+            type="number"
+            class="form-control"
+            [formControlName]="'folioNo'"
+            appAutoFocus
+          />
         </div>
       </form>
     </div>
-    <div class="col-3" *ngIf="folioForm.get('folioNo').value && filteredSipData.length > 0">
+    <div
+      class="col-3"
+      *ngIf="folioForm.get('folioNo').value && filteredSipData.length > 0"
+    >
       <div class="form-group">
         <label for="display">Display As</label>
         <select class="form-control" [(ngModel)]="selectedDisplay">
-          <option *ngFor="let el of displayAs" [ngValue]="el">{{ el | titlecase }} </option>
+          <option *ngFor="let el of displayAs" [ngValue]="el"
+            >{{ el | titlecase }}
+          </option>
         </select>
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col">
-      <app-monthly-sip-table class="col" [sipDataToShow]="filteredSipData"></app-monthly-sip-table>
+      <app-prime-table
+        class="col"
+        [sipDataToShow]="filteredSipData"
+      ></app-prime-table>
     </div>
-    <div class="col-4" *ngIf="selectedDisplay === 'graph' || folioForm.get('folioNo')?.value?.length > 0">
-      <app-chart [chartOptions]="chartOptions" [chartType]="chartType" [chartLegend]="chartLegend"
-        [chartLabels]="chartLabel" [chartData]="chartData" [chartColor]="chartColor" [chartPlugins]="chartPlugins">
+    <div
+      class="col-4"
+      *ngIf="
+        selectedDisplay === 'graph' ||
+        folioForm.get('folioNo')?.value?.length > 0
+      "
+    >
+      <app-chart
+        [chartOptions]="chartOptions"
+        [chartType]="chartType"
+        [chartLegend]="chartLegend"
+        [chartLabels]="chartLabel"
+        [chartData]="chartData"
+        [chartColor]="chartColor"
+        [chartPlugins]="chartPlugins"
+      >
       </app-chart>
     </div>
   </div>
