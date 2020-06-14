@@ -24,7 +24,7 @@ export class DatabaseService {
 
 
   getMFs = (): Observable<Array<IMutualFund>> => {
-    return this.firestore.collection('mfs').valueChanges() as Observable<Array<IMutualFundFund>>;
+    return this.firestore.collection('mfs').valueChanges() as Observable<Array<IMutualFund>>;
   }
 
 }
