@@ -7,3 +7,15 @@ export interface IMutualFund {
     schemes: Array<Scheme>;
 
 }
+
+export interface IFMutualFund{
+  schemeName: string;
+  freqType: string;
+  startDate: Date;
+  endDate: Date;
+  installmentAmt: number;
+  clientName: string;
+  regDate: Date;
+  folioNo: number;
+
+}
