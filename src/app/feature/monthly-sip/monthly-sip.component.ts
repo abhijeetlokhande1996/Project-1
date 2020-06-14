@@ -27,7 +27,7 @@ export class MonthlySipComponent implements OnInit {
   selectedDisplay = "table";
   chartPlugins = [pluginDataLabels];
 
-  constructor(private dbService: DatabaseService) { }
+  constructor(private dbService: DatabaseService) {}
 
   ngOnInit(): void {
     this.chartType = "doughnut";
@@ -47,6 +47,9 @@ export class MonthlySipComponent implements OnInit {
       .get("folioNo")
       .valueChanges.pipe(delay(500), distinctUntilChanged())
       .subscribe((folioNo: number) => {
+        if (!folioNo) {
+          this.selectedDisplay = "table";
+        }
         this.distillSipData(folioNo);
       });
     this.dbService

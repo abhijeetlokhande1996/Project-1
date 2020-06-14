@@ -34,9 +34,7 @@
 
 <div class="row" *ngIf="selectedDisplay == 'table'">
   <div class="col mx-auto">
-    <app-monthly-sip-table
-      [sipDataToShow]="filteredSipData"
-    ></app-monthly-sip-table>
+    <app-prime-table [sipDataToShow]="filteredSipData"></app-prime-table>
   </div>
 </div>
 
