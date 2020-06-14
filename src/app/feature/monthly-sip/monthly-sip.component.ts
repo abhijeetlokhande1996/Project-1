@@ -7,6 +7,12 @@ import { ChartType, ChartOptions } from "chart.js";
 import { Label } from "ng2-charts";
 import * as pluginDataLabels from "chartjs-plugin-datalabels";
 import "chart.piecelabel.js";
+import {
+  TitleCasePipe,
+  CurrencyPipe,
+  DecimalPipe,
+  DatePipe,
+} from "@angular/common";
 
 @Component({
   selector: "app-monthly-sip",
@@ -34,11 +40,11 @@ export class MonthlySipComponent implements OnInit {
       ["regDate", "Registration Date"],
       ["folioNo", "Folio Number"],
       ["schemeName", "Scheme Name"],
+      ["freqType", "Frequency Type"],
       ["startDate", "Start Date"],
       ["endDate", "End Date"],
       ["installmentAmt", "Installment Amount"],
     ];
-    console.log(this.colHeaderMapArray);
 
     this.chartType = "doughnut";
     this.chartLegend = true;
@@ -111,6 +117,25 @@ export class MonthlySipComponent implements OnInit {
         this.generateChartData(this.filteredSipData);
       }
     }
+    this.filteredSipData = this.transformFilteredData(this.filteredSipData);
+  }
+  transformFilteredData(data) {
+    data = this.getDeepCopy(data);
+    const tcPipe = new TitleCasePipe();
+    const cp = new CurrencyPipe("en");
+    const dp = new DecimalPipe("en");
+    const datePipe = new DatePipe("en");
+    for (const item of data) {
+      item["clientName"] = tcPipe.transform(item["clientName"]);
+      item["regDate"] = datePipe.transform(item["regDate"], "longDate");
+      item["folioNo"] = dp.transform(item["folioNo"]);
+      item["schemeName"] = tcPipe.transform(item["schemeName"]);
+      item["freqType"] = tcPipe.transform(item["freqType"]);
+      item["startDate"] = datePipe.transform(item["startDate"], "longDate");
+      item["endDate"] = datePipe.transform(item["endDate"], "longDate");
+      item["installmentAmt"] = cp.transform(item["installmentAmt"], "INR");
+    }
+    return data;
   }
   generateChartData(data: Array<{}>) {
     this.chartColor = null;
@@ -133,7 +158,6 @@ export class MonthlySipComponent implements OnInit {
         }
       }
     }
-    console.log(this.chartLabel, this.chartData);
   }
   getDeepCopy(item: any) {
     if (item) {
