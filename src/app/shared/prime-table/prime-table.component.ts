@@ -9,7 +9,7 @@ import { SipInterface } from "../../interfaces/sip.interface";
 export class PrimeTableComponent implements OnInit {
   _dataToShow: Array<any>;
 
-  @Input() colHeaderMapping: Map<string, string>;
+  @Input() colHeaderMapArray;
   @Input()
   set sipDataToShow(data: Array<any>) {
     this._dataToShow = data;

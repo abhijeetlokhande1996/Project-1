@@ -8,17 +8,17 @@
   <ng-template pTemplate="header">
     <tr>
       <th
-        *ngFor="let header of colHeaderMapping.entries().next()"
+        *ngFor="let header of colHeaderMapArray"
         [pSortableColumn]="header[0]"
       >
-        {{ header.value }}
+        {{ header[1] }}
       </th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-item>
     <tr>
-      <td *ngFor="let header of colHeaderMapping | keyvalue">
-        {{ item[header.key] }}
+      <td *ngFor="let header of colHeaderMapArray">
+        {{ item[header[0]] }}
       </td>
     </tr>
   </ng-template>

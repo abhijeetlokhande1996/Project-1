@@ -25,23 +25,21 @@ export class MonthlySipComponent implements OnInit {
   chartColor: Array<{}>;
 
   chartPlugins = [pluginDataLabels];
-
-  colHeaderMapping: Map<string, string>;
-
   colHeaderMapArray = [];
   constructor(private dbService: DatabaseService) {}
 
   ngOnInit(): void {
-    this.colHeaderMapping = new Map();
-    this.colHeaderMapping.set("clientName", "Name");
-    this.colHeaderMapping.set("regDate", "Registration Date");
-    this.colHeaderMapping.set("folioNo", "Folio Number");
-    this.colHeaderMapping.set("schemeName", "Scheme Name");
-    this.colHeaderMapping.set("startDate", "Start Date");
-    this.colHeaderMapping.set("endDate", "End Date");
-    this.colHeaderMapping.set("installmentAmt", "Installment Amount");
+    this.colHeaderMapArray = [
+      ["clientName", "Name"],
+      ["regDate", "Registration Date"],
+      ["folioNo", "Folio Number"],
+      ["schemeName", "Scheme Name"],
+      ["startDate", "Start Date"],
+      ["endDate", "End Date"],
+      ["installmentAmt", "Installment Amount"],
+    ];
+    console.log(this.colHeaderMapArray);
 
-    this.colHeaderMapArray = Array.from(this.colHeaderMapping);
     this.chartType = "doughnut";
     this.chartLegend = true;
     this.chartOptions = {
