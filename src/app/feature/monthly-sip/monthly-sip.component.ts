@@ -7,11 +7,13 @@ import { ChartType, ChartOptions } from "chart.js";
 import { Label } from "ng2-charts";
 import * as pluginDataLabels from "chartjs-plugin-datalabels";
 import "chart.piecelabel.js";
+
 import {
   TitleCasePipe,
   CurrencyPipe,
   DecimalPipe,
   DatePipe,
+  JsonPipe,
 } from "@angular/common";
 
 @Component({
@@ -171,5 +173,32 @@ export class MonthlySipComponent implements OnInit {
       color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+  }
+  onClickPrint() {
+    const PDFDocument = window.require("pdfkit");
+    const fs = window.require("fs");
+    const doc = new PDFDocument();
+    doc.pipe(fs.createWriteStream("output.pdf"));
+    const table0 = {
+      headers: ["Word", "Comment", "Summary"],
+      rows: [
+        [
+          "Apple",
+          "Not this one",
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla viverra at ligula gravida ultrices. Fusce vitae pulvinar magna.",
+        ],
+        [
+          "Tire",
+          "Smells like funny",
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla viverra at ligula gravida ultrices. Fusce vitae pulvinar magna.",
+        ],
+      ],
+    };
+    doc.table(table0, {
+      prepareHeader: () => doc.font("Helvetica-Bold"),
+      prepareRow: (row, i) => doc.font("Helvetica").fontSize(12),
+    });
+    doc.end();
+    console.log("--Done");
   }
 }
