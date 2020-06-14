@@ -1,10 +1,53 @@
-<div class="row">
+<div class="row mt-2">
   <div class="col-md-4 col-sm-12"></div>
   <div class="col-md-4 col-sm-12">
-    <div class="form-group">
-      <label>Enter Customer Number</label>
-      <input type="text" class="form-control" appAutoFocus />
+    <form [formGroup]="folioForm">
+      <div class="form-group">
+        <label>Enter Folio Number</label>
+        <input
+          type="number"
+          class="form-control"
+          [formControlName]="'folioNo'"
+          appAutoFocus
+        />
+      </div>
+    </form>
+  </div>
+  <div
+    class="col-md-4 col-sm-12"
+    *ngIf="folioForm.get('folioNo').value && filteredMfData.length > 0"
+  >
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Display As</label>
+          <select class="form-control" [(ngModel)]="selectedDisplay">
+            <option *ngFor="let el of displayAs" [ngValue]="el">{{
+              el | titlecase
+            }}</option>
+          </select>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="col-md-4 col-sm-12"></div>
+</div>
+
+<div class="row" *ngIf="selectedDisplay == 'table'">
+  <div class="col mx-auto">
+    <app-prime-table [sipDataToShow]="filteredMfData"></app-prime-table>
+  </div>
+</div>
+
+<div class="row mt-2 border-black" *ngIf="selectedDisplay == 'graph'">
+  <div class="col">
+    <app-chart
+      [chartOptions]="chartOptions"
+      [chartType]="chartType"
+      [chartLegend]="chartLegend"
+      [chartLabels]="chartLabel"
+      [chartData]="chartData"
+      [chartColor]="chartColor"
+      [chartPlugins]="chartPlugins"
+    ></app-chart>
+  </div>
 </div>
