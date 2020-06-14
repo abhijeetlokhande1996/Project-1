@@ -10,6 +10,12 @@ import { ChartOptions, ChartType } from "chart.js";
 import { Label } from "ng2-charts";
 import * as pluginDataLabels from "chartjs-plugin-datalabels";
 import "chart.piecelabel.js";
+import {
+  TitleCasePipe,
+  CurrencyPipe,
+  DecimalPipe,
+  DatePipe,
+} from "@angular/common";
 
 @Component({
   selector: "app-mutual-fund",
@@ -18,7 +24,7 @@ import "chart.piecelabel.js";
 })
 export class MutualFundComponent implements OnInit {
   mfData: Array<IMutualFund> = [];
-  filterData: Array<IFMutualFund> = [];
+
   folioForm: FormGroup;
   displayAs = ["table", "graph"];
   selectedDisplay = "table";
@@ -30,10 +36,21 @@ export class MutualFundComponent implements OnInit {
   chartData: Array<number>;
   chartColor: Array<{}>;
   chartPlugins = [pluginDataLabels];
+  colHeaderMapArray = [];
 
   constructor(private dbService: DatabaseService) {}
 
   ngOnInit(): void {
+    this.colHeaderMapArray = [
+      ["clientName", "Name"],
+      ["regDate", "Registration Date"],
+      ["folioNo", "Folio Number"],
+      ["schemeName", "Scheme Name"],
+      ["freqType", "Frequency Type"],
+      ["startDate", "Start Date"],
+      ["endDate", "End Date"],
+      ["installmentAmt", "Installment Amount"],
+    ];
     this.chartType = "doughnut";
     this.chartLegend = true;
     this.chartOptions = {
@@ -49,7 +66,7 @@ export class MutualFundComponent implements OnInit {
       .pipe(take(1))
       .subscribe((mfs) => {
         this.mfData = mfs;
-        console.log(this.mfData);
+
         this.distillMFData(null);
       });
 
@@ -58,7 +75,7 @@ export class MutualFundComponent implements OnInit {
     });
     this.folioForm
       .get("folioNo")
-      .valueChanges.pipe(delay(500), distinctUntilChanged())
+      .valueChanges.pipe(delay(100), distinctUntilChanged())
       .subscribe((folioNo: number) => {
         if (!folioNo) {
           this.selectedDisplay = "table";
@@ -82,6 +99,7 @@ export class MutualFundComponent implements OnInit {
         this.generateChartData(this.filteredMfData);
       }
     }
+    this.filteredMfData = this.transformFilteredData(this.filteredMfData);
   }
 
   getDeepCopy(item: any) {
@@ -132,9 +150,25 @@ export class MutualFundComponent implements OnInit {
         }
       }
     }
-    console.log(this.chartLabel, this.chartData);
   }
-
+  transformFilteredData(data) {
+    data = this.getDeepCopy(data);
+    const tcPipe = new TitleCasePipe();
+    const cp = new CurrencyPipe("en");
+    const dp = new DecimalPipe("en");
+    const datePipe = new DatePipe("en");
+    for (const item of data) {
+      item["clientName"] = tcPipe.transform(item["clientName"]);
+      item["regDate"] = datePipe.transform(item["regDate"], "longDate");
+      item["folioNo"] = dp.transform(item["folioNo"]);
+      item["schemeName"] = tcPipe.transform(item["schemeName"]);
+      item["freqType"] = tcPipe.transform(item["freqType"]);
+      item["startDate"] = datePipe.transform(item["startDate"], "longDate");
+      item["endDate"] = datePipe.transform(item["endDate"], "longDate");
+      item["installmentAmt"] = cp.transform(item["installmentAmt"], "INR");
+    }
+    return data;
+  }
   getRandomColor() {
     var letters = "0123456789ABCDEF";
     var color = "#";

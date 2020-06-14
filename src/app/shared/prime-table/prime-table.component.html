@@ -1,32 +1,29 @@
-<p-table [value]="_sipDataToShow" sortMode="multiple" [responsive]="true">
+<p-table
+  [value]="_dataToShow"
+  sortMode="multiple"
+  [paginator]="true"
+  [rows]="5"
+  [rowsPerPageOptions]="[5, 10, 15, 20]"
+>
   <ng-template pTemplate="header">
     <tr>
-      <th [pSortableColumn]="'clientName'">Name</th>
-      <th [pSortableColumn]="'regDate'">Registration Date</th>
-      <th [pSortableColumn]="'folioNo'">Folio Number</th>
-      <th [pSortableColumn]="'schemeName'">Scheme Name</th>
-      <th [pSortableColumn]="'freqType'">Frequency Type</th>
-      <th [pSortableColumn]="'startDate'">Start Date</th>
-      <th [pSortableColumn]="'endDate'">End Date</th>
-      <th [pSortableColumn]="'installmentAmt'">Installment Amount</th>
+      <th
+        *ngFor="let header of colHeaderMapArray"
+        [pSortableColumn]="header[0]"
+      >
+        {{ header[1] }}
+      </th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-item>
     <tr>
-      <td>{{ item.clientName | titlecase }}</td>
-      <td>{{ item.regDate | date: "longDate" }}</td>
-      <td>{{ item.folioNo }}</td>
-
-      <td>{{ item.schemeName | titlecase }}</td>
-      <td>{{ item.freqType | titlecase }}</td>
-      <td>{{ item.startDate | date: "longDate" }}</td>
-      <td>{{ item.endDate | date: "longDate" }}</td>
-      <td>{{ item.installmentAmt | currency: "INR" }}</td>
+      <td *ngFor="let header of colHeaderMapArray">
+        {{ item[header[0]] }}
+      </td>
     </tr>
   </ng-template>
-
 </p-table>
 
-<div class="text-center p-5" *ngIf="_sipDataToShow.length === 0">
+<div class="text-center p-5" *ngIf="_dataToShow.length === 0">
   <p><strong> No record found! </strong></p>
 </div>

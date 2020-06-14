@@ -8,6 +8,14 @@ import { Label } from "ng2-charts";
 import * as pluginDataLabels from "chartjs-plugin-datalabels";
 import "chart.piecelabel.js";
 
+import {
+  TitleCasePipe,
+  CurrencyPipe,
+  DecimalPipe,
+  DatePipe,
+  JsonPipe,
+} from "@angular/common";
+
 @Component({
   selector: "app-monthly-sip",
   templateUrl: "./monthly-sip.component.html",
@@ -23,13 +31,23 @@ export class MonthlySipComponent implements OnInit {
   chartLabel: Array<Label>;
   chartData: Array<number>;
   chartColor: Array<{}>;
-  displayAs = ["table", "graph"];
-  selectedDisplay = "table";
-  chartPlugins = [pluginDataLabels];
 
+  chartPlugins = [pluginDataLabels];
+  colHeaderMapArray = [];
   constructor(private dbService: DatabaseService) {}
 
   ngOnInit(): void {
+    this.colHeaderMapArray = [
+      ["clientName", "Name"],
+      ["regDate", "Registration Date"],
+      ["folioNo", "Folio Number"],
+      ["schemeName", "Scheme Name"],
+      ["freqType", "Frequency Type"],
+      ["startDate", "Start Date"],
+      ["endDate", "End Date"],
+      ["installmentAmt", "Installment Amount"],
+    ];
+
     this.chartType = "doughnut";
     this.chartLegend = true;
     this.chartOptions = {
@@ -45,11 +63,8 @@ export class MonthlySipComponent implements OnInit {
     });
     this.folioForm
       .get("folioNo")
-      .valueChanges.pipe(delay(500), distinctUntilChanged())
+      .valueChanges.pipe(delay(100), distinctUntilChanged())
       .subscribe((folioNo: number) => {
-        if (!folioNo) {
-          this.selectedDisplay = "table";
-        }
         this.distillSipData(folioNo);
       });
     this.dbService
@@ -88,6 +103,7 @@ export class MonthlySipComponent implements OnInit {
     }
     return result;
   }
+
   distillSipData(folioNo: number) {
     if (folioNo) {
       const tmpData = this.getDeepCopy(
@@ -103,6 +119,25 @@ export class MonthlySipComponent implements OnInit {
         this.generateChartData(this.filteredSipData);
       }
     }
+    this.filteredSipData = this.transformFilteredData(this.filteredSipData);
+  }
+  transformFilteredData(data) {
+    data = this.getDeepCopy(data);
+    const tcPipe = new TitleCasePipe();
+    const cp = new CurrencyPipe("en");
+    const dp = new DecimalPipe("en");
+    const datePipe = new DatePipe("en");
+    for (const item of data) {
+      item["clientName"] = tcPipe.transform(item["clientName"]);
+      item["regDate"] = datePipe.transform(item["regDate"], "dd/MM/yyyy");
+      item["folioNo"] = dp.transform(item["folioNo"]);
+      item["schemeName"] = tcPipe.transform(item["schemeName"]);
+      item["freqType"] = tcPipe.transform(item["freqType"]);
+      item["startDate"] = datePipe.transform(item["startDate"], "dd/MM/yyyy");
+      item["endDate"] = datePipe.transform(item["endDate"], "dd/MM/yyyy");
+      item["installmentAmt"] = cp.transform(item["installmentAmt"], "INR");
+    }
+    return data;
   }
   generateChartData(data: Array<{}>) {
     this.chartColor = null;
@@ -125,7 +160,6 @@ export class MonthlySipComponent implements OnInit {
         }
       }
     }
-    console.log(this.chartLabel, this.chartData);
   }
   getDeepCopy(item: any) {
     if (item) {
@@ -139,5 +173,98 @@ export class MonthlySipComponent implements OnInit {
       color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+  }
+
+  onClickPrint() {
+    const fs = window.require("fs");
+    const PdfTable = window.require("voilab-pdf-table");
+    const PdfDocument = window.require("pdfkit");
+    const pdf = new PdfDocument({
+      autoFirstPage: false,
+      layout: "landscape",
+      margins: { top: 50, left: 10, right: 10, bottom: 10 },
+      size: "A4",
+    });
+    pdf.fontSize(10);
+    const table = new PdfTable(pdf, {
+      bottomMargin: 30,
+    });
+    table
+
+      // set defaults to your columns
+      .setColumnsDefaults({
+        // headerBorder: ["L", "T", "B", "R"],
+        border: ["L", "T", "B", "R"],
+        align: "center",
+      })
+      // add table columns
+      .addColumns([
+        {
+          id: "clientName",
+          header: "Name",
+          align: "center",
+          width: 100,
+          height: 100,
+          valign: "center",
+        },
+        {
+          id: "regDate",
+          header: "Registration Date",
+          width: 100,
+          valign: "center",
+          align: "center",
+        },
+        {
+          id: "folioNo",
+          header: "Folio Number",
+          width: 100,
+          valign: "center",
+          align: "center",
+        },
+        {
+          id: "schemeName",
+          header: "Scheme Name",
+          width: 100,
+          valign: "center",
+          align: "center",
+        },
+        {
+          id: "freqType",
+          header: "Frequency Type",
+          width: 100,
+          valign: "center",
+          align: "center",
+        },
+        {
+          id: "startDate",
+          header: "Start Date",
+          width: 100,
+          valign: "center",
+          align: "center",
+        },
+        {
+          id: "endDate",
+          header: "End Date",
+          width: 100,
+          valign: "center",
+          align: "center",
+        },
+        {
+          id: "installmentAmt",
+          header: "Installment Amount",
+          width: 100,
+          valign: "center",
+          align: "center",
+        },
+      ]) // add events (here, we draw headers on each new page)
+      .onPageAdded(function (tb) {
+        tb.addHeader();
+      });
+    pdf.addPage();
+
+    // draw content, by passing data to the addBody method
+    table.addBody(this.filteredSipData);
+    pdf.end();
+    pdf.pipe(fs.createWriteStream("output.pdf"));
   }
 }

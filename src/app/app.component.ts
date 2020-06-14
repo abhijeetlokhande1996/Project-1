@@ -1,5 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { DatabaseService } from "./../app/services/database.service";
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
