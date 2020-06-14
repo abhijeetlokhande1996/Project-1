@@ -6,6 +6,7 @@ import { SipInterface } from "../../interfaces/sip.interface";
 import { ChartType, ChartOptions } from "chart.js";
 import { Label } from "ng2-charts";
 import * as pluginDataLabels from "chartjs-plugin-datalabels";
+import "chart.piecelabel.js";
 
 @Component({
   selector: "app-monthly-sip",
@@ -25,16 +26,16 @@ export class MonthlySipComponent implements OnInit {
   displayAs = ["table", "graph"];
   selectedDisplay = "table";
   chartPlugins = [pluginDataLabels];
-  
-  
+
   constructor(private dbService: DatabaseService) {}
 
   ngOnInit(): void {
-    this.chartType = "pie";
+    this.chartType = "doughnut";
     this.chartLegend = true;
     this.chartOptions = {
       responsive: true,
       maintainAspectRatio: false,
+
       legend: {
         position: "top",
       },
@@ -45,7 +46,9 @@ export class MonthlySipComponent implements OnInit {
     this.folioForm
       .get("folioNo")
       .valueChanges.pipe(delay(500), distinctUntilChanged())
-      .subscribe((folioNo: number) => this.distillSipData(folioNo));
+      .subscribe((folioNo: number) => {
+        this.distillSipData(folioNo);
+      });
     this.dbService
       .getSipData()
       .pipe(take(1))
@@ -55,15 +58,14 @@ export class MonthlySipComponent implements OnInit {
       });
 
     // this.dbService.getUser().subscribe(res => console.log(res));
-    this.dbService.getUsers().subscribe(users => {
-      let data = users.map(item => {
-        return item.payload.doc.data()
+    this.dbService.getUsers().subscribe((users) => {
+      let data = users.map((item) => {
+        return item.payload.doc.data();
       });
       console.log(data);
     });
 
     // this.dbService.addSip().then(res => console.log(res));
-
   }
 
   getFlattenData(dataToFlat: Array<SipInterface>) {
@@ -115,7 +117,13 @@ export class MonthlySipComponent implements OnInit {
       }
 
       this.chartData.push(item["installmentAmt"]);
-      this.chartColor[0]["backgroundColor"].push(this.getRandomColor());
+      while (true) {
+        const colorHexCode = this.getRandomColor();
+        if (this.chartColor[0]["backgroundColor"].indexOf(colorHexCode) == -1) {
+          this.chartColor[0]["backgroundColor"].push(colorHexCode);
+          break;
+        }
+      }
     }
     console.log(this.chartLabel, this.chartData);
   }

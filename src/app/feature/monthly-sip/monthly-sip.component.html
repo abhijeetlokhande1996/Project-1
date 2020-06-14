@@ -33,7 +33,7 @@
 </div>
 
 <div class="row" *ngIf="selectedDisplay == 'table'">
-  <div class="col-md-12 col-sm-12 mx-auto">
+  <div class="col mx-auto">
     <app-monthly-sip-table
       [sipDataToShow]="filteredSipData"
     ></app-monthly-sip-table>
@@ -41,7 +41,7 @@
 </div>
 
 <div class="row mt-2 border-black" *ngIf="selectedDisplay == 'graph'">
-  <div class="col-md-12 col-sm-12">
+  <div class="col">
     <app-chart
       [chartOptions]="chartOptions"
       [chartType]="chartType"
