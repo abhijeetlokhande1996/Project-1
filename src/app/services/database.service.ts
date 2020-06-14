@@ -2,8 +2,9 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { SipInterface } from "./../interfaces/sip.interface";
-import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { IMutualFund } from "../interfaces/IMutualFund.interface";
 
 @Injectable({
   providedIn: "root",
@@ -19,6 +20,11 @@ export class DatabaseService {
 
   getUsers = () => {
     return this.firestore.collection('users').snapshotChanges();
+  }
+
+
+  getMFs = (): Observable<Array<IMutualFund>> => {
+    return this.firestore.collection('mfs').valueChanges() as Observable<Array<IMutualFundFund>>;
   }
 
 }
