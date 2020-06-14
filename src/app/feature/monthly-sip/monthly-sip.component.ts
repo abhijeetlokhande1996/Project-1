@@ -26,9 +26,22 @@ export class MonthlySipComponent implements OnInit {
 
   chartPlugins = [pluginDataLabels];
 
+  colHeaderMapping: Map<string, string>;
+
+  colHeaderMapArray = [];
   constructor(private dbService: DatabaseService) {}
 
   ngOnInit(): void {
+    this.colHeaderMapping = new Map();
+    this.colHeaderMapping.set("clientName", "Name");
+    this.colHeaderMapping.set("regDate", "Registration Date");
+    this.colHeaderMapping.set("folioNo", "Folio Number");
+    this.colHeaderMapping.set("schemeName", "Scheme Name");
+    this.colHeaderMapping.set("startDate", "Start Date");
+    this.colHeaderMapping.set("endDate", "End Date");
+    this.colHeaderMapping.set("installmentAmt", "Installment Amount");
+
+    this.colHeaderMapArray = Array.from(this.colHeaderMapping);
     this.chartType = "doughnut";
     this.chartLegend = true;
     this.chartOptions = {
@@ -84,6 +97,7 @@ export class MonthlySipComponent implements OnInit {
     }
     return result;
   }
+
   distillSipData(folioNo: number) {
     if (folioNo) {
       const tmpData = this.getDeepCopy(

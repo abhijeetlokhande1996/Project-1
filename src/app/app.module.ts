@@ -18,6 +18,7 @@ import { ChartsModule } from "ng2-charts";
 import { ChartComponent } from "./shared/chart/chart.component";
 import { TableModule } from "primeng/table";
 import { ToggleButtonModule } from "primeng/togglebutton";
+import { PaginatorModule } from "primeng/paginator";
 
 import { AngularFireModule } from "@angular/fire";
 import {
@@ -49,6 +50,7 @@ import { firebaseConfig } from "../environments/environment";
     AngularFirestoreModule,
     AngularFireDatabaseModule,
     ToggleButtonModule,
+    PaginatorModule,
   ],
   providers: [AngularFireDatabase],
   bootstrap: [AppComponent],

@@ -24,7 +24,10 @@
         col: !folioForm.get('folioNo')?.value
       }"
     >
-      <app-prime-table [sipDataToShow]="filteredSipData"></app-prime-table>
+      <app-prime-table
+        [sipDataToShow]="filteredSipData"
+        [colHeaderMapping]="colHeaderMapping"
+      ></app-prime-table>
     </div>
     <div class="col-4" *ngIf="folioForm.get('folioNo')?.value">
       <app-chart

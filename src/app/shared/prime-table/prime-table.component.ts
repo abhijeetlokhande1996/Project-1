@@ -7,11 +7,12 @@ import { SipInterface } from "../../interfaces/sip.interface";
   styleUrls: ["./prime-table.component.css"],
 })
 export class PrimeTableComponent implements OnInit {
-  _sipDataToShow: Array<any>;
+  _dataToShow: Array<any>;
 
+  @Input() colHeaderMapping: Map<string, string>;
   @Input()
   set sipDataToShow(data: Array<any>) {
-    this._sipDataToShow = data;
+    this._dataToShow = data;
   }
 
   constructor() {}
