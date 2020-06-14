@@ -1,26 +1,28 @@
-import { Component, OnInit } from '@angular/core';
-import { DatabaseService } from '../../services/database.service';
-import { take, delay, distinctUntilChanged } from 'rxjs/operators';
-import { IMutualFund, IFMutualFund } from '../../interfaces/IMutualFund.interface';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ChartOptions, ChartType } from 'chart.js';
-import { Label } from 'ng2-charts';
+import { Component, OnInit } from "@angular/core";
+import { DatabaseService } from "../../services/database.service";
+import { take, delay, distinctUntilChanged } from "rxjs/operators";
+import {
+  IMutualFund,
+  IFMutualFund,
+} from "../../interfaces/IMutualFund.interface";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { ChartOptions, ChartType } from "chart.js";
+import { Label } from "ng2-charts";
 import * as pluginDataLabels from "chartjs-plugin-datalabels";
 import "chart.piecelabel.js";
 
 @Component({
-  selector: 'app-mutual-fund',
-  templateUrl: './mutual-fund.component.html',
-  styleUrls: ['./mutual-fund.component.css']
+  selector: "app-mutual-fund",
+  templateUrl: "./mutual-fund.component.html",
+  styleUrls: ["./mutual-fund.component.css"],
 })
 export class MutualFundComponent implements OnInit {
-
   mfData: Array<IMutualFund> = [];
-  filterData:Array<IFMutualFund>=[];
+  filterData: Array<IFMutualFund> = [];
   folioForm: FormGroup;
   displayAs = ["table", "graph"];
   selectedDisplay = "table";
-  filteredMfData:Array<IFMutualFund>=[];
+  filteredMfData: Array<IFMutualFund> = [];
   chartOptions: ChartOptions;
   chartType: ChartType;
   chartLegend: boolean;
@@ -29,9 +31,7 @@ export class MutualFundComponent implements OnInit {
   chartColor: Array<{}>;
   chartPlugins = [pluginDataLabels];
 
-
-
-  constructor(private dbService: DatabaseService) { }
+  constructor(private dbService: DatabaseService) {}
 
   ngOnInit(): void {
     this.chartType = "doughnut";
@@ -53,20 +53,19 @@ export class MutualFundComponent implements OnInit {
         this.distillMFData(null);
       });
 
-      this.folioForm = new FormGroup({
-        folioNo: new FormControl(null, [Validators.required]),
+    this.folioForm = new FormGroup({
+      folioNo: new FormControl(null, [Validators.required]),
+    });
+    this.folioForm
+      .get("folioNo")
+      .valueChanges.pipe(delay(500), distinctUntilChanged())
+      .subscribe((folioNo: number) => {
+        if (!folioNo) {
+          this.selectedDisplay = "table";
+        }
+        this.distillMFData(folioNo);
       });
-      this.folioForm
-        .get("folioNo")
-        .valueChanges.pipe(delay(500), distinctUntilChanged())
-        .subscribe((folioNo: number) => {
-          if (!folioNo) {
-            this.selectedDisplay = "table";
-          }
-          this.distillMFData(folioNo);
-        });
   }
-
 
   distillMFData(folioNo: number) {
     if (folioNo) {
@@ -92,7 +91,7 @@ export class MutualFundComponent implements OnInit {
   }
 
   getFlattenData(dataToFlat: Array<IMutualFund>) {
-    const result:Array<IFMutualFund> = [];
+    const result: Array<IFMutualFund> = [];
     for (const item of dataToFlat) {
       const objToPush = {};
       objToPush["clientName"] = item["clientName"];
@@ -144,9 +143,4 @@ export class MutualFundComponent implements OnInit {
     }
     return color;
   }
-
-
-
-
-
 }
