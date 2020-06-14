@@ -48,7 +48,7 @@ export class MonthlySipComponent implements OnInit {
       .valueChanges.pipe(delay(500), distinctUntilChanged())
       .subscribe((folioNo: number) => {
         if (!folioNo) {
-          this.selectedDisplay = "graph";
+          this.selectedDisplay = "table";
         }
         this.distillSipData(folioNo);
       });

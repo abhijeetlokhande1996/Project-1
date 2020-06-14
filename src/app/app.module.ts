@@ -13,7 +13,7 @@ import { AppComponent } from "./app.component";
 
 import { TopNavBarComponent } from "./core/top-nav-bar/top-nav-bar.component";
 import { AutoFocusDirective } from "./directives/auto-focus.directive";
-import { MonthlySipTableComponent } from "./feature/monthly-sip/monthly-sip-table/monthly-sip-table.component";
+import { PrimeTableComponent } from "./shared/prime-table/prime-table.component";
 import { ChartsModule } from "ng2-charts";
 import { ChartComponent } from "./shared/chart/chart.component";
 import { TableModule } from "primeng/table";
@@ -33,7 +33,7 @@ import { firebaseConfig } from "../environments/environment";
     TopNavBarComponent,
     componentArr,
     AutoFocusDirective,
-    MonthlySipTableComponent,
+    PrimeTableComponent,
     ChartComponent,
   ],
   imports: [
