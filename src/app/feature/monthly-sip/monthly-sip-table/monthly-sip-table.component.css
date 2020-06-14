@@ -1,0 +1,61 @@
+/* @media screen and (max-width: 70em) {
+    .mv-text-container{
+     white-space: normal !important;
+     text-overflow: initial !important;
+     overflow: auto !important;
+   }
+
+   .ui-table table {
+     width: 99%;
+   }
+
+  .ui-table-responsive .ui-table-thead > tr > th,
+  .ui-table-responsive .ui-table-tfoot > tr > td {
+     display: none !important;
+  }
+
+  .ui-table-responsive .ui-table-tbody > tr > td {
+    text-align: left !important;
+    display: block !important;
+    border: 0 none !important;
+    width: 100% !important;
+   -webkit-box-sizing: border-box !important;
+   -moz-box-sizing: border-box !important;
+    box-sizing: border-box !important;
+    float: left !important;
+    clear: left !important;
+  }
+
+  .ui-table-responsive .ui-table-tbody > tr > td .ui-column-title {
+    padding: .4em !important;
+    min-width: 30% !important;
+    display: inline-block !important;
+    margin: -.4em 1em -.4em -.4em !important;
+    font-weight: bold !important;
+  }
+
+
+  tr > td {
+    text-align: left !important;
+    border: 0px !important;
+    padding-left: 15px !important;
+  }
+
+  tr > th > {
+    border: 0px !important;
+    text-align: left !important;
+  }
+
+  tr {
+   border: 1px solid #D5D5D5 !important;
+  }
+
+  tr > td:last-child {
+   padding-bottom: 15px !important;
+   margin-bottom: 0 !important;
+  }
+
+  tr > td:first-child {
+   padding-top: 15px !important;
+  }
+} */

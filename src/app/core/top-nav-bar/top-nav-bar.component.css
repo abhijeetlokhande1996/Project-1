@@ -1,0 +1,10 @@
+.brand {
+    text-align: center;
+    display: grid;
+}
+
+
+.tagline {
+    padding: 0.5rem 0;
+    border-top: 1px solid;
+}

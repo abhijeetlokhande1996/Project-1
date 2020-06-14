@@ -1,12 +1,4 @@
-<div *ngIf="chartData" style="position: relative; height: 40vh; width: 80vw;">
-  <canvas
-    baseChart
-    [data]="chartData"
-    [labels]="chartLabels"
-    [chartType]="chartType"
-    [legend]="chartLegend"
-    [options]="chartOptions"
-    [colors]="chartColor"
-    [plugins]="chartPlugins"
-  ></canvas>
+<div class="chart" *ngIf="chartData">
+  <canvas baseChart [data]="chartData" [labels]="chartLabels" [chartType]="chartType" [legend]="chartLegend"
+    [options]="chartOptions" [colors]="chartColor" [plugins]="chartPlugins"></canvas>
 </div>
