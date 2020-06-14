@@ -12,9 +12,10 @@ export class PrimeTableComponent implements OnInit {
   @Input()
   set sipDataToShow(data: Array<any>) {
     this._sipDataToShow = data;
+    console.log(this._sipDataToShow);
   }
 
-  constructor() {}
+  constructor() { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 }
