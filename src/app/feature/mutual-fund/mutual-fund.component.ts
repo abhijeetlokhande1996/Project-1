@@ -75,7 +75,7 @@ export class MutualFundComponent implements OnInit {
     });
     this.folioForm
       .get("folioNo")
-      .valueChanges.pipe(delay(500), distinctUntilChanged())
+      .valueChanges.pipe(delay(100), distinctUntilChanged())
       .subscribe((folioNo: number) => {
         if (!folioNo) {
           this.selectedDisplay = "table";

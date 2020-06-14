@@ -61,7 +61,7 @@ export class MonthlySipComponent implements OnInit {
     });
     this.folioForm
       .get("folioNo")
-      .valueChanges.pipe(delay(500), distinctUntilChanged())
+      .valueChanges.pipe(delay(100), distinctUntilChanged())
       .subscribe((folioNo: number) => {
         this.distillSipData(folioNo);
       });
