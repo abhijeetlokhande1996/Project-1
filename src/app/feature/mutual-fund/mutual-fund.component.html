@@ -1,53 +1,34 @@
-<div class="row mt-2">
-  <div class="col-md-4 col-sm-12"></div>
-  <div class="col-md-4 col-sm-12">
-    <form [formGroup]="folioForm">
-      <div class="form-group">
-        <label>Enter Folio Number</label>
-        <input
-          type="number"
-          class="form-control"
-          [formControlName]="'folioNo'"
-          appAutoFocus
-        />
-      </div>
-    </form>
-  </div>
-  <div
-    class="col-md-4 col-sm-12"
-    *ngIf="folioForm.get('folioNo').value && filteredMfData.length > 0"
-  >
-    <div class="row">
-      <div class="col-md-6">
+<div class="container-fluid">
+  <div class="row justify-content-center text-center">
+    <div class="col-4">
+      <form [formGroup]="folioForm">
         <div class="form-group">
-          <label>Display As</label>
-          <select class="form-control" [(ngModel)]="selectedDisplay">
-            <option *ngFor="let el of displayAs" [ngValue]="el">{{
-              el | titlecase
-            }}</option>
-          </select>
+          <label>Enter Folio Number</label>
+          <input type="number" class="form-control" [formControlName]="'folioNo'" appAutoFocus />
         </div>
+      </form>
+    </div>
+    <div class="col-3" *ngIf="folioForm.get('folioNo').value && filteredMfData.length > 0">
+      <div class="form-group">
+        <label for="display">Display As</label>
+        <select class="form-control" [(ngModel)]="selectedDisplay">
+          <option *ngFor="let el of displayAs" [ngValue]="el">{{ el | titlecase }}
+          </option>
+        </select>
       </div>
     </div>
   </div>
-</div>
-
-<div class="row" *ngIf="selectedDisplay == 'table'">
-  <div class="col mx-auto">
-    <app-prime-table [sipDataToShow]="filteredMfData"></app-prime-table>
-  </div>
-</div>
-
-<div class="row mt-2 border-black" *ngIf="selectedDisplay == 'graph'">
-  <div class="col">
-    <app-chart
-      [chartOptions]="chartOptions"
-      [chartType]="chartType"
-      [chartLegend]="chartLegend"
-      [chartLabels]="chartLabel"
-      [chartData]="chartData"
-      [chartColor]="chartColor"
-      [chartPlugins]="chartPlugins"
-    ></app-chart>
+  <div class="row">
+    <div class="col">
+      <app-prime-table [sipDataToShow]="filteredMfData"></app-prime-table>
+    </div>
+    <div class="col-4" *ngIf="
+        selectedDisplay === 'graph' ||
+        folioForm.get('folioNo')?.value?.length > 0
+      ">
+      <app-chart [chartOptions]="chartOptions" [chartType]="chartType" [chartLegend]="chartLegend"
+        [chartLabels]="chartLabel" [chartData]="chartData" [chartColor]="chartColor" [chartPlugins]="chartPlugins">
+      </app-chart>
+    </div>
   </div>
 </div>
