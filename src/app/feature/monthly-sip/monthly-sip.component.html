@@ -13,34 +13,20 @@
         </div>
       </form>
     </div>
-    <div
-      class="col-3"
-      *ngIf="folioForm.get('folioNo').value && filteredSipData.length > 0"
-    >
-      <div class="form-group">
-        <label for="display">Display As</label>
-        <select class="form-control" [(ngModel)]="selectedDisplay">
-          <option *ngFor="let el of displayAs" [ngValue]="el"
-            >{{ el | titlecase }}
-          </option>
-        </select>
-      </div>
-    </div>
   </div>
-  <div class="row">
-    <div class="col">
-      <app-prime-table
-        class="col"
-        [sipDataToShow]="filteredSipData"
-      ></app-prime-table>
-    </div>
+  <div
+    class="row"
+    *ngIf="filteredSipData && filteredSipData.length > 0; else noDataFoundBlock"
+  >
     <div
-      class="col-4"
-      *ngIf="
-        selectedDisplay === 'graph' ||
-        folioForm.get('folioNo')?.value?.length > 0
-      "
+      [ngClass]="{
+        'col-8': folioForm.get('folioNo')?.value,
+        col: !folioForm.get('folioNo')?.value
+      }"
     >
+      <app-prime-table [sipDataToShow]="filteredSipData"></app-prime-table>
+    </div>
+    <div class="col-4" *ngIf="folioForm.get('folioNo')?.value">
       <app-chart
         [chartOptions]="chartOptions"
         [chartType]="chartType"
@@ -53,4 +39,11 @@
       </app-chart>
     </div>
   </div>
+  <ng-template #noDataFoundBlock>
+    <div class="row">
+      <div class="col text-center">
+        <p class="text-danger h2">No Data Found</p>
+      </div>
+    </div>
+  </ng-template>
 </div>
