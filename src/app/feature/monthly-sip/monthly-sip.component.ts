@@ -72,6 +72,7 @@ export class MonthlySipComponent implements OnInit {
       .pipe(take(1))
       .subscribe((resp) => {
         this.sipData = resp;
+        console.log(this.sipData);
         this.distillSipData(null);
       });
 

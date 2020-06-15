@@ -6,12 +6,21 @@
           <label>Enter Folio Number</label>
           <input
             type="number"
-            class="form-control"
+            class="form-control form-control-sm"
             [formControlName]="'folioNo'"
             appAutoFocus
           />
         </div>
       </form>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <label>Enter To</label>
+        <p-calendar></p-calendar>
+      </div>
+    </div>
+    <div class="col-4">
+      <p class="h2">Calender End</p>
     </div>
   </div>
   <div
