@@ -45,5 +45,6 @@ const componentArr = [
   IncomeComponent,
   EquityComponent,
   MutualFundComponent,
+  AdminPanelComponent,
 ];
 export { componentArr };
