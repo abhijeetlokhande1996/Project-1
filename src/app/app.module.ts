@@ -28,6 +28,7 @@ import {
 } from "@angular/fire/database";
 import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { firebaseConfig } from "../environments/environment";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { firebaseConfig } from "../environments/environment";
     ToggleButtonModule,
     PaginatorModule,
     CalendarModule,
+    NgbModule,
   ],
   providers: [AngularFireDatabase],
   bootstrap: [AppComponent],
