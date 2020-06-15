@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { DatabaseService } from "./../../services/database.service";
 import { take, delay, distinctUntilChanged } from "rxjs/operators";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { SipInterface } from "../../interfaces/sip.interface";
+import { SipInterface, IFSipInterface } from "../../interfaces/sip.interface";
 import { ChartType, ChartOptions } from "chart.js";
 import { Label } from "ng2-charts";
 import * as pluginDataLabels from "chartjs-plugin-datalabels";
@@ -23,7 +23,7 @@ import {
 })
 export class MonthlySipComponent implements OnInit {
   sipData: Array<SipInterface> = [];
-  filteredSipData: Array<SipInterface> = [];
+  filteredSipData: Array<IFSipInterface> = [];
   folioForm: FormGroup;
   chartOptions: ChartOptions;
   chartType: ChartType;
@@ -34,6 +34,8 @@ export class MonthlySipComponent implements OnInit {
 
   chartPlugins = [pluginDataLabels];
   colHeaderMapArray = [];
+  startDate = null;
+  endDate = null;
   constructor(private dbService: DatabaseService) {}
 
   ngOnInit(): void {
@@ -44,7 +46,7 @@ export class MonthlySipComponent implements OnInit {
       ["schemeName", "Scheme Name"],
       ["freqType", "Frequency Type"],
       ["startDate", "Start Date"],
-      ["endDate", "End Date"],
+
       ["installmentAmt", "Installment Amount"],
     ];
 
@@ -65,14 +67,28 @@ export class MonthlySipComponent implements OnInit {
       .get("folioNo")
       .valueChanges.pipe(delay(100), distinctUntilChanged())
       .subscribe((folioNo: number) => {
-        this.distillSipData(folioNo);
+        if (this.startDate && this.endDate) {
+          this.onEndDateSelect(this.endDate);
+        } else {
+          const fData: Array<SipInterface> = this.distillSipData(folioNo);
+          this.filteredSipData = this.getFlattenData(fData);
+          this.generateChartData(this.filteredSipData);
+          this.filteredSipData = this.transformFilteredData(
+            this.filteredSipData
+          );
+        }
       });
     this.dbService
       .getSipData()
       .pipe(take(1))
       .subscribe((resp) => {
         this.sipData = resp;
-        this.distillSipData(null);
+
+        const fData: Array<SipInterface> = this.distillSipData(null);
+
+        this.filteredSipData = this.getFlattenData(fData);
+        this.generateChartData(this.filteredSipData);
+        this.filteredSipData = this.transformFilteredData(this.filteredSipData);
       });
 
     this.dbService.getUsers().subscribe((users) => {
@@ -95,7 +111,6 @@ export class MonthlySipComponent implements OnInit {
           objToPush["schemeName"] = el["schemeName"];
           objToPush["freqType"] = el["freqType"];
           objToPush["startDate"] = el["startDate"];
-          objToPush["endDate"] = el["endDate"];
           objToPush["installmentAmt"] = el["installmentAmt"];
           result.push(this.getDeepCopy(objToPush));
         }
@@ -105,23 +120,17 @@ export class MonthlySipComponent implements OnInit {
   }
 
   distillSipData(folioNo: number) {
+    let dataToReturn = [];
     if (folioNo) {
-      const tmpData = this.getDeepCopy(
+      dataToReturn = this.getDeepCopy(
         this.sipData.filter((item) => item.folioNo == folioNo)
       );
-      this.filteredSipData = this.getFlattenData(tmpData);
-      if (folioNo) {
-        this.generateChartData(this.filteredSipData);
-      }
     } else {
-      this.filteredSipData = this.getFlattenData(this.sipData);
-      if (folioNo) {
-        this.generateChartData(this.filteredSipData);
-      }
+      dataToReturn = this.getDeepCopy(this.sipData);
     }
-    this.filteredSipData = this.transformFilteredData(this.filteredSipData);
+    return dataToReturn;
   }
-  transformFilteredData(data) {
+  transformFilteredData(data: Array<IFSipInterface>) {
     data = this.getDeepCopy(data);
     const tcPipe = new TitleCasePipe();
     const cp = new CurrencyPipe("en");
@@ -242,13 +251,7 @@ export class MonthlySipComponent implements OnInit {
           valign: "center",
           align: "center",
         },
-        {
-          id: "endDate",
-          header: "End Date",
-          width: 100,
-          valign: "center",
-          align: "center",
-        },
+
         {
           id: "installmentAmt",
           header: "Installment Amount",
@@ -266,5 +269,57 @@ export class MonthlySipComponent implements OnInit {
     table.addBody(this.filteredSipData);
     pdf.end();
     pdf.pipe(fs.createWriteStream("output.pdf"));
+  }
+  onStartDateSelect(startDate) {
+    this.endDate = null;
+  }
+  onEndDateSelect(endDate) {
+    const startDay = this.startDate["day"];
+    const startMonth = this.startDate["month"] - 1;
+    const startYear = this.startDate["year"];
+
+    const endDay = this.endDate["day"];
+    const endMonth = this.endDate["month"] - 1;
+    const endYear = this.endDate["year"];
+
+    const minDate: Date = new Date(startYear, startMonth, startDay);
+    const maxDate: Date = new Date(endYear, endMonth, endDay);
+    let fData = this.distillRecordsAccordingToRange(minDate, maxDate);
+    this.filteredSipData = null;
+    this.filteredSipData = this.getFlattenData(fData);
+    this.generateChartData(this.filteredSipData);
+    this.filteredSipData = this.transformFilteredData(this.filteredSipData);
+  }
+  distillRecordsAccordingToRange(minDate: Date, maxDate: Date) {
+    const folioNumber = this.folioForm.get("folioNo").value;
+    let fData: Array<SipInterface> = this.distillSipData(folioNumber);
+
+    let dataToReturn = [];
+    for (const item of fData) {
+      const objToProcess: SipInterface = this.getDeepCopy(item);
+      objToProcess.schemes = [];
+      for (const el of item.schemes) {
+        if (
+          new Date(el.startDate) >= minDate &&
+          new Date(el.startDate) < maxDate
+        ) {
+          objToProcess.schemes.push(el);
+        }
+      } // for-inner
+      if (objToProcess.schemes.length > 0) {
+        dataToReturn.push(objToProcess);
+      }
+    }
+    return dataToReturn;
+  }
+  resetFilters() {
+    this.startDate = null;
+    this.endDate = null;
+    const folioNumber = this.folioForm.get("folioNo").value;
+    const fData: Array<SipInterface> = this.distillSipData(folioNumber);
+    this.filteredSipData = null;
+    this.filteredSipData = this.getFlattenData(fData);
+    this.generateChartData(this.filteredSipData);
+    this.filteredSipData = this.transformFilteredData(this.filteredSipData);
   }
 }

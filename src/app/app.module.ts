@@ -19,6 +19,7 @@ import { ChartComponent } from "./shared/chart/chart.component";
 import { TableModule } from "primeng/table";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { PaginatorModule } from "primeng/paginator";
+import { CalendarModule } from "primeng/calendar";
 
 import { AngularFireModule } from "@angular/fire";
 import {
@@ -27,6 +28,7 @@ import {
 } from "@angular/fire/database";
 import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { firebaseConfig } from "../environments/environment";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
   declarations: [
@@ -51,6 +53,8 @@ import { firebaseConfig } from "../environments/environment";
     AngularFireDatabaseModule,
     ToggleButtonModule,
     PaginatorModule,
+    CalendarModule,
+    NgbModule,
   ],
   providers: [AngularFireDatabase],
   bootstrap: [AppComponent],

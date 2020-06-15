@@ -11,3 +11,14 @@ export interface SipInterface {
   folioNo: number;
   schemes: Array<Scheme>;
 }
+
+export interface IFSipInterface {
+  clientName: string;
+  regDate: Date | string;
+  folioNo: number | string;
+  schemeName: string;
+  freqType: string;
+  startDate: Date | string;
+  endDate: Date | string;
+  installmentAmt: number | string;
+}
