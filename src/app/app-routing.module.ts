@@ -4,6 +4,7 @@ import { MonthlySipComponent } from "./feature/monthly-sip/monthly-sip.component
 import { IncomeComponent } from "./feature/income/income.component";
 import { EquityComponent } from "./feature/equity/equity.component";
 import { MutualFundComponent } from "./feature/mutual-fund/mutual-fund.component";
+import { AdminPanelComponent } from "./feature/admin-panel/admin-panel.component";
 
 const routes: Routes = [
   {
@@ -23,6 +24,10 @@ const routes: Routes = [
     component: EquityComponent,
   },
   {
+    path: "admin-panel",
+    component: AdminPanelComponent,
+  },
+  {
     path: "",
     redirectTo: "mutual-fund",
     pathMatch: "full",
@@ -40,5 +45,6 @@ const componentArr = [
   IncomeComponent,
   EquityComponent,
   MutualFundComponent,
+  AdminPanelComponent,
 ];
 export { componentArr };
