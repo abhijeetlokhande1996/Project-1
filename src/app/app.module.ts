@@ -29,6 +29,7 @@ import {
 import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { firebaseConfig } from "../environments/environment";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { KeysPipe } from './pipes/keys.pipe';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
     AutoFocusDirective,
     PrimeTableComponent,
     ChartComponent,
+    KeysPipe,
   ],
   imports: [
     BrowserModule,

@@ -4,15 +4,15 @@ import { BehaviorSubject } from "rxjs";
 @Injectable({
   providedIn: "root",
 })
-export class NavService {
-  private navModel = new NavModel();
-  private subject = new BehaviorSubject(this.navModel);
+export class NavDataService {
+  private navData: Array<NavModel> = [];
+  private subject = new BehaviorSubject(this.navData);
 
-  setNavModel(obj: NavModel) {
-    this.navModel = obj;
-    this.subject.next(this.navModel);
+  setNavData(data: Array<NavModel>) {
+    this.navData = data;
+    this.subject.next(this.navData);
   }
-  getNavModel() {
+  getNavData() {
     return this.subject.asObservable();
   }
 }

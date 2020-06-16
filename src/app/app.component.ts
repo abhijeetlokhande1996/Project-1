@@ -2,13 +2,17 @@ import { Component, OnInit } from "@angular/core";
 import { DatabaseService } from "./services/database.service";
 import { map } from "rxjs/operators";
 import { NavModel } from "./models/nav.model";
+import { NavDataService } from "./services/navModel.service";
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnInit {
-  constructor(private dbService: DatabaseService) {}
+  constructor(
+    private dbService: DatabaseService,
+    private navModelService: NavDataService
+  ) {}
   ngOnInit(): void {
     this.dbService
       .fetchLatestNAV()
@@ -30,7 +34,7 @@ export class AppComponent implements OnInit {
         })
       )
       .subscribe((resp: Array<NavModel>) => {
-        console.log(resp);
+        this.navModelService.setNavData(resp);
       });
   }
 }
