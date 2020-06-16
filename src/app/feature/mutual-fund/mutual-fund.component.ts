@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { DatabaseService } from "./../../services/database.service";
 import { take, delay, distinctUntilChanged } from "rxjs/operators";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
@@ -12,8 +12,7 @@ import {
   TitleCasePipe,
   CurrencyPipe,
   DecimalPipe,
-  DatePipe,
-  JsonPipe,
+  DatePipe
 } from "@angular/common";
 import {
   IFMutualFund,
@@ -24,6 +23,7 @@ import {
   selector: "app-monthly-sip",
   templateUrl: "./mutual-fund.component.html",
   styleUrls: ["./mutual-fund.component.css"],
+  encapsulation: ViewEncapsulation.None
 })
 export class MutualFundComponent implements OnInit {
   mfData: Array<IMutualFund> = [];
@@ -40,7 +40,7 @@ export class MutualFundComponent implements OnInit {
   colHeaderMapArray = [];
   startDate = null;
   endDate = null;
-  constructor(private dbService: DatabaseService) {}
+  constructor(private dbService: DatabaseService) { }
 
   ngOnInit(): void {
     this.colHeaderMapArray = [
