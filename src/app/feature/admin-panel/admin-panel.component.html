@@ -24,7 +24,7 @@
     <div class="col"></div>
   </div>
   <div class="row mt-5 mx-auto" *ngIf="isAuthenticated">
-    <div class="col-3">
+    <div class="col-4">
       <form [formGroup]="clientForm" (ngSubmit)="onClientInfoSubmit()">
         <div class="form-group">
           <label>Enter Client Name</label>
@@ -74,7 +74,8 @@
         </button>
       </form>
     </div>
-    <div class="col-4">
+    <div class="col-2"></div>
+    <div class="col-6">
       <form [formGroup]="schemeForm" (ngSubmit)="onSchemeFormSubmit()">
         <div class="form-group">
           <label>Enter Folio Number</label>
@@ -84,12 +85,34 @@
             [formControlName]="'folioNo'"
           />
         </div>
+
         <div class="form-group">
-          <label>Enter Scheme Name</label>
+          <label>Select Fund Family</label>
+          <select class="form-control" [formControlName]="'mFundFamily'">
+            <option [ngValue]="null" disabled>Select</option>
+            <option
+              *ngFor="let key of mFundAndSchemeMapping | keys"
+              [ngValue]="key"
+              >{{ key | uppercase }}</option
+            >
+          </select>
+        </div>
+        <div class="form-group" *ngIf="schemeForm.get('mFundFamily').value">
+          <label>Select Scheme</label>
+          <select class="form-control" [formControlName]="'schemeName'">
+            <option [ngValue]="null" disabled>Select</option>
+            <option *ngFor="let sn of schemeNameArr" [ngValue]="sn">{{
+              sn | uppercase
+            }}</option>
+          </select>
+        </div>
+
+        <div class="form-group" *ngIf="schemeForm.get('schemeName').value">
+          <label>Scheme Code</label>
           <input
-            type="text"
+            type="number"
             class="form-control"
-            [formControlName]="'schemeName'"
+            [formControlName]="'schemeCode'"
           />
         </div>
         <div class="form-group">
