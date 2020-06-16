@@ -12,3 +12,8 @@ nav {
     border-top: 1px solid;
     padding: 0.5rem;
 }
+
+.logo {
+    height: 5rem;
+    width: 10rem;
+}
