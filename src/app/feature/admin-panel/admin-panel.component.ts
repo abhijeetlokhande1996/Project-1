@@ -5,7 +5,7 @@ import {
   Validators,
   FormControl,
 } from "@angular/forms";
-import { NavDataService } from "./../../services/navModel.service";
+import { NavDataService } from "../../services/nav-data.service";
 import { take } from "rxjs/operators";
 import { NavModel } from "../../models/nav.model";
 import { CommentStmt } from "@angular/compiler";

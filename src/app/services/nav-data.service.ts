@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { NavModel } from "./../models/nav.model";
+import { NavModel } from "../models/nav.model";
 import { BehaviorSubject } from "rxjs";
 @Injectable({
   providedIn: "root",
