@@ -1,55 +1,31 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark p-2">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark p-0">
   <div class="brand justify-content-center text-center mr-5">
-    <a class="text-light m-0 p-0" [routerLink]="['mutual-fund']">smc</a>
-    <sub class="tagline text-light">Moneywise. Be Wise</sub>
+    <a class="text-light m-0 p-0" [routerLink]="['mutual-fund']">
+      <img class="logo" src="../../../assets/icons/logo.jpeg" alt="logo">
+    </a>
+    <!-- <sub class="tagline text-light">Moneywise. Be Wise</sub> -->
   </div>
-  <button
-    class="navbar-toggler"
-    type="button"
-    data-toggle="collapse"
-    data-target="#navbarColor01"
-    aria-controls="navbarColor01"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-  >
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+    aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarColor01">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a
-          class="nav-link"
-          [routerLink]="['mutual-fund']"
-          routerLinkActive="active"
-          >Mutual Fund</a
-        >
+        <a class="nav-link" [routerLink]="['mutual-fund']" routerLinkActive="active">Mutual Fund</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="['equity']" routerLinkActive="active"
-          >Equity</a
-        >
+        <a class="nav-link" [routerLink]="['equity']" routerLinkActive="active">Equity</a>
       </li>
       <li class="nav-item">
-        <a
-          class="nav-link"
-          [routerLink]="['monthly-sip']"
-          routerLinkActive="active"
-          >Monthly Sip</a
-        >
+        <a class="nav-link" [routerLink]="['monthly-sip']" routerLinkActive="active">Monthly Sip</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="['income']" routerLinkActive="active"
-          >Income</a
-        >
+        <a class="nav-link" [routerLink]="['income']" routerLinkActive="active">Income</a>
       </li>
       <li class="nav-item">
-        <a
-          class="nav-link"
-          [routerLink]="['admin-panel']"
-          routerLinkActive="active"
-          >Admin-Panel</a
-        >
+        <a class="nav-link" [routerLink]="['admin-panel']" routerLinkActive="active">Admin-Panel</a>
       </li>
     </ul>
   </div>
