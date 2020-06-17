@@ -8,7 +8,6 @@ import {
 import { NavDataService } from "../../services/nav-data.service";
 import { take } from "rxjs/operators";
 import { NavModel } from "../../models/nav.model";
-import { CommentStmt } from "@angular/compiler";
 import { DatabaseService } from "../../services/database.service";
 import { ToastRef, ToastrService } from "ngx-toastr";
 import { IClient } from "../../interfaces/IClient.interface";
@@ -30,7 +29,11 @@ export class AdminPanelComponent implements OnInit {
   schemeNameArr: Array<string>;
   selectedCollection: string;
 
-  constructor(private navModelService: NavDataService, private dbService: DatabaseService, private toastrService: ToastrService) { }
+  constructor(
+    private navModelService: NavDataService,
+    private dbService: DatabaseService,
+    private toastrService: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.isAuthenticated = false;
@@ -146,19 +149,24 @@ export class AdminPanelComponent implements OnInit {
   }
   onClientInfoSubmit() {
     const client: IClient = {
-      name: this.clientForm.get('name').value,
-      folioNo: this.clientForm.get('folioNumber').value,
-      isActive: true
-    }
-    this.dbService.addClient(client).then(res => {
-      if (res['id']) {
-        this.toastrService.success(res['message']);
-      } else {
-        this.toastrService.error(res['message']);
-      }
-    }).catch(err => {
-      this.toastrService.error('Something went wrong! Couldn\'t add the client. Try again!')
-    })
+      name: this.clientForm.get("name").value,
+      folioNo: this.clientForm.get("folioNumber").value,
+      isActive: true,
+    };
+    this.dbService
+      .addClient(client)
+      .then((res) => {
+        if (res["id"]) {
+          this.toastrService.success(res["message"]);
+        } else {
+          this.toastrService.error(res["message"]);
+        }
+      })
+      .catch((err) => {
+        this.toastrService.error(
+          "Something went wrong! Couldn't add the client. Try again!"
+        );
+      });
   }
   onSchemeFormSubmit() {
     console.log(this.schemeForm.getRawValue());
@@ -173,4 +181,3 @@ export class AdminPanelComponent implements OnInit {
     return units;
   }
 }
-;
