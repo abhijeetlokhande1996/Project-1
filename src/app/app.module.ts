@@ -46,7 +46,11 @@ import { ProgressSpinnerModule } from "primeng/progressspinner";
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      timeOut: 5000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true
+    }),
     FormsModule,
     HttpClientModule,
     AppRoutingModule,

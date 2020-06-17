@@ -99,10 +99,6 @@ export class MutualFundComponent implements OnInit {
         return item.payload.doc.data();
       });
     });
-    console.log('before component call')
-    this.dbService.addClient().then(res => {
-      console.log('in .then ', res);
-    });
   }
 
   getFlattenData(dataToFlat: Array<SipInterface>) {

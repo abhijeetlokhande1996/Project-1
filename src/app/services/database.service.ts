@@ -53,39 +53,36 @@ export class DatabaseService {
    * @param {IClient} client Client info
    * TODO: Add (client: IClient) signature in method 
    */
-  addClient = () => {
-    const client: IClient = {
-      name: "Warren Buffet",
-      folioNo: 105,
-      isActive: true
-    }
-    return new Promise((resolve, reject) => {
-      const user = this.firestore.collection("clients", ref => ref.where('folioNo', '==', client.folioNo)).snapshotChanges();
-      console.log('user call done');
-      const result = user.subscribe(res => {
-        console.log('into user subscription');
+  addClient = (client: IClient) => {
+    return new Promise(async (resolve, reject) => {
+      const user = await this.firestore.collection("clients", ref => ref.where('folioNo', '==', client.folioNo)).snapshotChanges();
+      user.pipe(take(1)).subscribe(async res => {
         let data = res.map((item) => {
           return item.payload.doc.data();
         });
         if (data.length > 0) {
-          console.log('into if', data);
           resolve({
             status: false,
-            data: 'Already exists'
+            message: 'Folio number is associated to another user. Please choose unique folio number.',
+            id: null
           });
         } else {
           const user = this.firestore.collection('clients').add(client);
           const id = user.then(res => {
-            console.log('else', res.id, res)
             resolve({
               status: true,
-              data: id
+              id: res.id,
+              message: 'Client added successfully!'
             });
           });
         }
       });
     }).catch(err => {
-      return status;
+      return {
+        status: false,
+        message: 'Something went wrong. Couldn\'t add client',
+        id: null
+      };
     })
 
 
