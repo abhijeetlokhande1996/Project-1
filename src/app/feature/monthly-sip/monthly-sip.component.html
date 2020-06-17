@@ -28,7 +28,7 @@
           <input class="form-control form-control-sm text-primary" name="dp" ngbDatepicker [minDate]="startDate"
             #d1="ngbDatepicker" [(ngModel)]="endDate" (dateSelect)="onEndDateSelect($event)" />
           <div class="input-group-append align-items-center">
-            <i class="fa fa-calendar pointer cal" aria-hidden="true" (click)="d.toggle()"></i>
+            <i class="fa fa-calendar pointer cal" aria-hidden="true" (click)="d1.toggle()"></i>
           </div>
         </div>
       </div>

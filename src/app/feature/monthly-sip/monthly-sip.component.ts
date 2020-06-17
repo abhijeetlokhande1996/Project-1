@@ -7,6 +7,7 @@ import { ChartType, ChartOptions } from "chart.js";
 import { Label } from "ng2-charts";
 import * as pluginDataLabels from "chartjs-plugin-datalabels";
 import "chart.piecelabel.js";
+import { pdfMaker } from "./../../shared/lib/pdf-maker";
 
 import {
   TitleCasePipe,
@@ -184,90 +185,65 @@ export class MonthlySipComponent implements OnInit {
   }
 
   onClickPrint() {
-    const fs = window.require("fs");
-    const PdfTable = window.require("voilab-pdf-table");
-    const PdfDocument = window.require("pdfkit");
-    const pdf = new PdfDocument({
-      autoFirstPage: false,
-      layout: "landscape",
-      margins: { top: 50, left: 10, right: 10, bottom: 10 },
-      size: "A4",
-    });
-    pdf.fontSize(10);
-    const table = new PdfTable(pdf, {
-      bottomMargin: 30,
-    });
-    table
-
-      // set defaults to your columns
-      .setColumnsDefaults({
-        // headerBorder: ["L", "T", "B", "R"],
-        border: ["L", "T", "B", "R"],
+    const colums = [
+      {
+        id: "clientName",
+        header: "Name",
         align: "center",
-      })
-      // add table columns
-      .addColumns([
-        {
-          id: "clientName",
-          header: "Name",
-          align: "center",
-          width: 100,
-          height: 100,
-          valign: "center",
-        },
-        {
-          id: "regDate",
-          header: "Registration Date",
-          width: 100,
-          valign: "center",
-          align: "center",
-        },
-        {
-          id: "folioNo",
-          header: "Folio Number",
-          width: 100,
-          valign: "center",
-          align: "center",
-        },
-        {
-          id: "schemeName",
-          header: "Scheme Name",
-          width: 100,
-          valign: "center",
-          align: "center",
-        },
-        {
-          id: "freqType",
-          header: "Frequency Type",
-          width: 100,
-          valign: "center",
-          align: "center",
-        },
-        {
-          id: "startDate",
-          header: "Start Date",
-          width: 100,
-          valign: "center",
-          align: "center",
-        },
+        width: 100,
+        height: 100,
+        valign: "center",
+      },
+      {
+        id: "regDate",
+        header: "Registration Date",
+        width: 100,
+        valign: "center",
+        align: "center",
+      },
+      {
+        id: "folioNo",
+        header: "Folio Number",
+        width: 100,
+        valign: "center",
+        align: "center",
+      },
+      {
+        id: "schemeName",
+        header: "Scheme Name",
+        width: 100,
+        valign: "center",
+        align: "center",
+      },
+      {
+        id: "freqType",
+        header: "Frequency Type",
+        width: 100,
+        valign: "center",
+        align: "center",
+      },
+      {
+        id: "startDate",
+        header: "Start Date",
+        width: 100,
+        valign: "center",
+        align: "center",
+      },
 
-        {
-          id: "installmentAmt",
-          header: "Installment Amount",
-          width: 100,
-          valign: "center",
-          align: "center",
-        },
-      ]) // add events (here, we draw headers on each new page)
-      .onPageAdded(function (tb) {
-        tb.addHeader();
-      });
-    pdf.addPage();
-
-    // draw content, by passing data to the addBody method
-    table.addBody(this.filteredSipData);
-    pdf.end();
-    pdf.pipe(fs.createWriteStream("output.pdf"));
+      {
+        id: "installmentAmt",
+        header: "Installment Amount",
+        width: 100,
+        valign: "center",
+        align: "center",
+      },
+    ];
+    const status = pdfMaker(colums, this.filteredSipData, "monthly-sip.pdf");
+    if (status) {
+      alert("Success");
+    } else {
+      alert("Failure");
+    }
   }
 
   onStartDateSelect(startDate) {
