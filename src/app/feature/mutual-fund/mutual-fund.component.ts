@@ -19,6 +19,8 @@ import {
   IFMutualFund,
   IMutualFund,
 } from "../../interfaces/IMutualFund.interface";
+import { NavModel } from "../../models/nav.model";
+import { NavDataService } from "../../services/nav-data.service";
 
 @Component({
   selector: "app-monthly-sip",
@@ -42,7 +44,11 @@ export class MutualFundComponent implements OnInit {
   colHeaderMapArray = [];
   startDate = null;
   endDate = null;
-  constructor(private dbService: DatabaseService) {}
+  navData: Array<NavModel>;
+  constructor(
+    private dbService: DatabaseService,
+    private navDataService: NavDataService
+  ) {}
 
   ngOnInit(): void {
     this.colHeaderMapArray = [
@@ -95,7 +101,9 @@ export class MutualFundComponent implements OnInit {
         this.generateChartData(this.filteredMfData);
         this.filteredMfData = this.transformFilteredData(this.filteredMfData);
       });
-
+    this.navDataService.getNavData().subscribe((resp: Array<NavModel>) => {
+      this.navData = resp;
+    });
     this.dbService.getUsers().subscribe((users) => {
       let data = users.map((item) => {
         return item.payload.doc.data();
@@ -245,21 +253,35 @@ export class MutualFundComponent implements OnInit {
         align: "center",
       },
     ];
-    const dataToProcess: Array<IFMutualFund> = this.unTransFilteredMfData;
-    const amtInvestedDict = {};
-    for (const item of dataToProcess) {
-      const sName: string = item.schemeName;
-      if (!amtInvestedDict[sName]) {
-        amtInvestedDict[sName] = 0;
+    const dataToSend: Array<{}> = [];
+    for (const item of this.unTransFilteredMfData) {
+      let nav = 0;
+      const idx = this.navData.findIndex(
+        (el: NavModel) =>
+          el.schemeName.toLowerCase() == item.schemeName.toLowerCase()
+      );
+      if (idx >= 0) {
+        nav = this.navData[idx].netAssetValue;
       }
-      amtInvestedDict[sName] += item.installmentAmt;
+
+      const objToPush = {
+        clientName: item.clientName.toUpperCase(),
+        regDate: new DatePipe("en").transform(
+          new Date(item.regDate),
+          "longDate"
+        ),
+        folioNo: item.folioNo,
+        schemeName: item.schemeName.toUpperCase(),
+        startDate: new DatePipe("en").transform(
+          new Date(item.startDate),
+          "longDate"
+        ),
+        totalAmtInvested: new DecimalPipe("en").transform(item.installmentAmt),
+        currentValue: nav,
+      };
+      dataToSend.push(objToPush);
     }
-    console.log("dataToProcess ", dataToProcess);
-    // const status = pdfMaker(
-    //   columns,
-    //   this.filteredMfData,
-    //   "mutual-fund-statement.pdf"
-    // );
+    const status = pdfMaker(columns, dataToSend, "mutual-fund-statement.pdf");
     if (status) {
       alert("Success");
     } else {
