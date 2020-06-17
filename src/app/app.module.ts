@@ -32,6 +32,9 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { ToastrModule } from 'ngx-toastr';
 import { KeysPipe } from "./pipes/keys.pipe";
 import { ProgressSpinnerModule } from "primeng/progressspinner";
+import { AuthComponent } from './feature/admin-panel/auth/auth.component';
+import { AddClientComponent } from './feature/admin-panel/add-client/add-client.component';
+import { AddSchemeComponent } from './feature/admin-panel/add-scheme/add-scheme.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +45,9 @@ import { ProgressSpinnerModule } from "primeng/progressspinner";
     PrimeTableComponent,
     ChartComponent,
     KeysPipe,
+    AuthComponent,
+    AddClientComponent,
+    AddSchemeComponent,
   ],
   imports: [
     BrowserModule,

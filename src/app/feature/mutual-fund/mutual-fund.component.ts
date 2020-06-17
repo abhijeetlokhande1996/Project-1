@@ -19,6 +19,8 @@ import {
   IFMutualFund,
   IMutualFund,
 } from "../../interfaces/IMutualFund.interface";
+import { NavModel } from "../../models/nav.model";
+import { NavDataService } from "../../services/nav-data.service";
 
 @Component({
   selector: "app-monthly-sip",
@@ -29,6 +31,7 @@ import {
 export class MutualFundComponent implements OnInit {
   mfData: Array<IMutualFund> = [];
   filteredMfData: Array<IFMutualFund> = [];
+  unTransFilteredMfData: Array<IFMutualFund> = [];
   folioForm: FormGroup;
   chartOptions: ChartOptions;
   chartType: ChartType;
@@ -41,7 +44,11 @@ export class MutualFundComponent implements OnInit {
   colHeaderMapArray = [];
   startDate = null;
   endDate = null;
-  constructor(private dbService: DatabaseService) { }
+  navData: Array<NavModel>;
+  constructor(
+    private dbService: DatabaseService,
+    private navDataService: NavDataService
+  ) {}
 
   ngOnInit(): void {
     this.colHeaderMapArray = [
@@ -51,8 +58,7 @@ export class MutualFundComponent implements OnInit {
       ["schemeName", "Scheme Name"],
       ["freqType", "Frequency Type"],
       ["startDate", "Start Date"],
-
-      ["installmentAmt", "Installment Amount"],
+      ["installmentAmt", "Amount"],
     ];
 
     this.chartType = "doughnut";
@@ -75,8 +81,9 @@ export class MutualFundComponent implements OnInit {
         if (this.startDate && this.endDate) {
           this.onEndDateSelect(this.endDate);
         } else {
-          const fData: Array<SipInterface> = this.distillSipData(folioNo);
+          const fData: Array<SipInterface> = this.distillMFData(folioNo);
           this.filteredMfData = this.getFlattenData(fData);
+          this.unTransFilteredMfData = this.getDeepCopy(this.filteredMfData);
           this.generateChartData(this.filteredMfData);
           this.filteredMfData = this.transformFilteredData(this.filteredMfData);
         }
@@ -87,13 +94,16 @@ export class MutualFundComponent implements OnInit {
       .subscribe((resp) => {
         this.mfData = resp;
 
-        const fData: Array<SipInterface> = this.distillSipData(null);
+        const fData: Array<SipInterface> = this.distillMFData(null);
 
         this.filteredMfData = this.getFlattenData(fData);
+        this.unTransFilteredMfData = this.getDeepCopy(this.filteredMfData);
         this.generateChartData(this.filteredMfData);
         this.filteredMfData = this.transformFilteredData(this.filteredMfData);
       });
-
+    this.navDataService.getNavData().subscribe((resp: Array<NavModel>) => {
+      this.navData = resp;
+    });
     this.dbService.getUsers().subscribe((users) => {
       let data = users.map((item) => {
         return item.payload.doc.data();
@@ -122,7 +132,7 @@ export class MutualFundComponent implements OnInit {
     return result;
   }
 
-  distillSipData(folioNo: number) {
+  distillMFData(folioNo: number) {
     let dataToReturn = [];
     if (folioNo) {
       dataToReturn = this.getDeepCopy(
@@ -131,6 +141,8 @@ export class MutualFundComponent implements OnInit {
     } else {
       dataToReturn = this.getDeepCopy(this.mfData);
     }
+    // temporary code to be deleted
+
     return dataToReturn;
   }
   transformFilteredData(data: Array<IFMutualFund>) {
@@ -218,33 +230,56 @@ export class MutualFundComponent implements OnInit {
         align: "center",
       },
       {
-        id: "freqType",
-        header: "Frequency Type",
-        width: 100,
-        valign: "center",
-        align: "center",
-      },
-      {
         id: "startDate",
         header: "Start Date",
         width: 100,
         valign: "center",
         align: "center",
       },
-
       {
-        id: "installmentAmt",
-        header: "Installment Amount",
+        id: "totalAmtInvested",
+        header: "Total Amount Invested",
+        width: 100,
+        valign: "center",
+        align: "center",
+      },
+      {
+        id: "currentValue",
+        header: "Current Value",
         width: 100,
         valign: "center",
         align: "center",
       },
     ];
-    const status = pdfMaker(
-      columns,
-      this.filteredMfData,
-      "mutual-fund-statement.pdf"
-    );
+    const dataToSend: Array<{}> = [];
+    for (const item of this.unTransFilteredMfData) {
+      let nav = 0;
+      const idx = this.navData.findIndex(
+        (el: NavModel) =>
+          el.schemeName.toLowerCase() == item.schemeName.toLowerCase()
+      );
+      if (idx >= 0) {
+        nav = this.navData[idx].netAssetValue;
+      }
+
+      const objToPush = {
+        clientName: item.clientName.toUpperCase(),
+        regDate: new DatePipe("en").transform(
+          new Date(item.regDate),
+          "longDate"
+        ),
+        folioNo: item.folioNo,
+        schemeName: item.schemeName.toUpperCase(),
+        startDate: new DatePipe("en").transform(
+          new Date(item.startDate),
+          "longDate"
+        ),
+        totalAmtInvested: new DecimalPipe("en").transform(item.installmentAmt),
+        currentValue: nav,
+      };
+      dataToSend.push(objToPush);
+    }
+    const status = pdfMaker(columns, dataToSend, "mutual-fund-statement.pdf");
     if (status) {
       alert("Success");
     } else {
@@ -268,12 +303,13 @@ export class MutualFundComponent implements OnInit {
     let fData = this.distillRecordsAccordingToRange(minDate, maxDate);
     this.filteredMfData = null;
     this.filteredMfData = this.getFlattenData(fData);
+    this.unTransFilteredMfData = this.getDeepCopy(this.filteredMfData);
     this.generateChartData(this.filteredMfData);
     this.filteredMfData = this.transformFilteredData(this.filteredMfData);
   }
   distillRecordsAccordingToRange(minDate: Date, maxDate: Date) {
     const folioNumber = this.folioForm.get("folioNo").value;
-    let fData: Array<SipInterface> = this.distillSipData(folioNumber);
+    let fData: Array<SipInterface> = this.distillMFData(folioNumber);
 
     let dataToReturn = [];
     for (const item of fData) {
@@ -297,9 +333,10 @@ export class MutualFundComponent implements OnInit {
     this.startDate = null;
     this.endDate = null;
     const folioNumber = this.folioForm.get("folioNo").value;
-    const fData: Array<SipInterface> = this.distillSipData(folioNumber);
+    const fData: Array<SipInterface> = this.distillMFData(folioNumber);
     this.filteredMfData = null;
     this.filteredMfData = this.getFlattenData(fData);
+    this.unTransFilteredMfData = this.getDeepCopy(this.filteredMfData);
     this.generateChartData(this.filteredMfData);
     this.filteredMfData = this.transformFilteredData(this.filteredMfData);
   }

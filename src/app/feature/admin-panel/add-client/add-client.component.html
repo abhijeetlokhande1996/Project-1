@@ -1,0 +1,42 @@
+<div>
+  <form [formGroup]="clientForm" (ngSubmit)="onClientInfoSubmit()">
+    <div class="form-group">
+      <label>Enter Client Name</label>
+      <input type="text" class="form-control" [formControlName]="'name'" />
+    </div>
+    <div class="form-group">
+      <label>Enter Folio Name</label>
+      <input
+        type="number"
+        class="form-control"
+        [formControlName]="'folioNumber'"
+      />
+    </div>
+    <div class="form-group">
+      <label>Select Registration Date</label>
+      <div class="input-group">
+        <input
+          class="form-control form-control-sm text-primary"
+          name="dp"
+          ngbDatepicker
+          #d="ngbDatepicker"
+          [formControlName]="'regDate'"
+        />
+        <div class="input-group-append">
+          <span
+            class="input-group-text fa fa-calendar"
+            (click)="d.toggle()"
+          ></span>
+        </div>
+      </div>
+    </div>
+
+    <button
+      class="btn btn-success"
+      type="submit"
+      [disabled]="clientForm.invalid"
+    >
+      Add Client
+    </button>
+  </form>
+</div>
