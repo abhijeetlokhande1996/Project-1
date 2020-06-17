@@ -29,6 +29,7 @@ import {
 import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { firebaseConfig } from "../environments/environment";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { ToastrModule } from 'ngx-toastr';
 import { KeysPipe } from "./pipes/keys.pipe";
 import { ProgressSpinnerModule } from "primeng/progressspinner";
 
@@ -45,6 +46,11 @@ import { ProgressSpinnerModule } from "primeng/progressspinner";
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 5000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true
+    }),
     FormsModule,
     HttpClientModule,
     AppRoutingModule,
@@ -63,4 +69,4 @@ import { ProgressSpinnerModule } from "primeng/progressspinner";
   providers: [AngularFireDatabase],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

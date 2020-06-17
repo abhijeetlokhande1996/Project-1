@@ -1,15 +1,10 @@
-<div class="container-fluid">
+<div class="container-fluid p-3">
   <div class="row justify-content-center text-center">
     <div class="col-3">
       <form [formGroup]="folioForm">
         <div class="form-group">
-          <label>Enter Folio Number</label>
-          <input
-            type="number"
-            class="form-control form-control-sm"
-            [formControlName]="'folioNo'"
-            appAutoFocus
-          />
+          <label>Search Client (Folio Number)</label>
+          <input type="number" class="form-control form-control-sm" [formControlName]="'folioNo'" appAutoFocus />
         </div>
       </form>
     </div>
@@ -17,20 +12,10 @@
       <div class="form-group">
         <label>Enter From Date</label>
         <div class="input-group">
-          <input
-            class="form-control form-control-sm text-primary"
-            name="dp"
-            ngbDatepicker
-            #d="ngbDatepicker"
-            [(ngModel)]="startDate"
-            (dateSelect)="onStartDateSelect($event)"
-          />
+          <input class="form-control form-control-sm text-primary" name="dp" ngbDatepicker #d="ngbDatepicker"
+            [(ngModel)]="startDate" (dateSelect)="onStartDateSelect($event)" />
           <div class="input-group-append align-items-center">
-            <i
-              class="fa fa-calendar pointer cal"
-              aria-hidden="true"
-              (click)="d.toggle()"
-            ></i>
+            <i class="fa fa-calendar pointer cal" aria-hidden="true" (click)="d.toggle()"></i>
             <!-- <span class="input-group-text fa fa-calendar" (click)="d.toggle()"></span> -->
           </div>
         </div>
@@ -40,21 +25,10 @@
       <div class="form-group">
         <label>Enter To Date</label>
         <div class="input-group">
-          <input
-            class="form-control form-control-sm text-primary"
-            name="dp"
-            ngbDatepicker
-            [minDate]="startDate"
-            #d1="ngbDatepicker"
-            [(ngModel)]="endDate"
-            (dateSelect)="onEndDateSelect($event)"
-          />
+          <input class="form-control form-control-sm text-primary" name="dp" ngbDatepicker [minDate]="startDate"
+            #d1="ngbDatepicker" [(ngModel)]="endDate" (dateSelect)="onEndDateSelect($event)" />
           <div class="input-group-append align-items-center">
-            <i
-              class="fa fa-calendar pointer cal"
-              aria-hidden="true"
-              (click)="d1.toggle()"
-            ></i>
+            <i class="fa fa-calendar pointer cal" aria-hidden="true" (click)="d1.toggle()"></i>
           </div>
         </div>
       </div>
@@ -65,31 +39,16 @@
       </button>
     </div>
   </div>
-  <div
-    class="row"
-    *ngIf="filteredSipData && filteredSipData.length > 0; else noDataFoundBlock"
-  >
-    <div
-      [ngClass]="{
+  <div class="row" *ngIf="filteredSipData && filteredSipData.length > 0; else noDataFoundBlock">
+    <div [ngClass]="{
         'col-8': folioForm.get('folioNo')?.value,
         col: !folioForm.get('folioNo')?.value
-      }"
-    >
-      <app-prime-table
-        [sipDataToShow]="filteredSipData"
-        [colHeaderMapArray]="colHeaderMapArray"
-      ></app-prime-table>
+      }">
+      <app-prime-table [sipDataToShow]="filteredSipData" [colHeaderMapArray]="colHeaderMapArray"></app-prime-table>
     </div>
     <div class="col-4" *ngIf="folioForm.get('folioNo')?.value">
-      <app-chart
-        [chartOptions]="chartOptions"
-        [chartType]="chartType"
-        [chartLegend]="chartLegend"
-        [chartLabels]="chartLabel"
-        [chartData]="chartData"
-        [chartColor]="chartColor"
-        [chartPlugins]="chartPlugins"
-      >
+      <app-chart [chartOptions]="chartOptions" [chartType]="chartType" [chartLegend]="chartLegend"
+        [chartLabels]="chartLabel" [chartData]="chartData" [chartColor]="chartColor" [chartPlugins]="chartPlugins">
       </app-chart>
     </div>
   </div>
