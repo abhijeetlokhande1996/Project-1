@@ -140,11 +140,19 @@
           </div>
         </div>
         <div class="form-group">
-          <label>Enter Installment Amount</label>
+          <label>Enter Amount</label>
+          <input type="number" class="form-control" [formControlName]="'amt'" />
+        </div>
+        <div class="form-group">
+          <label>Enter NAV</label>
+          <input type="number" class="form-control" [formControlName]="'nav'" />
+        </div>
+        <div class="form-group">
+          <label>Units</label>
           <input
             type="number"
             class="form-control"
-            [formControlName]="'installmentAmt'"
+            [formControlName]="'units'"
           />
         </div>
         <button

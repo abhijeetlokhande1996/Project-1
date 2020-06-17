@@ -29,7 +29,8 @@ import {
 import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { firebaseConfig } from "../environments/environment";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
-import { KeysPipe } from './pipes/keys.pipe';
+import { KeysPipe } from "./pipes/keys.pipe";
+import { ProgressSpinnerModule } from "primeng/progressspinner";
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { KeysPipe } from './pipes/keys.pipe';
     PaginatorModule,
     CalendarModule,
     NgbModule,
+    ProgressSpinnerModule,
   ],
   providers: [AngularFireDatabase],
   bootstrap: [AppComponent],

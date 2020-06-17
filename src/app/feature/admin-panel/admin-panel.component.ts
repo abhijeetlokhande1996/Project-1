@@ -25,6 +25,7 @@ export class AdminPanelComponent implements OnInit {
 
   mFundAndSchemeMapping = {};
   schemeNameArr: Array<string>;
+  selectedCollection: string;
 
   constructor(private navModelService: NavDataService) {}
 
@@ -90,7 +91,11 @@ export class AdminPanelComponent implements OnInit {
         Validators.required,
       ]),
       mFundFamily: new FormControl(null, [Validators.required]),
-      installmentAmt: new FormControl(null, [Validators.required]),
+      amt: new FormControl(null, [Validators.required]),
+      nav: new FormControl(null, [Validators.required]),
+      units: new FormControl({ value: null, disabled: true }, [
+        Validators.required,
+      ]),
     });
     this.triggerValueChanges();
   }
@@ -116,6 +121,17 @@ export class AdminPanelComponent implements OnInit {
         this.schemeForm.get("schemeName").setValue(null);
         this.schemeForm.get("schemeCode").setValue(null);
       });
+
+    this.schemeForm.get("amt").valueChanges.subscribe((amt) => {
+      const nav = this.schemeForm.get("nav").value;
+      const units = this.calculatedUnits(amt, nav);
+      this.schemeForm.get("units").setValue(units);
+    });
+    this.schemeForm.get("nav").valueChanges.subscribe((nav) => {
+      const amt = this.schemeForm.get("amt").value;
+      const units = this.calculatedUnits(amt, nav);
+      this.schemeForm.get("units").setValue(units);
+    });
   }
   onPwdSubmit() {
     const pwd = this.passwordForm.get("password").value;
@@ -130,5 +146,14 @@ export class AdminPanelComponent implements OnInit {
   }
   onSchemeFormSubmit() {
     console.log(this.schemeForm.getRawValue());
+    this.selectedCollection = this.schemeForm.get("collection").value;
+  }
+  calculatedUnits(amt: number, nav: number) {
+    let units = null;
+    if (amt && nav) {
+      units = amt / nav;
+      units = Math.round(units * 10) / 10;
+    }
+    return units;
   }
 }
