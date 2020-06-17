@@ -9,6 +9,7 @@ import { NavDataService } from "./services/nav-data.service";
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnInit {
+  isNavDataLoaded = false;
   constructor(
     private dbService: DatabaseService,
     private navDataService: NavDataService
@@ -40,8 +41,18 @@ export class AppComponent implements OnInit {
           return arrToReturn;
         })
       )
-      .subscribe((resp: Array<NavModel>) => {
-        this.navDataService.setNavData(resp);
-      });
+      .subscribe(
+        (resp: Array<NavModel>) => {
+          this.navDataService.setNavData(resp);
+        },
+        (err) => {
+          console.error(
+            "Unable to fetch current nav data, check your internet conection"
+          );
+        },
+        () => {
+          this.isNavDataLoaded = true;
+        }
+      );
   }
 }

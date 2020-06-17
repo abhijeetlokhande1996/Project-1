@@ -1,2 +1,7 @@
-<app-top-nav-bar></app-top-nav-bar>
-<router-outlet></router-outlet>
+<p-progressSpinner
+  *ngIf="!isNavDataLoaded"
+  animationDuration=".5s"
+></p-progressSpinner>
+
+<app-top-nav-bar *ngIf="isNavDataLoaded"></app-top-nav-bar>
+<router-outlet *ngIf="isNavDataLoaded"></router-outlet>
