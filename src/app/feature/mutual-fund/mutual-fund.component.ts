@@ -108,7 +108,6 @@ export class MutualFundComponent implements OnInit {
       let data = users.map((item) => {
         return item.payload.doc.data();
       });
-      console.log(data);
     });
   }
 
@@ -150,12 +149,11 @@ export class MutualFundComponent implements OnInit {
     data = this.getDeepCopy(data);
     const tcPipe = new TitleCasePipe();
     const cp = new CurrencyPipe("en");
-    const dp = new DecimalPipe("en");
     const datePipe = new DatePipe("en");
     for (const item of data) {
       item["clientName"] = tcPipe.transform(item["clientName"]);
       item["regDate"] = datePipe.transform(item["regDate"], "dd/MM/yyyy");
-      item["folioNo"] = dp.transform(item["folioNo"]);
+      item["folioNo"] = item["folioNo"];
       item["schemeName"] = tcPipe.transform(item["schemeName"]);
       item["freqType"] = tcPipe.transform(item["freqType"]);
       item["startDate"] = datePipe.transform(item["startDate"], "dd/MM/yyyy");
