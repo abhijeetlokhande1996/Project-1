@@ -7,6 +7,7 @@ import { AngularFirestore } from "@angular/fire/firestore";
 import { IMutualFund } from "../interfaces/IMutualFund.interface";
 import { IClient } from "../interfaces/IClient.interface";
 import { take } from "rxjs/operators";
+import { ToastrService } from "ngx-toastr";
 
 @Injectable({
   providedIn: "root",
@@ -52,13 +53,43 @@ export class DatabaseService {
    * @param {IClient} client Client info
    * TODO: Add (client: IClient) signature in method 
    */
-  addClient = async () => {
+  addClient = () => {
     const client: IClient = {
-      name: "Bob James",
-      folioNo: 103,
+      name: "Warren Buffet",
+      folioNo: 105,
       isActive: true
     }
-    const users = await this.firestore.collection("clients", ref => ref.where('folioNo', '==', client.folioNo)).get();
+    return new Promise((resolve, reject) => {
+      const user = this.firestore.collection("clients", ref => ref.where('folioNo', '==', client.folioNo)).snapshotChanges();
+      console.log('user call done');
+      const result = user.subscribe(res => {
+        console.log('into user subscription');
+        let data = res.map((item) => {
+          return item.payload.doc.data();
+        });
+        if (data.length > 0) {
+          console.log('into if', data);
+          resolve({
+            status: false,
+            data: 'Already exists'
+          });
+        } else {
+          const user = this.firestore.collection('clients').add(client);
+          const id = user.then(res => {
+            console.log('else', res.id, res)
+            resolve({
+              status: true,
+              data: id
+            });
+          });
+        }
+      });
+    }).catch(err => {
+      return status;
+    })
+
+
+    // users.subscribe(res => console.log(res.));
 
     // users.pipe()
     // users.subscribe(res => {

@@ -41,7 +41,7 @@ export class MutualFundComponent implements OnInit {
   colHeaderMapArray = [];
   startDate = null;
   endDate = null;
-  constructor(private dbService: DatabaseService) {}
+  constructor(private dbService: DatabaseService) { }
 
   ngOnInit(): void {
     this.colHeaderMapArray = [
@@ -99,7 +99,10 @@ export class MutualFundComponent implements OnInit {
         return item.payload.doc.data();
       });
     });
-    this.dbService.addClient();
+    console.log('before component call')
+    this.dbService.addClient().then(res => {
+      console.log('in .then ', res);
+    });
   }
 
   getFlattenData(dataToFlat: Array<SipInterface>) {
