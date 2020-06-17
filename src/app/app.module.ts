@@ -30,6 +30,7 @@ import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { firebaseConfig } from "../environments/environment";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { KeysPipe } from './pipes/keys.pipe';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { KeysPipe } from './pipes/keys.pipe';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    ToastrModule.forRoot(),
     FormsModule,
     HttpClientModule,
     AppRoutingModule,
@@ -61,4 +63,4 @@ import { KeysPipe } from './pipes/keys.pipe';
   providers: [AngularFireDatabase],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
