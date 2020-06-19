@@ -93,7 +93,7 @@ export class MutualFundComponent implements OnInit {
       .pipe(take(1))
       .subscribe((resp) => {
         this.mfData = resp;
-
+        console.log(JSON.parse(JSON.stringify(this.mfData)));
         const fData: Array<SipInterface> = this.distillMFData(null);
 
         this.filteredMfData = this.getFlattenData(fData);
@@ -274,7 +274,7 @@ export class MutualFundComponent implements OnInit {
           new Date(item.startDate),
           "longDate"
         ),
-        totalAmtInvested: new DecimalPipe("en").transform(item.installmentAmt),
+        totalAmtInvested: new DecimalPipe("en").transform(item.amt),
         currentValue: nav,
       };
       dataToSend.push(objToPush);

@@ -37,7 +37,7 @@ export class MonthlySipComponent implements OnInit {
   colHeaderMapArray = [];
   startDate = null;
   endDate = null;
-  constructor(private dbService: DatabaseService) { }
+  constructor(private dbService: DatabaseService) {}
 
   ngOnInit(): void {
     this.colHeaderMapArray = [
@@ -48,7 +48,7 @@ export class MonthlySipComponent implements OnInit {
       ["freqType", "Frequency Type"],
       ["startDate", "Start Date"],
 
-      ["installmentAmt", "Installment Amount"],
+      ["amt", "Installment Amount"],
     ];
 
     this.chartType = "doughnut";
@@ -112,7 +112,7 @@ export class MonthlySipComponent implements OnInit {
           objToPush["schemeName"] = el["schemeName"];
           objToPush["freqType"] = el["freqType"];
           objToPush["startDate"] = el["startDate"];
-          objToPush["installmentAmt"] = el["installmentAmt"];
+          objToPush["amt"] = el["amt"];
           result.push(this.getDeepCopy(objToPush));
         }
       }
@@ -144,7 +144,7 @@ export class MonthlySipComponent implements OnInit {
       item["freqType"] = tcPipe.transform(item["freqType"]);
       item["startDate"] = datePipe.transform(item["startDate"], "dd/MM/yyyy");
       item["endDate"] = datePipe.transform(item["endDate"], "dd/MM/yyyy");
-      item["installmentAmt"] = cp.transform(item["installmentAmt"], "INR");
+      item["amt"] = cp.transform(item["amt"], "INR");
     }
     return data;
   }
@@ -160,7 +160,7 @@ export class MonthlySipComponent implements OnInit {
         this.chartLabel.push(item["schemeName"].toUpperCase());
       }
 
-      this.chartData.push(item["installmentAmt"]);
+      this.chartData.push(item["amt"]);
       while (true) {
         const colorHexCode = this.getRandomColor();
         if (this.chartColor[0]["backgroundColor"].indexOf(colorHexCode) == -1) {
@@ -231,7 +231,7 @@ export class MonthlySipComponent implements OnInit {
       },
 
       {
-        id: "installmentAmt",
+        id: "amt",
         header: "Installment Amount",
         width: 100,
         valign: "center",
