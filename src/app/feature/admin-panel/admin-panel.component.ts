@@ -28,6 +28,7 @@ export class AdminPanelComponent implements OnInit {
   mFundAndSchemeMapping = {};
 
   selectedCollection: string;
+  isLoading: boolean = false;
 
   constructor(
     private navModelService: NavDataService,
@@ -84,14 +85,18 @@ export class AdminPanelComponent implements OnInit {
   }
   getSchemeDataToInsert(schemeData: IAddScheme) {
     console.log("schemeData ", schemeData);
+    this.dbService.addSip();
   }
   getClientToInsert(client: IClient) {
+    this.isLoading = true;
     this.dbService
       .addClient(client)
       .then((res) => {
         if (res["id"]) {
+          this.isLoading = false;
           this.toastrService.success(res["message"]);
         } else {
+          this.isLoading = false;
           this.toastrService.error(res["message"]);
         }
       })
