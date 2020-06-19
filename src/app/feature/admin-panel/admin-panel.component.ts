@@ -13,6 +13,7 @@ import { ToastRef, ToastrService } from "ngx-toastr";
 import { IClient } from "../../interfaces/IClient.interface";
 import { IContext } from "mocha";
 import { IAddScheme } from "../../interfaces/IAddScheme.interface";
+import { AngularFirestore } from "@angular/fire/firestore";
 @Component({
   selector: "app-admin-panel",
   templateUrl: "./admin-panel.component.html",
@@ -28,6 +29,7 @@ export class AdminPanelComponent implements OnInit {
   mFundAndSchemeMapping = {};
 
   selectedCollection: string;
+  isLoading: boolean = false;
 
   constructor(
     private navModelService: NavDataService,
@@ -37,6 +39,7 @@ export class AdminPanelComponent implements OnInit {
 
   ngOnInit(): void {
     this.isAuthenticated = false;
+    // this.dbService.addSip().then((res) => console.log(res));
   }
   getNavData() {
     this.navModelService
@@ -84,14 +87,28 @@ export class AdminPanelComponent implements OnInit {
   }
   getSchemeDataToInsert(schemeData: IAddScheme) {
     console.log("schemeData ", schemeData);
+    this.isLoading = true;
+    const data = { ...schemeData };
+    delete data.folioNumber;
+    this.dbService
+      .addSchemes(schemeData.folioNumber, "sips", data)
+      .then((res: { status: boolean; message: string; data?: any }) => {
+        this.isLoading = false;
+        res.status
+          ? this.toastrService.success(res.message)
+          : this.toastrService.error(res.message);
+      });
   }
   getClientToInsert(client: IClient) {
+    this.isLoading = true;
     this.dbService
       .addClient(client)
       .then((res) => {
         if (res["id"]) {
+          this.isLoading = false;
           this.toastrService.success(res["message"]);
         } else {
+          this.isLoading = false;
           this.toastrService.error(res["message"]);
         }
       })
