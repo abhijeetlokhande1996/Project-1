@@ -126,54 +126,59 @@ export class DatabaseService {
    * @param sip Give SIP information to be added
    * TODO: Pass a SIP info object as mentioned in demo
    */
-  addSip = () => {
-    const folioNo = 152;
-    const type = "sips";
-    const schema = {
-      schemeName: "test",
-      startDate: "test",
-      installmentAmt: 111,
-      endDate: "test",
-      freqType: "monthly",
-    };
-    // Check if valid folio number
+  addSchemes = (folioNo: number, type: string, schemeDetails: any) => {
+    let clientName: string = "";
     return new Promise((resolve, reject) => {
-      const user = this.isExists("clients", folioNo);
-      user.pipe(take(1)).subscribe((res) => {
-        let data = res.map((item) => {
-          return item.payload.doc.data();
-        });
-        console.log("user data clients", data);
-        if (data.length > 0) {
-          this.isExists(type, folioNo).subscribe((sip) => {
-            console.log("isExist response", res);
-            this.firestore
-              .collection("sips")
-              .doc(res[0].payload.doc.id)
-              .delete();
-
-            const obj = sip.map((details) => {
-              return details.payload.doc.data();
+      this.isExists("clients", folioNo)
+        .pipe(take(1))
+        .subscribe((res) => {
+          if (
+            res[0]?.payload?.doc?.data() &&
+            Object.keys(res[0].payload.doc.data()).length > 0
+          ) {
+            clientName = res[0].payload.doc.data()["name"];
+            this.isExists(type, folioNo)
+              .pipe(take(1))
+              .subscribe((res) => {
+                if (
+                  res[0]?.payload?.doc?.data() &&
+                  Object.keys(res[0].payload.doc.data()).length > 0
+                ) {
+                  const body = res[0].payload.doc.data();
+                  body["schemes"].push(schemeDetails);
+                  this.firestore
+                    .doc("sips/" + res[0].payload.doc.id)
+                    .update(body)
+                    .then((res) => {
+                      resolve({
+                        status: true,
+                        message: `${type} Updated successfully!`,
+                      });
+                    });
+                } else {
+                  this.firestore
+                    .collection("sips")
+                    .add({
+                      folioNo: folioNo,
+                      name: clientName,
+                      schemes: [schemeDetails],
+                    })
+                    .then((res) => {
+                      resolve({
+                        status: true,
+                        message: `${type} added successfully!`,
+                      });
+                    });
+                }
+              });
+          } else {
+            resolve({
+              status: false,
+              message:
+                "No user present! Add the client first then add any scheme",
             });
-            obj[0]["schemes"].push(schema);
-            this.firestore.collection("sip").add(obj[0]);
-          });
-        } else {
-        }
-      });
+          }
+        });
     });
-    // check if user already available in collection
-    // - If yes
-    // Update
-
-    // - Else
-    // create new
   };
-
-  /**
-   * Adds a Mutual Fund to database
-   * @param mf Give MF information to be added
-   * TODO: Pass a MF info object as mentioned in demo
-   */
-  addMF = () => {};
 }

@@ -1,9 +1,9 @@
-<div class="container-fluid">
-  <div *ngIf="isLoading" class="row justify-content-center spinner-size">
-    <div class="spinner-border text-info" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
+<div *ngIf="isLoading" class="row justify-content-center spinner-size overlay">
+  <div class="spinner-border text-dark spinner" role="status">
+    <span class="sr-only">Loading...</span>
   </div>
+</div>
+<div class="container-fluid">
   <app-auth *ngIf="!isAuthenticated" (pwdEmitter)="getPwd($event)"></app-auth>
   <div class="row mt-5 mx-auto" *ngIf="isAuthenticated">
     <div class="col-4">

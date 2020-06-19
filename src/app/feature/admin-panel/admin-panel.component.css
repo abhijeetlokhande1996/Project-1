@@ -1,0 +1,12 @@
+.overlay {
+  height: 100% !important;
+  width: 100vw;
+  position: fixed;
+  z-index: 1000;
+  background: #11349617;
+}
+
+.spinner {
+  position: absolute;
+  top: 33%;
+}
