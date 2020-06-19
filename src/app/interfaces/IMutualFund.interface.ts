@@ -12,7 +12,7 @@ export interface IFMutualFund {
   freqType: string;
   startDate: Date | string;
   endDate: Date | string;
-  installmentAmt: number | string;
+  amt: number | string;
   clientName: string;
   regDate: Date | string;
   folioNo: number | string;

@@ -20,5 +20,5 @@ export interface IFSipInterface {
   freqType: string;
   startDate: Date | string;
   endDate: Date | string;
-  installmentAmt: number | string;
+  amt: number | string;
 }
