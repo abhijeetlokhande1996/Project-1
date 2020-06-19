@@ -18,6 +18,7 @@ src/**/*.js
 /.idea
 .project
 .classpath
+.pdf
 .c9/
 *.launch
 .settings/

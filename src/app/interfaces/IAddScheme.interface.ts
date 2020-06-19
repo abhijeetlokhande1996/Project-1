@@ -8,4 +8,5 @@ export interface IAddScheme {
   nav: number;
   mFundFamily: string;
   units: string;
+  collection?: string;
 }

@@ -92,7 +92,6 @@ export class AddSchemeComponent implements OnInit {
     const date = objToSend["startDate"]["day"];
     objToSend["startDate"] = new Date(year, month, date).toString();
 
-    delete objToSend["collection"];
     this.schemeDataEventEmitter.emit(objToSend);
   }
 }
