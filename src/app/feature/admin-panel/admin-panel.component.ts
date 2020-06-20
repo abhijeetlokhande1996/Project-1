@@ -14,6 +14,7 @@ import { IClient } from "../../interfaces/IClient.interface";
 import { IContext } from "mocha";
 import { IAddScheme } from "../../interfaces/IAddScheme.interface";
 import { AngularFirestore } from "@angular/fire/firestore";
+import { IAddEquity } from "../../interfaces/IAddEquity.interface";
 @Component({
   selector: "app-admin-panel",
   templateUrl: "./admin-panel.component.html",
@@ -125,6 +126,20 @@ export class AdminPanelComponent implements OnInit {
         this.toastrService.error(
           "Something went wrong! Couldn't add the client. Try again!"
         );
+      });
+  }
+  getEqDataToInsert(obj: IAddEquity) {
+    this.isLoading = true;
+    this.dbService
+      .addEquity({ ...obj }, "equities")
+      .then((res) => {
+        this.toastrService.success(res["message"]);
+      })
+      .catch((res) => {
+        this.toastrService.error(res["message"]);
+      })
+      .finally(() => {
+        this.isLoading = false;
       });
   }
 }

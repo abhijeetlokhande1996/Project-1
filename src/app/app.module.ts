@@ -29,12 +29,13 @@ import {
 import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { firebaseConfig } from "../environments/environment";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
-import { ToastrModule } from 'ngx-toastr';
+import { ToastrModule } from "ngx-toastr";
 import { KeysPipe } from "./pipes/keys.pipe";
 import { ProgressSpinnerModule } from "primeng/progressspinner";
-import { AuthComponent } from './feature/admin-panel/auth/auth.component';
-import { AddClientComponent } from './feature/admin-panel/add-client/add-client.component';
-import { AddSchemeComponent } from './feature/admin-panel/add-scheme/add-scheme.component';
+import { AuthComponent } from "./feature/admin-panel/auth/auth.component";
+import { AddClientComponent } from "./feature/admin-panel/add-client/add-client.component";
+import { AddSchemeComponent } from "./feature/admin-panel/add-scheme/add-scheme.component";
+import { AddEquityComponent } from "./feature/admin-panel/add-equity/add-equity.component";
 
 @NgModule({
   declarations: [
@@ -48,14 +49,15 @@ import { AddSchemeComponent } from './feature/admin-panel/add-scheme/add-scheme.
     AuthComponent,
     AddClientComponent,
     AddSchemeComponent,
+    AddEquityComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot({
       timeOut: 5000,
-      positionClass: 'toast-top-right',
-      preventDuplicates: true
+      positionClass: "toast-top-right",
+      preventDuplicates: true,
     }),
     FormsModule,
     HttpClientModule,
@@ -75,4 +77,4 @@ import { AddSchemeComponent } from './feature/admin-panel/add-scheme/add-scheme.
   providers: [AngularFireDatabase],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

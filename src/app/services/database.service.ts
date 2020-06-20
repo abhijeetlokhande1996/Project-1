@@ -8,6 +8,7 @@ import { IMutualFund } from "../interfaces/IMutualFund.interface";
 import { IClient } from "../interfaces/IClient.interface";
 import { take } from "rxjs/operators";
 import { ToastrService } from "ngx-toastr";
+import { IAddEquity } from "../interfaces/IAddEquity.interface";
 
 @Injectable({
   providedIn: "root",
@@ -157,6 +158,26 @@ export class DatabaseService {
                 "No user present! Add the client first then add any scheme",
             });
           }
+        });
+    });
+  };
+
+  addEquity = (data: IAddEquity, type: string) => {
+    return new Promise((resolve, reject) => {
+      this.firestore
+        .collection(type)
+        .add(data)
+        .then((res) => {
+          resolve({
+            status: true,
+            message: `${type} added successfully!`,
+          });
+        })
+        .catch(() => {
+          reject({
+            status: false,
+            message: `unable to add ${type} !`,
+          });
         });
     });
   };
