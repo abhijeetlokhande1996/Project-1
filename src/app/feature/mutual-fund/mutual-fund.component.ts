@@ -93,7 +93,7 @@ export class MutualFundComponent implements OnInit {
       .pipe(take(1))
       .subscribe((resp) => {
         this.mfData = resp;
-        console.log(JSON.parse(JSON.stringify(this.mfData)));
+
         const fData: Array<SipInterface> = this.distillMFData(null);
 
         this.filteredMfData = this.getFlattenData(fData);
@@ -152,12 +152,12 @@ export class MutualFundComponent implements OnInit {
     const datePipe = new DatePipe("en");
     for (const item of data) {
       item["clientName"] = tcPipe.transform(item["clientName"]);
-      item["regDate"] = datePipe.transform(item["regDate"], "dd/MM/yyyy");
+      item["regDate"] = datePipe.transform(item["regDate"], "dd-MMM-yyyy");
       item["folioNo"] = item["folioNo"];
       item["schemeName"] = tcPipe.transform(item["schemeName"]);
       item["freqType"] = tcPipe.transform(item["freqType"]);
-      item["startDate"] = datePipe.transform(item["startDate"], "dd/MM/yyyy");
-      item["endDate"] = datePipe.transform(item["endDate"], "dd/MM/yyyy");
+      item["startDate"] = datePipe.transform(item["startDate"], "dd-MMM-yyyy");
+      item["endDate"] = datePipe.transform(item["endDate"], "dd-MMM-yyyy");
       item["amt"] = cp.transform(item["amt"], "INR");
     }
     return data;
