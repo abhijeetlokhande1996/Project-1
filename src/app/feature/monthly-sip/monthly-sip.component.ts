@@ -276,13 +276,7 @@ export class MonthlySipComponent implements OnInit {
         height: 100,
         valign: "center",
       },
-      {
-        id: "regDate",
-        header: "Registration Date",
-        width: 100,
-        valign: "center",
-        align: "center",
-      },
+
       {
         id: "folioNo",
         header: "Folio Number",
@@ -350,11 +344,13 @@ export class MonthlySipComponent implements OnInit {
       dataToSend.push(objToPush);
     }
     const status = pdfMaker(columns, dataToSend, "monthly-sip-statement.pdf");
-    if (status) {
-      alert("Success");
-    } else {
-      alert("Failure");
-    }
+    setTimeout(() => {
+      if (status) {
+        alert("Success");
+      } else {
+        alert("Failure");
+      }
+    }, 500);
   }
 
   onStartDateSelect(startDate) {
