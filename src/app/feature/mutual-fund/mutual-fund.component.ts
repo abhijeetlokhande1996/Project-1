@@ -1,6 +1,15 @@
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { DatabaseService } from "./../../services/database.service";
-import { take, delay, distinctUntilChanged } from "rxjs/operators";
+import {
+  take,
+  delay,
+  distinctUntilChanged,
+  finalize,
+  mergeMap,
+  concatMap,
+  switchMap,
+  map,
+} from "rxjs/operators";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { SipInterface, IFSipInterface } from "../../interfaces/sip.interface";
 import { ChartType, ChartOptions } from "chart.js";
@@ -21,6 +30,7 @@ import {
 } from "../../interfaces/IMutualFund.interface";
 import { NavModel } from "../../models/nav.model";
 import { NavDataService } from "../../services/nav-data.service";
+import { from, merge, of } from "rxjs";
 
 @Component({
   selector: "app-monthly-sip",
@@ -89,17 +99,34 @@ export class MutualFundComponent implements OnInit {
         }
       });
     this.dbService
-      .getSipData()
+      .getMFs()
       .pipe(take(1))
       .subscribe((resp) => {
-        this.mfData = resp;
-        console.log(JSON.parse(JSON.stringify(this.mfData)));
-        const fData: Array<SipInterface> = this.distillMFData(null);
+        const fNumbersArr = this.getAllFolioNumbers(this.getDeepCopy(resp));
+        console.log(fNumbersArr);
+        console.log(resp);
+        this.getAllClientDetails(this.getDeepCopy(fNumbersArr)).then(
+          (data: Array<{}>) => {
+            for (const el of data) {
+              if (el["isActive"]) {
+                const fNumber = el["folioNo"];
+                const clientName = el["name"];
+                let item = resp.filter((item) => item["folioNo"] == fNumber)[0];
+                item["clientName"] = clientName;
+                this.mfData.push(item);
+              }
+            }
 
-        this.filteredMfData = this.getFlattenData(fData);
-        this.unTransFilteredMfData = this.getDeepCopy(this.filteredMfData);
-        this.generateChartData(this.filteredMfData);
-        this.filteredMfData = this.transformFilteredData(this.filteredMfData);
+            const fData: Array<SipInterface> = this.distillMFData(null);
+
+            this.filteredMfData = this.getFlattenData(fData);
+            this.unTransFilteredMfData = this.getDeepCopy(this.filteredMfData);
+            this.generateChartData(this.filteredMfData);
+            this.filteredMfData = this.transformFilteredData(
+              this.filteredMfData
+            );
+          }
+        );
       });
     this.navDataService.getNavData().subscribe((resp: Array<NavModel>) => {
       this.navData = resp;
@@ -111,6 +138,48 @@ export class MutualFundComponent implements OnInit {
     });
   }
 
+  getAllClientDetails(fNumbersArr: Array<number>) {
+    return new Promise((resolve, reject) => {
+      let count = 0;
+      const dataToReturn = [];
+      from(fNumbersArr)
+        .pipe(
+          mergeMap((f) => {
+            return this.dbService.isExists("clients", f).pipe(
+              map((d) => {
+                count++;
+
+                return d;
+              })
+            );
+          })
+        )
+        .subscribe(
+          (resp) => {
+            try {
+              const d = resp[0].payload.doc.data();
+              dataToReturn.push(JSON.parse(JSON.stringify(d)));
+            } catch {
+              console.log("Error in fetching some records");
+            } finally {
+              if (count == fNumbersArr.length) {
+                resolve(dataToReturn);
+              }
+            }
+          },
+          (err) => {
+            console.error(err);
+          }
+        );
+    });
+  }
+  getAllFolioNumbers(mData: Array<IMutualFund>) {
+    const fNumbers: Array<number> = [];
+    for (const item of mData) {
+      fNumbers.push(item.folioNo);
+    }
+    return fNumbers;
+  }
   getFlattenData(dataToFlat: Array<SipInterface>) {
     const result = [];
     for (const item of dataToFlat) {
@@ -152,12 +221,12 @@ export class MutualFundComponent implements OnInit {
     const datePipe = new DatePipe("en");
     for (const item of data) {
       item["clientName"] = tcPipe.transform(item["clientName"]);
-      item["regDate"] = datePipe.transform(item["regDate"], "dd/MM/yyyy");
+      item["regDate"] = datePipe.transform(item["regDate"], "dd-MMM-yyyy");
       item["folioNo"] = item["folioNo"];
       item["schemeName"] = tcPipe.transform(item["schemeName"]);
       item["freqType"] = tcPipe.transform(item["freqType"]);
-      item["startDate"] = datePipe.transform(item["startDate"], "dd/MM/yyyy");
-      item["endDate"] = datePipe.transform(item["endDate"], "dd/MM/yyyy");
+      item["startDate"] = datePipe.transform(item["startDate"], "dd-MMM-yyyy");
+      item["endDate"] = datePipe.transform(item["endDate"], "dd-MMM-yyyy");
       item["amt"] = cp.transform(item["amt"], "INR");
     }
     return data;
