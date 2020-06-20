@@ -23,6 +23,8 @@ import {
   JsonPipe,
 } from "@angular/common";
 import { from } from "rxjs";
+import { NavModel } from "../../models/nav.model";
+import { NavDataService } from "../../services/nav-data.service";
 
 @Component({
   selector: "app-monthly-sip",
@@ -45,7 +47,11 @@ export class MonthlySipComponent implements OnInit {
   colHeaderMapArray = [];
   startDate = null;
   endDate = null;
-  constructor(private dbService: DatabaseService) {}
+  navData: Array<NavModel>;
+  constructor(
+    private dbService: DatabaseService,
+    private navDataService: NavDataService
+  ) {}
 
   ngOnInit(): void {
     this.colHeaderMapArray = [
@@ -91,7 +97,6 @@ export class MonthlySipComponent implements OnInit {
       .getSipData()
       .pipe(take(1))
       .subscribe((resp) => {
-        console.log(resp);
         const fNumbersArr = this.getAllFolioNumbers(this.getDeepCopy(resp));
 
         this.getAllClientDetails(this.getDeepCopy(fNumbersArr)).then(
@@ -130,6 +135,10 @@ export class MonthlySipComponent implements OnInit {
         return item.payload.doc.data();
       });
       console.log(data);
+    });
+
+    this.navDataService.getNavData().subscribe((resp: Array<NavModel>) => {
+      this.navData = resp;
     });
   }
   getAllClientDetails(fNumbersArr: Array<number>) {
@@ -259,7 +268,7 @@ export class MonthlySipComponent implements OnInit {
   }
 
   onClickPrint() {
-    const colums = [
+    const columns = [
       {
         id: "clientName",
         header: "Name",
@@ -290,29 +299,58 @@ export class MonthlySipComponent implements OnInit {
         align: "center",
       },
       {
-        id: "freqType",
-        header: "Frequency Type",
-        width: 100,
-        valign: "center",
-        align: "center",
-      },
-      {
         id: "startDate",
         header: "Start Date",
         width: 100,
         valign: "center",
         align: "center",
       },
-
       {
-        id: "amt",
-        header: "Installment Amount",
+        id: "totalAmtInvested",
+        header: "Total Amount Invested",
+        width: 100,
+        valign: "center",
+        align: "center",
+      },
+      {
+        id: "currentValue",
+        header: "Current Value",
         width: 100,
         valign: "center",
         align: "center",
       },
     ];
-    const status = pdfMaker(colums, this.filteredSipData, "monthly-sip.pdf");
+    console.log(JSON.parse(JSON.stringify(this.unTransfilteredSipData)));
+    const dataToSend: Array<{}> = [];
+    for (const item of this.unTransfilteredSipData) {
+      let nav = 0;
+      const idx = this.navData.findIndex(
+        (el: NavModel) =>
+          el.schemeName.toLowerCase() == item.schemeName.toLowerCase()
+      );
+      if (idx >= 0) {
+        nav = this.navData[idx].netAssetValue;
+      }
+
+      if (!item.regDate) {
+        item.regDate = new Date().toString();
+      }
+
+      const objToPush = {
+        clientName: item.clientName.toUpperCase(),
+        regDate: new DatePipe("en").transform(item.regDate, "longDate"),
+        folioNo: item.folioNo,
+        schemeName: item.schemeName.toUpperCase(),
+        startDate: new DatePipe("en").transform(
+          new Date(item.startDate),
+          "longDate"
+        ),
+        totalAmtInvested: new DecimalPipe("en").transform(item.amt),
+        currentValue: nav,
+      };
+      dataToSend.push(objToPush);
+    }
+    const status = pdfMaker(columns, dataToSend, "mutual-fund-statement.pdf");
     if (status) {
       alert("Success");
     } else {
