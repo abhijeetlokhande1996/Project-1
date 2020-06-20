@@ -1,6 +1,4 @@
-import { NumberValueAccessor } from "@angular/forms";
-
-export interface IAddEquity {
+export interface IEquity {
   clientName: string;
   companyName: string;
   quantity: number;

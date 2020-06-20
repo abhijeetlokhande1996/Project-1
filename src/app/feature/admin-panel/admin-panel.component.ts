@@ -14,7 +14,7 @@ import { IClient } from "../../interfaces/IClient.interface";
 import { IContext } from "mocha";
 import { IAddScheme } from "../../interfaces/IAddScheme.interface";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { IAddEquity } from "../../interfaces/IAddEquity.interface";
+import { IEquity } from "../../interfaces/IEquity.interface";
 @Component({
   selector: "app-admin-panel",
   templateUrl: "./admin-panel.component.html",
@@ -128,7 +128,7 @@ export class AdminPanelComponent implements OnInit {
         );
       });
   }
-  getEqDataToInsert(obj: IAddEquity) {
+  getEqDataToInsert(obj: IEquity) {
     this.isLoading = true;
     this.dbService
       .addEquity({ ...obj }, "equities")

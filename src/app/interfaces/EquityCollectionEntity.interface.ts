@@ -6,6 +6,7 @@ export interface HoldingsEntity {
   clientName: string;
   companyName: string;
   quantity: number;
-  rate: number;
+  rate?: number;
   amount: number;
+  purchaseDate: Date | string;
 }
