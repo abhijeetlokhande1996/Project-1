@@ -110,7 +110,6 @@ export class DatabaseService {
           ) {
             clientName = res[0].payload.doc.data()["name"];
             if (res[0].payload.doc.data()["isActive"]) {
-              console.log("Active User");
               this.isExists(type, folioNo)
                 .pipe(take(1))
                 .subscribe((res) => {
@@ -121,7 +120,7 @@ export class DatabaseService {
                     const body = res[0].payload.doc.data();
                     body["schemes"].push(schemeDetails);
                     this.firestore
-                      .doc("sips/" + res[0].payload.doc.id)
+                      .doc(type + "/" + res[0].payload.doc.id)
                       .update(body)
                       .then((res) => {
                         resolve({
@@ -131,7 +130,7 @@ export class DatabaseService {
                       });
                   } else {
                     this.firestore
-                      .collection("sips")
+                      .collection(type)
                       .add({
                         folioNo: folioNo,
                         name: clientName,
