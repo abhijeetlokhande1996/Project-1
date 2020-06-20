@@ -63,7 +63,7 @@ export class MutualFundComponent implements OnInit {
   ngOnInit(): void {
     this.colHeaderMapArray = [
       ["clientName", "Name"],
-      ["regDate", "Registration Date"],
+
       ["folioNo", "Folio Number"],
       ["schemeName", "Scheme Name"],
       ["freqType", "Frequency Type"],
@@ -277,13 +277,7 @@ export class MutualFundComponent implements OnInit {
         height: 100,
         valign: "center",
       },
-      {
-        id: "regDate",
-        header: "Registration Date",
-        width: 100,
-        valign: "center",
-        align: "center",
-      },
+
       {
         id: "folioNo",
         header: "Folio Number",
@@ -334,10 +328,7 @@ export class MutualFundComponent implements OnInit {
 
       const objToPush = {
         clientName: item.clientName.toUpperCase(),
-        regDate: new DatePipe("en").transform(
-          new Date(item.regDate),
-          "longDate"
-        ),
+
         folioNo: item.folioNo,
         schemeName: item.schemeName.toUpperCase(),
         startDate: new DatePipe("en").transform(
