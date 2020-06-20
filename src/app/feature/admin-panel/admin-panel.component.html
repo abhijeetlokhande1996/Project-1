@@ -5,14 +5,22 @@
 </div>
 <div class="container-fluid">
   <app-auth *ngIf="!isAuthenticated" (pwdEmitter)="getPwd($event)"></app-auth>
-  <div class="row mt-5 mx-auto" *ngIf="isAuthenticated">
-    <div class="col-4">
-      <app-add-client (clientInfoEventEmitter)="getClientToInsert($event)"></app-add-client>
+  <div class="row p-5" *ngIf="isAuthenticated">
+    <div class="col-3">
+      <button class="btn btn-dark m-1 p-2 w-100" [ngClass]="{'disabled': selectedTemplate === 'add-client'}"
+        (click)="selectedTemplate = 'add-client'">Add a Client</button>
+      <button class="btn btn-dark m-1 p-2 w-100" [ngClass]="{'disabled': selectedTemplate === 'add-scheme'}"
+        (click)="selectedTemplate = 'add-scheme'">Add a Schema
+        client</button>
     </div>
-    <div class="col-2"></div>
-    <div class="col-6">
-      <app-add-scheme [mFundAndSchemeMapping]="mFundAndSchemeMapping" [navData]="navData"
-        (schemeDataEventEmitter)="getSchemeDataToInsert($event)"></app-add-scheme>
+    <div class="w-50 mx-auto">
+      <ng-container *ngIf="selectedTemplate==='add-client'">
+        <app-add-client (clientInfoEventEmitter)="getClientToInsert($event)"></app-add-client>
+      </ng-container>
+      <ng-container *ngIf="selectedTemplate==='add-scheme'">
+        <app-add-scheme [mFundAndSchemeMapping]="mFundAndSchemeMapping" [navData]="navData"
+          (schemeDataEventEmitter)="getSchemeDataToInsert($event)"></app-add-scheme>
+      </ng-container>
     </div>
   </div>
 </div>
