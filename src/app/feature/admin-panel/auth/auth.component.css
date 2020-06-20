@@ -1,0 +1,8 @@
+.center-block {
+  position: fixed;
+  top: 30%;
+  margin: 0 auto;
+  left: 33%;
+  padding: 5rem;
+  box-shadow: 1px 1px 10px 0px;
+}

@@ -1,5 +1,6 @@
 export interface IClient {
-    name: string;
-    folioNo: number;
-    isActive: true
+  name: string;
+  folioNo: number;
+  isActive: true;
+  regDate: string;
 }
