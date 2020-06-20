@@ -1,6 +1,6 @@
 export interface EquityCollectionEntity {
   folioNumber: number;
-  holdings?: (HoldingsEntity)[] | null;
+  holdings: (HoldingsEntity)[] ;
 }
 export interface HoldingsEntity {
   clientName: string;
