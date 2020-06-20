@@ -6,6 +6,7 @@ import {
   distinctUntilChanged,
   mergeMap,
   map,
+  filter,
 } from "rxjs/operators";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { SipInterface, IFSipInterface } from "../../interfaces/sip.interface";
@@ -87,6 +88,9 @@ export class MonthlySipComponent implements OnInit {
         } else {
           const fData: Array<SipInterface> = this.distillSipData(folioNo);
           this.filteredSipData = this.getFlattenData(fData);
+          this.unTransfilteredSipData = JSON.parse(
+            JSON.stringify(this.filteredSipData)
+          );
           this.generateChartData(this.filteredSipData);
           this.filteredSipData = this.transformFilteredData(
             this.filteredSipData
@@ -123,11 +127,6 @@ export class MonthlySipComponent implements OnInit {
             );
           }
         );
-        // this.sipData = resp;
-        // const fData: Array<SipInterface> = this.distillSipData(null);
-        // this.filteredSipData = this.getFlattenData(fData);
-        // this.generateChartData(this.filteredSipData);
-        // this.filteredSipData = this.transformFilteredData(this.filteredSipData);
       });
 
     this.dbService.getUsers().subscribe((users) => {
@@ -306,15 +305,15 @@ export class MonthlySipComponent implements OnInit {
         align: "center",
       },
       {
-        id: "totalAmtInvested",
-        header: "Total Amount Invested",
+        id: "currentValue",
+        header: "Current Value",
         width: 100,
         valign: "center",
         align: "center",
       },
       {
-        id: "currentValue",
-        header: "Current Value",
+        id: "amt",
+        header: "Amount Invested",
         width: 100,
         valign: "center",
         align: "center",
@@ -345,12 +344,12 @@ export class MonthlySipComponent implements OnInit {
           new Date(item.startDate),
           "longDate"
         ),
-        totalAmtInvested: new DecimalPipe("en").transform(item.amt),
+        amt: new DecimalPipe("en").transform(item.amt),
         currentValue: nav,
       };
       dataToSend.push(objToPush);
     }
-    const status = pdfMaker(columns, dataToSend, "mutual-fund-statement.pdf");
+    const status = pdfMaker(columns, dataToSend, "monthly-sip-statement.pdf");
     if (status) {
       alert("Success");
     } else {

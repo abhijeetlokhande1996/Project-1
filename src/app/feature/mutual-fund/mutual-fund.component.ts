@@ -320,6 +320,7 @@ export class MutualFundComponent implements OnInit {
         align: "center",
       },
     ];
+
     const dataToSend: Array<{}> = [];
     for (const item of this.unTransFilteredMfData) {
       let nav = 0;
