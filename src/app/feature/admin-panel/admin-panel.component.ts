@@ -86,10 +86,10 @@ export class AdminPanelComponent implements OnInit {
     }
   }
   getSchemeDataToInsert(schemeData: IAddScheme) {
-    console.log("schemeData ", schemeData);
     this.isLoading = true;
     const data = { ...schemeData };
     delete data.folioNumber;
+
     this.dbService
       .addSchemes(schemeData.folioNumber, "sips", data)
       .then((res: { status: boolean; message: string; data?: any }) => {
