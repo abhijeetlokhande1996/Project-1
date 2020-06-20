@@ -57,7 +57,7 @@ export class MonthlySipComponent implements OnInit {
   ngOnInit(): void {
     this.colHeaderMapArray = [
       ["clientName", "Name"],
-      ["regDate", "Registration Date"],
+
       ["folioNo", "Folio Number"],
       ["schemeName", "Scheme Name"],
       ["freqType", "Frequency Type"],
@@ -337,7 +337,7 @@ export class MonthlySipComponent implements OnInit {
 
       const objToPush = {
         clientName: item.clientName.toUpperCase(),
-        regDate: new DatePipe("en").transform(item.regDate, "longDate"),
+
         folioNo: item.folioNo,
         schemeName: item.schemeName.toUpperCase(),
         startDate: new DatePipe("en").transform(
