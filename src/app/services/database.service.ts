@@ -121,7 +121,7 @@ export class DatabaseService {
                     const body = res[0].payload.doc.data();
                     body["schemes"].push(schemeDetails);
                     this.firestore
-                      .doc("sips/" + res[0].payload.doc.id)
+                      .doc(`${type}/` + res[0].payload.doc.id)
                       .update(body)
                       .then((res) => {
                         resolve({

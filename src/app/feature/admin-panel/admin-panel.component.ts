@@ -90,8 +90,17 @@ export class AdminPanelComponent implements OnInit {
     const data = { ...schemeData };
     delete data.folioNumber;
 
+    let cName = null;
+    if (schemeData.collection.toLowerCase() == "mutual fund") {
+      cName = "mfs";
+    } else if (schemeData.collection.toLowerCase() == "sip") {
+      cName = "sips";
+    } else {
+      cName = "equity";
+    }
+
     this.dbService
-      .addSchemes(schemeData.folioNumber, "sips", data)
+      .addSchemes(schemeData.folioNumber, cName, data)
       .then((res: { status: boolean; message: string; data?: any }) => {
         this.isLoading = false;
         res.status
