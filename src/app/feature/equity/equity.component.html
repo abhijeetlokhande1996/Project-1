@@ -1,1 +1,24 @@
-<p>equity works!</p>
+<div class="row mt-2">
+  <div class="col"></div>
+  <div class="col">
+    <form [formGroup]="equityForm">
+      <div class="form-group">
+        <label>Enter Name to Search</label>
+        <input
+          type="text"
+          class="form-control"
+          [formControlName]="'clientName'"
+        />
+      </div>
+    </form>
+  </div>
+  <div class="col"></div>
+</div>
+<div class="row">
+  <div class="col">
+    <app-prime-table
+      [colHeaderMapArray]="colHeaderMapArray"
+      [sipDataToShow]="filteredEqData"
+    ></app-prime-table>
+  </div>
+</div>
