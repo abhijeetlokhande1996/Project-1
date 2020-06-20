@@ -5,11 +5,26 @@
   [rows]="5"
   [rowsPerPageOptions]="[5, 10, 15, 20]"
   *ngIf="_dataToShow"
+  #dt
+  [globalFilterFields]="filterFields"
 >
+  <ng-template pTemplate="caption">
+    <div style="text-align: right;">
+      <i class="fa fa-search" style="margin: 4px 4px 0 0;"></i>
+      <input
+        type="text"
+        pInputText
+        size="50"
+        placeholder="Global Filter"
+        (input)="dt.filterGlobal($event.target.value, 'contains')"
+        style="width: auto;"
+      />
+    </div>
+  </ng-template>
   <ng-template pTemplate="header">
     <tr>
       <th
-        *ngFor="let header of colHeaderMapArray"
+        *ngFor="let header of _colHeaderMapArray"
         [pSortableColumn]="header[0]"
       >
         {{ header[1] }}
@@ -18,7 +33,7 @@
   </ng-template>
   <ng-template pTemplate="body" let-item>
     <tr>
-      <td *ngFor="let header of colHeaderMapArray">
+      <td *ngFor="let header of _colHeaderMapArray">
         {{ item[header[0]] }}
       </td>
     </tr>
