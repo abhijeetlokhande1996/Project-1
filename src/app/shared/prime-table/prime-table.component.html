@@ -2,11 +2,11 @@
   [value]="_dataToShow"
   sortMode="multiple"
   [paginator]="true"
-  [rows]="5"
-  [rowsPerPageOptions]="[5, 10, 15, 20]"
+  [rows]="20"
   *ngIf="_dataToShow"
   #dt
   [globalFilterFields]="filterFields"
+  [rowsPerPageOptions]="[5, 10, 15, 20]"
 >
   <ng-template pTemplate="caption">
     <div style="text-align: right;">

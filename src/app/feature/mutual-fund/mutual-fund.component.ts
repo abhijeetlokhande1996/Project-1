@@ -111,9 +111,20 @@ export class MutualFundComponent implements OnInit {
               if (el["isActive"]) {
                 const fNumber = el["folioNo"];
                 const clientName = el["name"];
-                let item = resp.filter((item) => item["folioNo"] == fNumber)[0];
-                item["clientName"] = clientName;
-                this.mfData.push(item);
+                let itemArr = resp.filter((item) => item["folioNo"] == fNumber);
+
+                itemArr.forEach((item) => {
+                  const idx = this.mfData.findIndex(
+                    (item) => item.folioNo == fNumber
+                  );
+                  if (idx < 0) {
+                    item["clientName"] = clientName;
+                    this.mfData.push(item);
+                  } else {
+                    const sItem = this.mfData[idx];
+                    sItem.schemes = [...sItem.schemes, ...item.schemes];
+                  }
+                });
               }
             }
 

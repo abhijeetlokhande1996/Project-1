@@ -101,17 +101,31 @@ export class MonthlySipComponent implements OnInit {
       .getSipData()
       .pipe(take(1))
       .subscribe((resp) => {
+        console.log(JSON.parse(JSON.stringify(resp)));
         const fNumbersArr = this.getAllFolioNumbers(this.getDeepCopy(resp));
-
         this.getAllClientDetails(this.getDeepCopy(fNumbersArr)).then(
           (data: Array<{}>) => {
+            console.log("Data ", JSON.parse(JSON.stringify(data)));
             for (const el of data) {
               if (el["isActive"]) {
                 const fNumber = el["folioNo"];
                 const clientName = el["name"];
-                let item = resp.filter((item) => item["folioNo"] == fNumber)[0];
-                item["clientName"] = clientName;
-                this.sipData.push(item);
+                let itemArr: Array<SipInterface> = resp.filter(
+                  (item) => item["folioNo"] == fNumber
+                );
+
+                itemArr.forEach((item) => {
+                  const idx = this.sipData.findIndex(
+                    (item) => item.folioNo == fNumber
+                  );
+                  if (idx < 0) {
+                    item["clientName"] = clientName;
+                    this.sipData.push(item);
+                  } else {
+                    const sItem = this.sipData[idx];
+                    sItem.schemes = [...sItem.schemes, ...item.schemes];
+                  }
+                });
               }
             }
             console.log(this.sipData);
@@ -180,7 +194,7 @@ export class MonthlySipComponent implements OnInit {
     for (const item of mData) {
       fNumbers.push(item.folioNo);
     }
-    return fNumbers;
+    return Array.from(new Set(fNumbers));
   }
   getFlattenData(dataToFlat: Array<SipInterface>) {
     const result = [];
