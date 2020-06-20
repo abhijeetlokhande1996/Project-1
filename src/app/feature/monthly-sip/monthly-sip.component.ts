@@ -1,6 +1,13 @@
 import { Component, OnInit } from "@angular/core";
 import { DatabaseService } from "./../../services/database.service";
-import { take, delay, distinctUntilChanged } from "rxjs/operators";
+import {
+  take,
+  delay,
+  distinctUntilChanged,
+  mergeMap,
+  map,
+  filter,
+} from "rxjs/operators";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { SipInterface, IFSipInterface } from "../../interfaces/sip.interface";
 import { ChartType, ChartOptions } from "chart.js";
@@ -16,6 +23,9 @@ import {
   DatePipe,
   JsonPipe,
 } from "@angular/common";
+import { from } from "rxjs";
+import { NavModel } from "../../models/nav.model";
+import { NavDataService } from "../../services/nav-data.service";
 
 @Component({
   selector: "app-monthly-sip",
@@ -25,6 +35,7 @@ import {
 export class MonthlySipComponent implements OnInit {
   sipData: Array<SipInterface> = [];
   filteredSipData: Array<IFSipInterface> = [];
+  unTransfilteredSipData: Array<IFSipInterface> = [];
   folioForm: FormGroup;
   chartOptions: ChartOptions;
   chartType: ChartType;
@@ -37,7 +48,11 @@ export class MonthlySipComponent implements OnInit {
   colHeaderMapArray = [];
   startDate = null;
   endDate = null;
-  constructor(private dbService: DatabaseService) {}
+  navData: Array<NavModel>;
+  constructor(
+    private dbService: DatabaseService,
+    private navDataService: NavDataService
+  ) {}
 
   ngOnInit(): void {
     this.colHeaderMapArray = [
@@ -73,6 +88,9 @@ export class MonthlySipComponent implements OnInit {
         } else {
           const fData: Array<SipInterface> = this.distillSipData(folioNo);
           this.filteredSipData = this.getFlattenData(fData);
+          this.unTransfilteredSipData = JSON.parse(
+            JSON.stringify(this.filteredSipData)
+          );
           this.generateChartData(this.filteredSipData);
           this.filteredSipData = this.transformFilteredData(
             this.filteredSipData
@@ -83,13 +101,32 @@ export class MonthlySipComponent implements OnInit {
       .getSipData()
       .pipe(take(1))
       .subscribe((resp) => {
-        this.sipData = resp;
+        const fNumbersArr = this.getAllFolioNumbers(this.getDeepCopy(resp));
 
-        const fData: Array<SipInterface> = this.distillSipData(null);
+        this.getAllClientDetails(this.getDeepCopy(fNumbersArr)).then(
+          (data: Array<{}>) => {
+            for (const el of data) {
+              if (el["isActive"]) {
+                const fNumber = el["folioNo"];
+                const clientName = el["name"];
+                let item = resp.filter((item) => item["folioNo"] == fNumber)[0];
+                item["clientName"] = clientName;
+                this.sipData.push(item);
+              }
+            }
+            console.log(this.sipData);
+            const fData: Array<SipInterface> = this.distillSipData(null);
 
-        this.filteredSipData = this.getFlattenData(fData);
-        this.generateChartData(this.filteredSipData);
-        this.filteredSipData = this.transformFilteredData(this.filteredSipData);
+            this.filteredSipData = this.getFlattenData(fData);
+            this.unTransfilteredSipData = this.getDeepCopy(
+              this.filteredSipData
+            );
+            this.generateChartData(this.filteredSipData);
+            this.filteredSipData = this.transformFilteredData(
+              this.filteredSipData
+            );
+          }
+        );
       });
 
     this.dbService.getUsers().subscribe((users) => {
@@ -98,8 +135,53 @@ export class MonthlySipComponent implements OnInit {
       });
       console.log(data);
     });
-  }
 
+    this.navDataService.getNavData().subscribe((resp: Array<NavModel>) => {
+      this.navData = resp;
+    });
+  }
+  getAllClientDetails(fNumbersArr: Array<number>) {
+    return new Promise((resolve, reject) => {
+      let count = 0;
+      const dataToReturn = [];
+      from(fNumbersArr)
+        .pipe(
+          mergeMap((f) => {
+            return this.dbService.isExists("clients", f).pipe(
+              map((d) => {
+                count++;
+
+                return d;
+              })
+            );
+          })
+        )
+        .subscribe(
+          (resp) => {
+            try {
+              const d = resp[0].payload.doc.data();
+              dataToReturn.push(JSON.parse(JSON.stringify(d)));
+            } catch {
+              console.log("Error in fetching some records");
+            } finally {
+              if (count == fNumbersArr.length) {
+                resolve(dataToReturn);
+              }
+            }
+          },
+          (err) => {
+            console.error(err);
+          }
+        );
+    });
+  }
+  getAllFolioNumbers(mData: Array<SipInterface>) {
+    const fNumbers: Array<number> = [];
+    for (const item of mData) {
+      fNumbers.push(item.folioNo);
+    }
+    return fNumbers;
+  }
   getFlattenData(dataToFlat: Array<SipInterface>) {
     const result = [];
     for (const item of dataToFlat) {
@@ -185,7 +267,7 @@ export class MonthlySipComponent implements OnInit {
   }
 
   onClickPrint() {
-    const colums = [
+    const columns = [
       {
         id: "clientName",
         header: "Name",
@@ -216,29 +298,58 @@ export class MonthlySipComponent implements OnInit {
         align: "center",
       },
       {
-        id: "freqType",
-        header: "Frequency Type",
-        width: 100,
-        valign: "center",
-        align: "center",
-      },
-      {
         id: "startDate",
         header: "Start Date",
         width: 100,
         valign: "center",
         align: "center",
       },
-
+      {
+        id: "currentValue",
+        header: "Current Value",
+        width: 100,
+        valign: "center",
+        align: "center",
+      },
       {
         id: "amt",
-        header: "Installment Amount",
+        header: "Amount Invested",
         width: 100,
         valign: "center",
         align: "center",
       },
     ];
-    const status = pdfMaker(colums, this.filteredSipData, "monthly-sip.pdf");
+    console.log(JSON.parse(JSON.stringify(this.unTransfilteredSipData)));
+    const dataToSend: Array<{}> = [];
+    for (const item of this.unTransfilteredSipData) {
+      let nav = 0;
+      const idx = this.navData.findIndex(
+        (el: NavModel) =>
+          el.schemeName.toLowerCase() == item.schemeName.toLowerCase()
+      );
+      if (idx >= 0) {
+        nav = this.navData[idx].netAssetValue;
+      }
+
+      if (!item.regDate) {
+        item.regDate = new Date().toString();
+      }
+
+      const objToPush = {
+        clientName: item.clientName.toUpperCase(),
+        regDate: new DatePipe("en").transform(item.regDate, "longDate"),
+        folioNo: item.folioNo,
+        schemeName: item.schemeName.toUpperCase(),
+        startDate: new DatePipe("en").transform(
+          new Date(item.startDate),
+          "longDate"
+        ),
+        amt: new DecimalPipe("en").transform(item.amt),
+        currentValue: nav,
+      };
+      dataToSend.push(objToPush);
+    }
+    const status = pdfMaker(columns, dataToSend, "monthly-sip-statement.pdf");
     if (status) {
       alert("Success");
     } else {
@@ -263,6 +374,7 @@ export class MonthlySipComponent implements OnInit {
     let fData = this.distillRecordsAccordingToRange(minDate, maxDate);
     this.filteredSipData = null;
     this.filteredSipData = this.getFlattenData(fData);
+    this.unTransfilteredSipData = this.getDeepCopy(this.filteredSipData);
     this.generateChartData(this.filteredSipData);
     this.filteredSipData = this.transformFilteredData(this.filteredSipData);
   }

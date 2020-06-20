@@ -21,12 +21,18 @@ export class AddClientComponent implements OnInit {
     });
   }
   onClientInfoSubmit() {
+    const regDate = this.clientForm.get("regDate").value;
+    const month = regDate["month"] - 1;
+    const year = regDate["year"];
+    const day = regDate["day"];
+
     const client: IClient = {
       name: this.clientForm.get("name").value,
       folioNo: this.clientForm.get("folioNumber").value,
       isActive: true,
-      regDate: this.clientForm.get("regDate").value,
+      regDate: new Date(year, month, day).toString(),
     };
+
     this.clientInfoEventEmitter.emit(client);
   }
 }
