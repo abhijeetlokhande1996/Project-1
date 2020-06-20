@@ -4,6 +4,7 @@
   [paginator]="true"
   [rows]="5"
   [rowsPerPageOptions]="[5, 10, 15, 20]"
+  *ngIf="_dataToShow"
 >
   <ng-template pTemplate="header">
     <tr>
@@ -24,6 +25,6 @@
   </ng-template>
 </p-table>
 
-<div class="text-center p-5" *ngIf="_dataToShow.length === 0">
+<div class="text-center p-5" *ngIf="_dataToShow && _dataToShow.length === 0">
   <p><strong> No record found! </strong></p>
 </div>

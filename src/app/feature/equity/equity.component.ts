@@ -6,6 +6,12 @@ import {
 } from "./../../interfaces/EquityCollectionEntity.interface";
 import { DatabaseService } from "../../services/database.service";
 import { IEquity } from "../../interfaces/IEquity.interface";
+import {
+  TitleCasePipe,
+  DecimalPipe,
+  CurrencyPipe,
+  DatePipe,
+} from "@angular/common";
 @Component({
   selector: "app-equity",
   templateUrl: "./equity.component.html",
@@ -33,11 +39,60 @@ export class EquityComponent implements OnInit {
     });
     this.dbService.getEquities().subscribe((resp) => {
       this.eqData = resp;
-      console.log(this.eqData);
+      this.filteredEqData = this.filterData(
+        null,
+        JSON.parse(JSON.stringify(this.eqData))
+      );
+      this.unTransfilteredEqData = JSON.parse(
+        JSON.stringify(this.filteredEqData)
+      );
+      this.filteredEqData = this.transformData(
+        JSON.parse(JSON.stringify(this.filteredEqData))
+      );
     });
     this.equityForm.get("clientName").valueChanges.subscribe((val) => {
-      this.filterEqData(val, JSON.parse(JSON.stringify(this.eqData)));
+      this.filteredEqData = this.filterData(
+        val,
+        JSON.parse(JSON.stringify(this.eqData))
+      );
+      this.unTransfilteredEqData = JSON.parse(
+        JSON.stringify(this.filteredEqData)
+      );
+      this.filteredEqData = this.transformData(
+        JSON.parse(JSON.stringify(this.filteredEqData))
+      );
     });
   }
-  filterEqData(clientName: string, data: Array<EquityCollectionEntity>) {}
+  filterData(clientName: string | null, data: Array<IEquity>) {
+    if (clientName) {
+      return data.filter(
+        (item) =>
+          item.clientName.toLowerCase().includes(clientName.toLowerCase()) ||
+          item.clientName.toLowerCase() == clientName.toLowerCase()
+      );
+    }
+    return data;
+  }
+  transformData(data: Array<IEquity>) {
+    const tp = new TitleCasePipe();
+    const dp = new DecimalPipe("en");
+    const cp = new CurrencyPipe("en");
+
+    const dataToReturn: Array<IEquity> = [];
+    for (const item of data) {
+      const objToPush = {};
+      objToPush["clientName"] = tp.transform(item.clientName);
+      objToPush["amount"] = dp.transform(item.amount);
+      objToPush["companyName"] = tp.transform(item.companyName);
+      objToPush["quantity"] = dp.transform(item.quantity);
+      objToPush["rate"] = dp.transform(item.rate);
+      objToPush["amt"] = cp.transform(item.amount, "INR");
+      objToPush["purchaseDate"] = new DatePipe("en").transform(
+        item.purchaseDate,
+        "dd-MMM-yyyy"
+      );
+      dataToReturn.push(JSON.parse(JSON.stringify(objToPush)));
+    }
+    return dataToReturn;
+  }
 }
