@@ -340,12 +340,15 @@ export class MutualFundComponent implements OnInit {
       };
       dataToSend.push(objToPush);
     }
+
     const status = pdfMaker(columns, dataToSend, "mutual-fund-statement.pdf");
-    if (status) {
-      alert("Success");
-    } else {
-      alert("Failure");
-    }
+    setTimeout(() => {
+      if (status) {
+        alert("Success");
+      } else {
+        alert("Failure");
+      }
+    }, 500);
   }
   onStartDateSelect(startDate) {
     this.endDate = null;
