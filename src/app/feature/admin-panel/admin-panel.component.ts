@@ -30,6 +30,7 @@ export class AdminPanelComponent implements OnInit {
 
   selectedCollection: string;
   isLoading: boolean = false;
+  selectedTemplate: string = "add-client";
 
   constructor(
     private navModelService: NavDataService,
@@ -39,7 +40,6 @@ export class AdminPanelComponent implements OnInit {
 
   ngOnInit(): void {
     this.isAuthenticated = false;
-    // this.dbService.addSip().then((res) => console.log(res));
   }
   getNavData() {
     this.navModelService

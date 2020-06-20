@@ -25,6 +25,7 @@ export class AddClientComponent implements OnInit {
       name: this.clientForm.get("name").value,
       folioNo: this.clientForm.get("folioNumber").value,
       isActive: true,
+      regDate: this.clientForm.get("regDate").value,
     };
     this.clientInfoEventEmitter.emit(client);
   }

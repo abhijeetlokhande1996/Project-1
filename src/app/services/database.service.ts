@@ -93,34 +93,6 @@ export class DatabaseService {
     });
   };
 
-  isDataAvailableInInvestmentCollection = (
-    investmentType: string,
-    folioNo: number
-  ) => {
-    switch (investmentType) {
-      case "sip":
-        return new Promise<boolean>((resolve, reject) => {
-          const id = this.firestore
-            .collection("sips", (ref) => ref.where("folioNo", "==", folioNo))
-            .snapshotChanges();
-          id.subscribe((res) => {
-            let data = res.map((item) => {
-              return item.payload.doc.data();
-            });
-            console.log("id found", data);
-            resolve(true);
-          });
-        }).catch((err) => err);
-        break;
-      case "mf":
-        break;
-      case "equity":
-        break;
-      default:
-        null;
-    }
-  };
-
   /**
    * Adds a SIP to database
    * @param sip Give SIP information to be added
@@ -137,40 +109,48 @@ export class DatabaseService {
             Object.keys(res[0].payload.doc.data()).length > 0
           ) {
             clientName = res[0].payload.doc.data()["name"];
-            this.isExists(type, folioNo)
-              .pipe(take(1))
-              .subscribe((res) => {
-                if (
-                  res[0]?.payload?.doc?.data() &&
-                  Object.keys(res[0].payload.doc.data()).length > 0
-                ) {
-                  const body = res[0].payload.doc.data();
-                  body["schemes"].push(schemeDetails);
-                  this.firestore
-                    .doc("sips/" + res[0].payload.doc.id)
-                    .update(body)
-                    .then((res) => {
-                      resolve({
-                        status: true,
-                        message: `${type} Updated successfully!`,
+            if (res[0].payload.doc.data()["isActive"]) {
+              console.log("Active User");
+              this.isExists(type, folioNo)
+                .pipe(take(1))
+                .subscribe((res) => {
+                  if (
+                    res[0]?.payload?.doc?.data() &&
+                    Object.keys(res[0].payload.doc.data()).length > 0
+                  ) {
+                    const body = res[0].payload.doc.data();
+                    body["schemes"].push(schemeDetails);
+                    this.firestore
+                      .doc("sips/" + res[0].payload.doc.id)
+                      .update(body)
+                      .then((res) => {
+                        resolve({
+                          status: true,
+                          message: `${type} Updated successfully!`,
+                        });
                       });
-                    });
-                } else {
-                  this.firestore
-                    .collection("sips")
-                    .add({
-                      folioNo: folioNo,
-                      name: clientName,
-                      schemes: [schemeDetails],
-                    })
-                    .then((res) => {
-                      resolve({
-                        status: true,
-                        message: `${type} added successfully!`,
+                  } else {
+                    this.firestore
+                      .collection("sips")
+                      .add({
+                        folioNo: folioNo,
+                        name: clientName,
+                        schemes: [schemeDetails],
+                      })
+                      .then((res) => {
+                        resolve({
+                          status: true,
+                          message: `${type} added successfully!`,
+                        });
                       });
-                    });
-                }
+                  }
+                });
+            } else {
+              resolve({
+                status: false,
+                message: "Client is not active! Kindly update his status",
               });
+            }
           } else {
             resolve({
               status: false,
