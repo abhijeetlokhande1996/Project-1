@@ -1,10 +1,10 @@
 export interface EquityCollectionEntity {
-  folioNumber: number;
-  holdings: (HoldingsEntity)[] ;
+  id?: number;
+  holdings: HoldingsEntity[];
 }
 export interface HoldingsEntity {
   clientName: string;
-  companyName:string;
+  companyName: string;
   quantity: number;
   rate: number;
   amount: number;
