@@ -1,86 +1,48 @@
-export const generatePDF = () => {
-    const fs = window.require("fs");
-    const PdfTable = window.require("voilab-pdf-table");
-    const PdfDocument = window.require("pdfkit");
-    const pdf = new PdfDocument({
-        autoFirstPage: false,
-        layout: "potrait",
-        margins: { top: 50, left: 10, right: 10, bottom: 10 },
-        size: "A4",
-    });
-    pdf.fontSize(10);
-    const table = new PdfTable(pdf, {
-        bottomMargin: 30,
-    });
-    table
+import * as jsPDF from "jspdf";
+import "jspdf-autotable";
+import { imageURIs } from "./data-buffer";
 
-        // set defaults to your columns
-        .setColumnsDefaults({
-            // headerBorder: ["L", "T", "B", "R"],
-            border: ["L", "T", "B", "R"],
-            align: "center",
-        })
-        // add table columns
-        .addColumns([
-            {
-                id: "clientName",
-                header: "Name",
-                align: "center",
-                width: 100,
-                height: 100,
-                valign: "center",
-            },
-            {
-                id: "regDate",
-                header: "Registration Date",
-                width: 100,
-                valign: "center",
-                align: "center",
-            },
-            {
-                id: "folioNo",
-                header: "Folio Number",
-                width: 100,
-                valign: "center",
-                align: "center",
-            },
-            {
-                id: "schemeName",
-                header: "Scheme Name",
-                width: 100,
-                valign: "center",
-                align: "center",
-            },
-            {
-                id: "freqType",
-                header: "Frequency Type",
-                width: 100,
-                valign: "center",
-                align: "center",
-            },
-            {
-                id: "startDate",
-                header: "Start Date",
-                width: 100,
-                valign: "center",
-                align: "center",
-            },
+export const PDFGenerator = (headers, data) => {
+  const doc = new jsPDF();
+  const height = doc.internal.pageSize.getHeight();
 
-            {
-                id: "installmentAmt",
-                header: "Installment Amount",
-                width: 100,
-                valign: "center",
-                align: "center",
-            },
-        ]) // add events (here, we draw headers on each new page)
-        .onPageAdded(function (tb) {
-            tb.addHeader();
-        });
-    pdf.addPage();
+  doc.addImage(imageURIs.logo, "JPEG", 15, 15, 30, 30);
+  doc.text("Ram Sadhana Investments", 100, 30);
+  doc.text("Contact: shri.prasad.barade@gmail.com", 100, 35);
+  doc.line(10, 50, 200, 50);
+  doc.setLineWidth(0.5);
+  doc.line(10, 52, 200, 52);
 
-    // draw content, by passing data to the addBody method
-    table.addBody(this.filteredSipData);
-    pdf.end();
-    pdf.pipe(fs.createWriteStream("output.pdf"));
-}
+  doc.setFontSize(11);
+  doc.setTextColor(100);
+
+  (doc as any).autoTable({
+    startY: 60,
+    cellWidth: "wrap",
+    bodyStyles: {
+      halign: "center",
+      valign: "middle",
+      fontStyle: "italic",
+      overflow: "linebreak",
+      fontSize: 8,
+    },
+    columnStyles: {
+      halign: "center",
+      valign: "middle",
+      lineWidth: 1,
+      lineColor: 10,
+    },
+    theme: "grid",
+    head: headers,
+    body: data,
+  });
+
+  doc.line(10, height - 10, 200, height - 10);
+  doc.text(
+    "All rights are reserved with @Ram Sadhan Investment @2020",
+    50,
+    height - 5
+  );
+  // Download PDF document
+  doc.save("output.pdf");
+};
