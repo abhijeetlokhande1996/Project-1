@@ -1,9 +1,10 @@
 export interface IEquityCollectionEntity {
-  folioNumber: number;
+  folioNo: number;
+  name: string;
   holdings: HoldingsEntity[];
 }
 export interface HoldingsEntity {
-  clientName: string;
+  name: string;
   companyName: string;
   quantity: number;
   rate?: number;
@@ -12,8 +13,8 @@ export interface HoldingsEntity {
 }
 
 export interface IFEquityCollectionEntity {
-  folioNumber: number;
-  clientName: string;
+  folioNo: number;
+  name: string;
   companyName: string;
   quantity: number;
   rate?: number;
