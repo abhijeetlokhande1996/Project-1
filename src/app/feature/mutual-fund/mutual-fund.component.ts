@@ -4,34 +4,26 @@ import {
   take,
   delay,
   distinctUntilChanged,
-  finalize,
   mergeMap,
-  concatMap,
-  switchMap,
   map,
 } from "rxjs/operators";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { SipInterface, IFSipInterface } from "../../interfaces/sip.interface";
+import { SipInterface } from "../../interfaces/sip.interface";
 import { ChartType, ChartOptions } from "chart.js";
 import { Label } from "ng2-charts";
 import * as pluginDataLabels from "chartjs-plugin-datalabels";
 import "chart.piecelabel.js";
-import { pdfMaker } from "./../../shared/lib/pdf-maker";
 
-import {
-  TitleCasePipe,
-  CurrencyPipe,
-  DecimalPipe,
-  DatePipe,
-} from "@angular/common";
+import { TitleCasePipe, CurrencyPipe, DatePipe } from "@angular/common";
 import {
   IFMutualFund,
   IMutualFund,
 } from "../../interfaces/IMutualFund.interface";
 import { NavModel } from "../../models/nav.model";
 import { NavDataService } from "../../services/nav-data.service";
-import { from, merge, of } from "rxjs";
+import { from } from "rxjs";
 import { PDFGenerator } from "../../shared/lib/reuse-func";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-monthly-sip",
@@ -58,7 +50,8 @@ export class MutualFundComponent implements OnInit {
   navData: Array<NavModel>;
   constructor(
     private dbService: DatabaseService,
-    private navDataService: NavDataService
+    private navDataService: NavDataService,
+    private toastrService: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -286,93 +279,21 @@ export class MutualFundComponent implements OnInit {
       const nonNullData = Object.values(value).filter((data) => data);
       data.push(nonNullData);
     });
-    console.log(data);
-    PDFGenerator([headers], data);
+    PDFGenerator([headers], data).then(
+      (res: { status: Boolean; message: string }) => {
+        if (res.status) {
+          setTimeout(() => {
+            this.toastrService.success(res.message);
+          }, 5000);
+        } else {
+          setTimeout(() => {
+            this.toastrService.error(res.message);
+          }, 5000);
+        }
+      }
+    );
   };
 
-  onClickPrint() {
-    const columns = [
-      {
-        id: "clientName",
-        header: "Name",
-        align: "center",
-        width: 100,
-        height: 100,
-        valign: "center",
-      },
-
-      {
-        id: "folioNo",
-        header: "Folio Number",
-        width: 100,
-        valign: "center",
-        align: "center",
-      },
-      {
-        id: "schemeName",
-        header: "Scheme Name",
-        width: 100,
-        valign: "center",
-        align: "center",
-      },
-      {
-        id: "startDate",
-        header: "Start Date",
-        width: 100,
-        valign: "center",
-        align: "center",
-      },
-      {
-        id: "totalAmtInvested",
-        header: "Total Amount Invested",
-        width: 100,
-        valign: "center",
-        align: "center",
-      },
-      {
-        id: "currentValue",
-        header: "Current Value",
-        width: 100,
-        valign: "center",
-        align: "center",
-      },
-    ];
-
-    const dataToSend: Array<{}> = [];
-    for (const item of this.unTransFilteredMfData) {
-      let nav = 0;
-      const idx = this.navData.findIndex(
-        (el: NavModel) =>
-          el.schemeName.toLowerCase() == item.schemeName.toLowerCase()
-      );
-      if (idx >= 0) {
-        nav = this.navData[idx].netAssetValue;
-      }
-
-      const objToPush = {
-        clientName: item.clientName.toUpperCase(),
-
-        folioNo: item.folioNo,
-        schemeName: item.schemeName.toUpperCase(),
-        startDate: new DatePipe("en").transform(
-          new Date(item.startDate),
-          "longDate"
-        ),
-        totalAmtInvested: new DecimalPipe("en").transform(item.amt),
-        currentValue: nav,
-      };
-      dataToSend.push(objToPush);
-    }
-
-    const status = pdfMaker(columns, dataToSend, "mutual-fund-statement.pdf");
-    setTimeout(() => {
-      if (status) {
-        alert("Success");
-      } else {
-        alert("Failure");
-      }
-    }, 500);
-  }
   onStartDateSelect(startDate) {
     this.endDate = null;
   }
