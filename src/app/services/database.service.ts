@@ -123,7 +123,9 @@ export class DatabaseService {
                     Object.keys(res[0].payload.doc.data()).length > 0
                   ) {
                     const body = res[0].payload.doc.data();
-                    body["schemes"].push(schemeDetails);
+                    type === "equities"
+                      ? body["holdings"].push(schemeDetails)
+                      : body["schemes"].push(schemeDetails);
                     this.firestore
                       .doc(type + "/" + res[0].payload.doc.id)
                       .update(body)
@@ -134,19 +136,35 @@ export class DatabaseService {
                         });
                       });
                   } else {
-                    this.firestore
-                      .collection(type)
-                      .add({
-                        folioNo: folioNo,
-                        name: clientName,
-                        schemes: [schemeDetails],
-                      })
-                      .then((res) => {
-                        resolve({
-                          status: true,
-                          message: `${type} added successfully!`,
+                    if (type === "equities") {
+                      this.firestore
+                        .collection(type)
+                        .add({
+                          folioNo: folioNo,
+                          name: clientName,
+                          holdings: [schemeDetails],
+                        })
+                        .then((res) => {
+                          resolve({
+                            status: true,
+                            message: `${type} added successfully!`,
+                          });
                         });
-                      });
+                    } else {
+                      this.firestore
+                        .collection(type)
+                        .add({
+                          folioNo: folioNo,
+                          name: clientName,
+                          schemes: [schemeDetails],
+                        })
+                        .then((res) => {
+                          resolve({
+                            status: true,
+                            message: `${type} added successfully!`,
+                          });
+                        });
+                    }
                   }
                 });
             } else {
