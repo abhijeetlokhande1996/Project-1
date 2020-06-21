@@ -1,4 +1,4 @@
-export interface IEquity {
+export interface IAddEquity {
   folioNumber: number;
   clientName: string;
   companyName: string;

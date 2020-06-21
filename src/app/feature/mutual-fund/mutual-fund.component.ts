@@ -103,7 +103,6 @@ export class MutualFundComponent implements OnInit {
       .getMFs()
       .pipe(take(1))
       .subscribe((resp) => {
-        console.log("MF ", resp);
         const fNumbersArr = this.getAllFolioNumbers(this.getDeepCopy(resp));
 
         this.getAllClientDetails(this.getDeepCopy(fNumbersArr)).then(

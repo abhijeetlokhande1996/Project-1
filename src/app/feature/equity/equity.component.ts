@@ -1,11 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, Validators, FormControl } from "@angular/forms";
 import {
-  EquityCollectionEntity,
+  IEquityCollectionEntity,
   HoldingsEntity,
+  IFEquityCollectionEntity,
 } from "./../../interfaces/EquityCollectionEntity.interface";
 import { DatabaseService } from "../../services/database.service";
-import { IEquity } from "../../interfaces/IEquity.interface";
 import {
   TitleCasePipe,
   DecimalPipe,
@@ -18,9 +18,9 @@ import {
   styleUrls: ["./equity.component.css"],
 })
 export class EquityComponent implements OnInit {
-  eqData: Array<IEquity>;
-  filteredEqData: Array<IEquity>;
-  unTransfilteredEqData: Array<IEquity>;
+  eqData: Array<IEquityCollectionEntity>;
+  filteredEqData: Array<IFEquityCollectionEntity>;
+  unTransfilteredEqData: Array<IFEquityCollectionEntity>;
   equityForm: FormGroup;
   colHeaderMapArray: Array<Array<string>>;
   constructor(private dbService: DatabaseService) {}
@@ -63,7 +63,7 @@ export class EquityComponent implements OnInit {
       );
     });
   }
-  filterData(clientName: string | null, data: Array<IEquity>) {
+  filterData(clientName: string | null, data: Array<IFEquityCollectionEntity>) {
     if (clientName) {
       return data.filter(
         (item) =>
@@ -73,12 +73,12 @@ export class EquityComponent implements OnInit {
     }
     return data;
   }
-  transformData(data: Array<IEquity>) {
+  transformData(data: Array<IFEquityCollectionEntity>) {
     const tp = new TitleCasePipe();
     const dp = new DecimalPipe("en");
     const cp = new CurrencyPipe("en");
 
-    const dataToReturn: Array<IEquity> = [];
+    const dataToReturn: Array<IFEquityCollectionEntity> = [];
     for (const item of data) {
       const objToPush = {};
       objToPush["clientName"] = tp.transform(item.clientName);
