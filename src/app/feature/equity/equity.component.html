@@ -60,10 +60,28 @@
   </div>
 </div>
 <div class="row">
-  <div class="col">
+  <div
+    [ngClass]="{
+      'col-8': equityForm.get('id')?.value,
+      col: !equityForm.get('id')?.value
+    }"
+  >
     <app-prime-table
       [colHeaderMapArray]="colHeaderMapArray"
       [sipDataToShow]="filteredEqData"
     ></app-prime-table>
+  </div>
+
+  <div class="col-4" *ngIf="equityForm.get('id')?.value">
+    <app-chart
+      [chartOptions]="chartOptions"
+      [chartType]="chartType"
+      [chartLegend]="chartLegend"
+      [chartLabels]="chartLabel"
+      [chartData]="chartData"
+      [chartColor]="chartColor"
+      [chartPlugins]="chartPlugins"
+    >
+    </app-chart>
   </div>
 </div>
