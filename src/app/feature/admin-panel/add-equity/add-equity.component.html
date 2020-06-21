@@ -2,24 +2,24 @@
 
 <form [formGroup]="equityForm" (ngSubmit)="onSubmit()">
   <div class="form-group">
-    <label>Enter Client Name</label>
+    <label>Client's Name</label>
     <input type="text" class="form-control" [formControlName]="'clientName'" />
   </div>
   <div class="form-group">
-    <label>Enter Company Name</label>
+    <label>Script/Stock Name</label>
     <input type="text" class="form-control" [formControlName]="'companyName'" />
   </div>
   <div class="form-group">
-    <label>Enter Quantity</label>
+    <label>Quantity</label>
     <input type="number" class="form-control" [formControlName]="'quantity'" />
   </div>
   <div class="form-group">
-    <label>Enter Rate</label>
+    <label>Buy Price</label>
     <input type="number" class="form-control" [formControlName]="'rate'" />
   </div>
   <div class="form-group">
-    <label>Enter Amount</label>
-    <input type="number" class="form-control" [formControlName]="'amount'" />
+    <label>Total Amount</label>
+    <input type="number" class="form-control disabled" [formControlName]="'amount'" />
   </div>
   <div class="form-group">
     <label>Select Purchase Date</label>
