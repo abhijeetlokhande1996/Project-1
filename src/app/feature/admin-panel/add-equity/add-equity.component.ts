@@ -13,7 +13,7 @@ export class AddEquityComponent implements OnInit {
 
   ngOnInit(): void {
     this.equityForm = new FormGroup({
-      clientName: new FormControl(null, [Validators.required]),
+      folioNumber: new FormControl(null, [Validators.required]),
       companyName: new FormControl(null, [Validators.required]),
       quantity: new FormControl(null, [Validators.required]),
       rate: new FormControl(null, [Validators.required]),

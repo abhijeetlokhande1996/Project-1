@@ -1,5 +1,5 @@
 export interface EquityCollectionEntity {
-  id?: number;
+  folioNumber: number;
   holdings: HoldingsEntity[];
 }
 export interface HoldingsEntity {

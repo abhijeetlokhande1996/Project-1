@@ -2,9 +2,14 @@
 
 <form [formGroup]="equityForm" (ngSubmit)="onSubmit()">
   <div class="form-group">
-    <label>Enter Client Name</label>
-    <input type="text" class="form-control" [formControlName]="'clientName'" />
+    <label>Enter ID</label>
+    <input
+      type="number"
+      class="form-control"
+      [formControlName]="'folioNumber'"
+    />
   </div>
+
   <div class="form-group">
     <label>Enter Company Name</label>
     <input type="text" class="form-control" [formControlName]="'companyName'" />
@@ -24,14 +29,26 @@
   <div class="form-group">
     <label>Select Purchase Date</label>
     <div class="input-group">
-      <input class="form-control form-control-sm text-primary" ngbDatepicker #d1="ngbDatepicker"
-        [formControlName]="'purchaseDate'" />
+      <input
+        class="form-control form-control-sm text-primary"
+        ngbDatepicker
+        #d1="ngbDatepicker"
+        [formControlName]="'purchaseDate'"
+      />
       <div class="input-group-append">
-        <i class="fa fa-calendar pointer cal" aria-hidden="true" (click)="d1.toggle()"></i>
+        <i
+          class="fa fa-calendar pointer cal"
+          aria-hidden="true"
+          (click)="d1.toggle()"
+        ></i>
       </div>
     </div>
   </div>
-  <button class="btn btn-success d-block mx-auto" type="submit" [disabled]="!equityForm.valid">
+  <button
+    class="btn btn-success d-block mx-auto"
+    type="submit"
+    [disabled]="!equityForm.valid"
+  >
     Add
   </button>
 </form>

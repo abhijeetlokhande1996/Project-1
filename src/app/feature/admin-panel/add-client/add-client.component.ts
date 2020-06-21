@@ -15,8 +15,8 @@ export class AddClientComponent implements OnInit {
 
   ngOnInit(): void {
     this.clientForm = new FormGroup({
-      name: new FormControl("Abhijeet", [Validators.required]),
-      folioNumber: new FormControl(1234, [Validators.required]),
+      name: new FormControl(null, [Validators.required]),
+      folioNumber: new FormControl(null, [Validators.required]),
       regDate: new FormControl(null, [Validators.required]),
     });
   }
