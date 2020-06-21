@@ -4,3 +4,8 @@
   z-index: 10;
   padding: 3px;
 }
+
+.disabled {
+  background: #e9ecef !important;
+  font-weight: bold;
+}
