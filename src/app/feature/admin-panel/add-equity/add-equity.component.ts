@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { IEquity } from "../../../interfaces/IEquity.interface";
+import { IAddEquity } from "../../../interfaces/IEquity.interface";
 @Component({
   selector: "app-add-equity",
   templateUrl: "./add-equity.component.html",
@@ -8,12 +8,12 @@ import { IEquity } from "../../../interfaces/IEquity.interface";
 })
 export class AddEquityComponent implements OnInit {
   equityForm: FormGroup;
-  @Output() eqDataEventEmitter: EventEmitter<IEquity> = new EventEmitter();
+  @Output() eqDataEventEmitter: EventEmitter<IAddEquity> = new EventEmitter();
   constructor() {}
 
   ngOnInit(): void {
     this.equityForm = new FormGroup({
-      clientName: new FormControl(null, [Validators.required]),
+      folioNumber: new FormControl(null, [Validators.required]),
       companyName: new FormControl(null, [Validators.required]),
       quantity: new FormControl(null, [Validators.required]),
       rate: new FormControl(null, [Validators.required]),
@@ -36,7 +36,7 @@ export class AddEquityComponent implements OnInit {
     });
   }
   onSubmit() {
-    const objToEmit: IEquity = this.equityForm.getRawValue();
+    const objToEmit: IAddEquity = this.equityForm.getRawValue();
     const purchaseDate = this.equityForm.get("purchaseDate").value;
     const year = purchaseDate["year"];
     const month = purchaseDate["month"] - 1;

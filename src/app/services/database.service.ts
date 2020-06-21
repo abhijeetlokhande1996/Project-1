@@ -7,8 +7,9 @@ import { AngularFirestore } from "@angular/fire/firestore";
 import { IMutualFund } from "../interfaces/IMutualFund.interface";
 import { IClient } from "../interfaces/IClient.interface";
 import { take } from "rxjs/operators";
-import { IEquity } from "../interfaces/IEquity.interface";
-import { EquityCollectionEntity } from "../interfaces/EquityCollectionEntity.interface";
+
+import { IEquityCollectionEntity } from "../interfaces/EquityCollectionEntity.interface";
+import { IAddEquity } from "../interfaces/IEquity.interface";
 
 @Injectable({
   providedIn: "root",
@@ -31,7 +32,7 @@ export class DatabaseService {
   };
   getEquities = () => {
     return this.firestore.collection("equities").valueChanges() as Observable<
-      Array<IEquity>
+      Array<IEquityCollectionEntity>
     >;
   };
   getMFs = (): Observable<Array<IMutualFund>> => {
@@ -184,7 +185,7 @@ export class DatabaseService {
     });
   };
 
-  addEquity = (data: IEquity, type: string) => {
+  addEquity = (data: IAddEquity, type: string) => {
     return new Promise((resolve, reject) => {
       this.firestore
         .collection(type)

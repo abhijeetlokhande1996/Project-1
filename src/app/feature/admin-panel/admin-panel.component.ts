@@ -14,7 +14,8 @@ import { IClient } from "../../interfaces/IClient.interface";
 import { IContext } from "mocha";
 import { IAddScheme } from "../../interfaces/IAddScheme.interface";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { IEquity } from "../../interfaces/IEquity.interface";
+import { IAddEquity } from "../../interfaces/IEquity.interface";
+import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
 @Component({
   selector: "app-admin-panel",
   templateUrl: "./admin-panel.component.html",
@@ -96,8 +97,6 @@ export class AdminPanelComponent implements OnInit {
       cName = "mfs";
     } else if (schemeData.collection.toLowerCase() == "sip") {
       cName = "sips";
-    } else {
-      cName = "equity";
     }
 
     this.dbService
@@ -128,18 +127,15 @@ export class AdminPanelComponent implements OnInit {
         );
       });
   }
-  getEqDataToInsert(obj: IEquity) {
+  getEqDataToInsert(obj: IAddEquity) {
     this.isLoading = true;
     this.dbService
-      .addEquity({ ...obj }, "equities")
-      .then((res) => {
-        this.toastrService.success(res["message"]);
-      })
-      .catch((res) => {
-        this.toastrService.error(res["message"]);
-      })
-      .finally(() => {
+      .addSchemes(obj.folioNumber, "equities", obj)
+      .then((res: { status: boolean; message: string; data?: any }) => {
         this.isLoading = false;
+        res.status
+          ? this.toastrService.success(res.message)
+          : this.toastrService.error(res.message);
       });
   }
 }
