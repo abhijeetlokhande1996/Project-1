@@ -11,6 +11,7 @@ import {
   DecimalPipe,
   CurrencyPipe,
   DatePipe,
+  UpperCasePipe,
 } from "@angular/common";
 
 @Component({
@@ -88,15 +89,16 @@ export class EquityComponent implements OnInit {
     const tp = new TitleCasePipe();
     const dp = new DecimalPipe("en");
     const cp = new CurrencyPipe("en");
+    const up = new UpperCasePipe();
 
     const dataToReturn: Array<IFEquityCollectionEntity> = [];
     for (const item of data) {
       const objToPush = {};
       objToPush["name"] = tp.transform(item.name);
       objToPush["folioNo"] = item.folioNo;
-      objToPush["companyName"] = tp.transform(item.companyName);
-      objToPush["quantity"] = dp.transform(item.quantity);
-      objToPush["rate"] = dp.transform(item.rate);
+      objToPush["companyName"] = up.transform(item.companyName);
+      objToPush["quantity"] = item.quantity;
+      objToPush["rate"] = cp.transform(item.rate, "INR");
       objToPush["amt"] = cp.transform(item.amount, "INR");
       objToPush["purchaseDate"] = new DatePipe("en").transform(
         item.purchaseDate,
