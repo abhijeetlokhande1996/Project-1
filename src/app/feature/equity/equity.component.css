@@ -1,0 +1,15 @@
+.spinner-size {
+  min-height: 60vh;
+  align-items: center;
+}
+
+.cal {
+  font-size: 1.5rem;
+  margin: 0 -2rem;
+  z-index: 10;
+}
+
+.reset {
+  right: 0;
+  position: absolute;
+}

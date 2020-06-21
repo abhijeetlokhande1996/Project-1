@@ -23,7 +23,6 @@ export class PrimeTableComponent implements OnInit {
   @Input()
   set sipDataToShow(data: Array<any>) {
     this._dataToShow = data;
-    console.log(this._dataToShow);
   }
 
   constructor() {}
