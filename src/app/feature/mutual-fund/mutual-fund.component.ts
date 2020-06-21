@@ -31,6 +31,7 @@ import {
 import { NavModel } from "../../models/nav.model";
 import { NavDataService } from "../../services/nav-data.service";
 import { from, merge, of } from "rxjs";
+import { PDFGenerator } from "../../shared/lib/reuse-func";
 
 @Component({
   selector: "app-monthly-sip",
@@ -277,6 +278,18 @@ export class MutualFundComponent implements OnInit {
     }
     return color;
   }
+
+  generatePdf = () => {
+    let headers = [];
+    let data = [];
+    this.colHeaderMapArray.map((heads) => headers.push(heads[1]));
+    this.filteredMfData.map((value) => {
+      const nonNullData = Object.values(value).filter((data) => data);
+      data.push(nonNullData);
+    });
+    console.log(data);
+    PDFGenerator([headers], data);
+  };
 
   onClickPrint() {
     const columns = [
