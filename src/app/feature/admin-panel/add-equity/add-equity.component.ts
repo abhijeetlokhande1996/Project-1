@@ -17,7 +17,7 @@ export class AddEquityComponent implements OnInit {
       companyName: new FormControl(null, [Validators.required]),
       quantity: new FormControl(null, [Validators.required]),
       rate: new FormControl(null, [Validators.required]),
-      amount: new FormControl(null, [Validators.required]),
+      amount: new FormControl(null),
       purchaseDate: new FormControl(null, [Validators.required]),
     });
     this.equityForm.get("quantity").valueChanges.subscribe((val) => {
