@@ -250,7 +250,6 @@ export class EquityComponent implements OnInit {
     let headers = [];
     let data = [];
     this.colHeaderMapArray.map((heads) => headers.push(heads[1]));
-    headers.push("Current Rate");
 
     for (const item of this.unTransfilteredEqData) {
       const nonNullData = [];
