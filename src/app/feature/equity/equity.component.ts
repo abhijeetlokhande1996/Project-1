@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, IterableDiffers } from "@angular/core";
 import { FormGroup, Validators, FormControl } from "@angular/forms";
 import {
   IEquityCollectionEntity,
@@ -50,7 +50,6 @@ export class EquityComponent implements OnInit {
     this.colHeaderMapArray = [
       ["folioNo", "Id"],
       ["name", "Name"],
-
       ["companyName", "Company Name"],
       ["purchaseDate", "Purchase Date"],
       ["rate", "Rate"],
@@ -73,7 +72,7 @@ export class EquityComponent implements OnInit {
     });
     this.dbService.getEquities().subscribe((resp) => {
       this.eqData = resp;
-
+      console.log("1111 ", this.eqData);
       const fData: Array<IEquityCollectionEntity> = this.filterData(
         null,
         JSON.parse(JSON.stringify(this.eqData))
@@ -136,7 +135,7 @@ export class EquityComponent implements OnInit {
       objToPush["companyName"] = up.transform(item.companyName);
       objToPush["quantity"] = item.quantity;
       objToPush["rate"] = cp.transform(item.rate, "INR");
-      objToPush["amt"] = cp.transform(item.amount, "INR");
+      objToPush["amt"] = cp.transform(item.amt, "INR");
       objToPush["purchaseDate"] = new DatePipe("en").transform(
         item.purchaseDate,
         "dd-MMM-yyyy"
@@ -220,7 +219,7 @@ export class EquityComponent implements OnInit {
         this.chartLabel.push(item.companyName.toUpperCase());
       }
 
-      this.chartData.push(item.amount);
+      this.chartData.push(item.amt);
       while (true) {
         const colorHexCode = this.getRandomColor();
         if (this.chartColor[0]["backgroundColor"].indexOf(colorHexCode) == -1) {
@@ -250,10 +249,21 @@ export class EquityComponent implements OnInit {
     let headers = [];
     let data = [];
     this.colHeaderMapArray.map((heads) => headers.push(heads[1]));
-    this.filteredEqData.map((value) => {
-      const nonNullData = Object.values(value).filter((data) => data);
-      data.push(nonNullData);
-    });
+    console.log(this.unTransfilteredEqData);
+    for (const item of this.unTransfilteredEqData) {
+      const nonNullData = [];
+      for (const head of this.colHeaderMapArray) {
+        let val = item[head[0]];
+        if (head[0].toLowerCase() == "purchasedate") {
+          val = new DatePipe("en").transform(val, "dd-MMM-yyyy");
+        } else if (head[0].toLowerCase() == "amt") {
+          val = new DecimalPipe("en").transform(val);
+        }
+        nonNullData.push(val);
+      }
+      data.push(JSON.parse(JSON.stringify(nonNullData)));
+    }
+
     PDFGenerator([headers], data).then(
       (res: { status: Boolean; message: string }) => {
         if (res.status) {
