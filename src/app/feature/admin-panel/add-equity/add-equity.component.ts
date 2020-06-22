@@ -1,7 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { IAddEquity } from "../../../interfaces/IEquity.interface";
-import { validateEventsArray } from "@angular/fire/firestore";
 @Component({
   selector: "app-add-equity",
   templateUrl: "./add-equity.component.html",

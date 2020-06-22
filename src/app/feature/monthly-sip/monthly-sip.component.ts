@@ -26,6 +26,8 @@ import {
 import { from } from "rxjs";
 import { NavModel } from "../../models/nav.model";
 import { NavDataService } from "../../services/nav-data.service";
+import { PDFGenerator } from "../../shared/lib/reuse-func";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-monthly-sip",
@@ -51,7 +53,8 @@ export class MonthlySipComponent implements OnInit {
   navData: Array<NavModel>;
   constructor(
     private dbService: DatabaseService,
-    private navDataService: NavDataService
+    private navDataService: NavDataService,
+    private toastrService: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -280,92 +283,28 @@ export class MonthlySipComponent implements OnInit {
     return color;
   }
 
-  onClickPrint() {
-    const columns = [
-      {
-        id: "clientName",
-        header: "Name",
-        align: "center",
-        width: 100,
-        height: 100,
-        valign: "center",
-      },
-
-      {
-        id: "folioNo",
-        header: "Folio Number",
-        width: 100,
-        valign: "center",
-        align: "center",
-      },
-      {
-        id: "schemeName",
-        header: "Scheme Name",
-        width: 100,
-        valign: "center",
-        align: "center",
-      },
-      {
-        id: "startDate",
-        header: "Start Date",
-        width: 100,
-        valign: "center",
-        align: "center",
-      },
-      {
-        id: "currentValue",
-        header: "Current Value",
-        width: 100,
-        valign: "center",
-        align: "center",
-      },
-      {
-        id: "amt",
-        header: "Amount Invested",
-        width: 100,
-        valign: "center",
-        align: "center",
-      },
-    ];
-
-    const dataToSend: Array<{}> = [];
-    for (const item of this.unTransfilteredSipData) {
-      let nav = 0;
-      const idx = this.navData.findIndex(
-        (el: NavModel) =>
-          el.schemeName.toLowerCase() == item.schemeName.toLowerCase()
-      );
-      if (idx >= 0) {
-        nav = this.navData[idx].netAssetValue;
+  generatePDF = () => {
+    let headers = [];
+    let data = [];
+    this.colHeaderMapArray.map((heads) => headers.push(heads[1]));
+    this.unTransfilteredSipData.map((value) => {
+      const nonNullData = Object.values(value).filter((data) => data);
+      data.push(nonNullData);
+    });
+    PDFGenerator([headers], data, "SIP").then(
+      (res: { status: Boolean; message: string }) => {
+        if (res.status) {
+          setTimeout(() => {
+            this.toastrService.success(res.message);
+          }, 5000);
+        } else {
+          setTimeout(() => {
+            this.toastrService.error(res.message);
+          }, 5000);
+        }
       }
-
-      if (!item.regDate) {
-        item.regDate = new Date().toString();
-      }
-
-      const objToPush = {
-        clientName: item.clientName.toUpperCase(),
-
-        folioNo: item.folioNo,
-        schemeName: item.schemeName.toUpperCase(),
-        startDate: new DatePipe("en").transform(
-          new Date(item.startDate),
-          "longDate"
-        ),
-        amt: new DecimalPipe("en").transform(item.amt),
-        currentValue: nav,
-      };
-      dataToSend.push(objToPush);
-    }
-    const status = pdfMaker(columns, dataToSend, "monthly-sip-statement.pdf");
-    setTimeout(() => {
-      if (status) {
-        alert("Success");
-      } else {
-        alert("Failure");
-      }
-    }, 500);
-  }
+    );
+  };
 
   onStartDateSelect(startDate) {
     this.endDate = null;

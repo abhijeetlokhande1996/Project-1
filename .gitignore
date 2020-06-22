@@ -10,6 +10,7 @@ main.js
 src/**/*.js
 !src/karma.conf.js
 *.js.map
+*.pdf
 
 # dependencies
 /node_modules
@@ -40,6 +41,7 @@ npm-debug.log
 testem.log
 /typings
 package-lock.json
+*.pdf
 
 # e2e
 /e2e/*.js

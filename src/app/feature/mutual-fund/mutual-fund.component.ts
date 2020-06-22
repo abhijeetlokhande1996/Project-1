@@ -275,11 +275,11 @@ export class MutualFundComponent implements OnInit {
     let headers = [];
     let data = [];
     this.colHeaderMapArray.map((heads) => headers.push(heads[1]));
-    this.filteredMfData.map((value) => {
+    this.unTransFilteredMfData.map((value) => {
       const nonNullData = Object.values(value).filter((data) => data);
       data.push(nonNullData);
     });
-    PDFGenerator([headers], data).then(
+    PDFGenerator([headers], data, "MF").then(
       (res: { status: Boolean; message: string }) => {
         if (res.status) {
           setTimeout(() => {
