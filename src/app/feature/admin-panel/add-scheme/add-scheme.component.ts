@@ -34,6 +34,7 @@ export class AddSchemeComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
+    this.filteredMFFamily = Object.keys(this.mFundAndSchemeMapping);
     this.schemeForm = new FormGroup({
       schemeName: new FormControl(null, [Validators.required]),
       schemeCode: new FormControl({ value: null, disabled: true }, [
