@@ -289,8 +289,8 @@ export class MutualFundComponent implements OnInit {
     });
 
     data = data.map((item) => {
-      item[4] = new DatePipe("en").transform(item[4], "longDate");
-      item[5] = new DecimalPipe("en").transform(item[5]);
+      item[3] = new DatePipe("en").transform(item[3], "longDate");
+      item[4] = new DecimalPipe("en").transform(item[4]);
       return item;
     });
     PDFGenerator([headers], data, "MF").then(
