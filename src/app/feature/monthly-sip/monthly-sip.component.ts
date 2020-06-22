@@ -14,7 +14,6 @@ import { ChartType, ChartOptions } from "chart.js";
 import { Label } from "ng2-charts";
 import * as pluginDataLabels from "chartjs-plugin-datalabels";
 import "chart.piecelabel.js";
-import { pdfMaker } from "./../../shared/lib/pdf-maker";
 
 import {
   TitleCasePipe,
@@ -63,7 +62,7 @@ export class MonthlySipComponent implements OnInit {
 
       ["folioNo", "Folio Number"],
       ["schemeName", "Scheme Name"],
-      ["freqType", "Frequency Type"],
+
       ["startDate", "Start Date"],
 
       ["amt", "Installment Amount"],
@@ -209,7 +208,7 @@ export class MonthlySipComponent implements OnInit {
       if (item["schemes"]) {
         for (const el of item.schemes) {
           objToPush["schemeName"] = el["schemeName"];
-          objToPush["freqType"] = el["freqType"];
+
           objToPush["startDate"] = el["startDate"];
           objToPush["amt"] = el["amt"];
           result.push(this.getDeepCopy(objToPush));
@@ -240,7 +239,7 @@ export class MonthlySipComponent implements OnInit {
       item["regDate"] = datePipe.transform(item["regDate"], "dd-MMM-yyyy");
       item["folioNo"] = item["folioNo"];
       item["schemeName"] = tcPipe.transform(item["schemeName"]);
-      item["freqType"] = tcPipe.transform(item["freqType"]);
+
       item["startDate"] = datePipe.transform(item["startDate"], "dd-MMM-yyyy");
       item["endDate"] = datePipe.transform(item["endDate"], "dd-MMM-yyyy");
       item["amt"] = cp.transform(item["amt"], "INR");

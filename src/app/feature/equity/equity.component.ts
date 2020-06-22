@@ -53,7 +53,7 @@ export class EquityComponent implements OnInit {
       ["name", "Name"],
       ["companyName", "Company Name"],
       ["purchaseDate", "Purchase Date"],
-      ["rate", "Rate"],
+      ["rate", "Entered Rate"],
       ["quantity", "Quantity"],
       ["amt", "Amount Invested"],
     ];
@@ -73,7 +73,7 @@ export class EquityComponent implements OnInit {
     });
     this.dbService.getEquities().subscribe((resp) => {
       this.eqData = resp;
-      console.log("1111 ", this.eqData);
+
       const fData: Array<IEquityCollectionEntity> = this.filterData(
         null,
         JSON.parse(JSON.stringify(this.eqData))
