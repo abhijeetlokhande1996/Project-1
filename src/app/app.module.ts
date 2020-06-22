@@ -27,7 +27,6 @@ import {
   AngularFireDatabase,
 } from "@angular/fire/database";
 import { AngularFirestoreModule } from "@angular/fire/firestore";
-import { firebaseConfig } from "../environments/environment";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { ToastrModule } from "ngx-toastr";
 import { KeysPipe } from "./pipes/keys.pipe";
@@ -37,6 +36,16 @@ import { AddClientComponent } from "./feature/admin-panel/add-client/add-client.
 import { AddSchemeComponent } from "./feature/admin-panel/add-scheme/add-scheme.component";
 import { AddEquityComponent } from "./feature/admin-panel/add-equity/add-equity.component";
 import { SortByPipe } from "./pipes/sortBy.pipe";
+const firebaseConfig = {
+  apiKey: "AIzaSyDey1BZs4_4pdsruD7IN34AabaWnkZxxx0",
+  authDomain: "shri-record-book-36ad1.firebaseapp.com",
+  databaseURL: "https://shri-record-book-36ad1.firebaseio.com",
+  projectId: "shri-record-book-36ad1",
+  storageBucket: "shri-record-book-36ad1.appspot.com",
+  messagingSenderId: "478091212753",
+  appId: "1:478091212753:web:429ca14fb94ef684bed2f0",
+  measurementId: "G-HRWPNECMYX",
+};
 @NgModule({
   declarations: [
     AppComponent,

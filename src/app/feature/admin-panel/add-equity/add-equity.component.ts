@@ -1,7 +1,8 @@
 import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { IAddEquity } from "../../../interfaces/IEquity.interface";
-import listings from "./../../../../assets/json/listings.json";
+
+import listings from "C:\\Lincoln Tech\\listings.json";
 @Component({
   selector: "app-add-equity",
   templateUrl: "./add-equity.component.html",

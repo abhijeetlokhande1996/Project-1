@@ -1,6 +1,6 @@
 export const AppConfig = {
   production: false,
-  environment: 'LOCAL'
+  environment: "LOCAL",
 };
 
 export const firebaseConfig = {
@@ -11,5 +11,5 @@ export const firebaseConfig = {
   storageBucket: "shri-record-book-36ad1.appspot.com",
   messagingSenderId: "478091212753",
   appId: "1:478091212753:web:429ca14fb94ef684bed2f0",
-  measurementId: "G-HRWPNECMYX"
+  measurementId: "G-HRWPNECMYX",
 };

@@ -85,31 +85,36 @@ try {
   // Catch Error
   // throw e;
 } finally {
+  console.log(__dirname);
   downloadCSV()
     .then((d) => {
       const data: Array<{}> = [];
-      const readPath = path.resolve(
-        __dirname,
-        "src",
-        "assets",
-        "csv",
-        "listings.csv"
-      );
-      const writePath = path.resolve(
-        __dirname,
-        "src",
-        "assets",
-        "json",
-        "listings.json"
-      );
-      fs.createReadStream(readPath)
+      const dir = "C:Lincoln Tech";
+      // const readPath = path.resolve(
+      //   __dirname,
+      //   "src",
+      //   "assets",
+      //   "csv",
+      //   "listings.csv"
+      // );
+      // const writePath = path.resolve(
+      //   __dirname,
+      //   "src",
+      //   "assets",
+      //   "json",
+      //   "listings.json"
+      // );
+      fs.createReadStream(path.resolve(dir, "listings.csv"))
         .pipe(csv())
         .on("data", (row) => {
           data.push(row);
         })
         .on("end", () => {
           try {
-            fs.writeFileSync(writePath, JSON.stringify(data, null, 2));
+            fs.writeFileSync(
+              path.resolve(dir, "listings.json"),
+              JSON.stringify(data, null, 2)
+            );
           } catch {
             console.log("unable to write listings.json file");
           }
@@ -121,14 +126,19 @@ try {
 async function downloadCSV() {
   const url =
     "https://www1.nseindia.com/corporates/datafiles/LDE_EQUITIES_MORE_THAN_5_YEARS.csv";
+  const dir = "C:Lincoln Tech";
+
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
   const pathName = path.resolve(
-    __dirname,
-    "src",
-    "assets",
-    "csv",
+    dir,
+    // "src",
+    // "assets",
+    // "csv",
     "listings.csv"
   );
-  console.log("path name -- ", pathName);
+
   const writer = fs.createWriteStream(pathName);
   const response = await axios({
     url: url,
