@@ -1,6 +1,10 @@
 import { app, BrowserWindow, screen } from "electron";
 import * as path from "path";
 import * as url from "url";
+import axios from "axios";
+import * as fs from "fs";
+import * as csv from "csv-parser";
+import * as util from "util";
 
 let win: BrowserWindow = null;
 
@@ -80,4 +84,61 @@ try {
 } catch (e) {
   // Catch Error
   // throw e;
+} finally {
+  downloadCSV()
+    .then((d) => {
+      const data: Array<{}> = [];
+      const readPath = path.resolve(
+        __dirname,
+        "src",
+        "assets",
+        "csv",
+        "listings.csv"
+      );
+      const writePath = path.resolve(
+        __dirname,
+        "src",
+        "assets",
+        "json",
+        "listings.json"
+      );
+      fs.createReadStream(readPath)
+        .pipe(csv())
+        .on("data", (row) => {
+          data.push(row);
+        })
+        .on("end", () => {
+          try {
+            fs.writeFileSync(writePath, JSON.stringify(data, null, 2));
+          } catch {
+            console.log("unable to write listings.json file");
+          }
+        });
+    })
+    .catch((e) => console.log("unable to download listings.csv for NSE"));
+}
+
+async function downloadCSV() {
+  const url =
+    "https://www1.nseindia.com/corporates/datafiles/LDE_EQUITIES_MORE_THAN_5_YEARS.csv";
+  const pathName = path.resolve(
+    __dirname,
+    "src",
+    "assets",
+    "csv",
+    "listings.csv"
+  );
+  console.log("path name -- ", pathName);
+  const writer = fs.createWriteStream(pathName);
+  const response = await axios({
+    url: url,
+    method: "GET",
+    responseType: "stream",
+  });
+  response.data.pipe(writer);
+
+  return new Promise((resolve, reject) => {
+    writer.on("finish", resolve);
+    writer.on("error", reject);
+  });
 }

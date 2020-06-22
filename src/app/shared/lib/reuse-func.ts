@@ -1,6 +1,7 @@
 import * as jsPDF from "jspdf";
 import "jspdf-autotable";
 import { imageURIs } from "./data-buffer";
+import * as quote from "stock-quote";
 
 export const PDFGenerator = (headers, data, type?: string) => {
   return new Promise((resolve, reject) => {
@@ -59,5 +60,14 @@ export const PDFGenerator = (headers, data, type?: string) => {
         message: "Something went wrong. Try again!",
       });
     }
+  });
+};
+
+export const GetQuote = (symbol: string) => {
+  return new Promise((resolve, reject) => {
+    quote.getQuote(symbol.toUpperCase(), "NS").then((data) => {
+      console.log(JSON.stringify(data, null, 4));
+      resolve(JSON.stringify(data, null, 4));
+    });
   });
 };

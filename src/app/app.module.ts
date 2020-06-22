@@ -36,7 +36,7 @@ import { AuthComponent } from "./feature/admin-panel/auth/auth.component";
 import { AddClientComponent } from "./feature/admin-panel/add-client/add-client.component";
 import { AddSchemeComponent } from "./feature/admin-panel/add-scheme/add-scheme.component";
 import { AddEquityComponent } from "./feature/admin-panel/add-equity/add-equity.component";
-
+import { SortByPipe } from "./pipes/sortBy.pipe";
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,6 +50,7 @@ import { AddEquityComponent } from "./feature/admin-panel/add-equity/add-equity.
     AddClientComponent,
     AddSchemeComponent,
     AddEquityComponent,
+    SortByPipe,
   ],
   imports: [
     BrowserModule,

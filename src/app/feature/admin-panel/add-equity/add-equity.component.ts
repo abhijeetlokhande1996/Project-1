@@ -1,17 +1,20 @@
 import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { IAddEquity } from "../../../interfaces/IEquity.interface";
+import listings from "./../../../../assets/json/listings.json";
 @Component({
   selector: "app-add-equity",
   templateUrl: "./add-equity.component.html",
   styleUrls: ["./add-equity.component.css"],
 })
 export class AddEquityComponent implements OnInit {
+  listingJson: Array<{}>;
   equityForm: FormGroup;
   @Output() eqDataEventEmitter: EventEmitter<IAddEquity> = new EventEmitter();
   constructor() {}
 
   ngOnInit(): void {
+    this.listingJson = listings;
     this.equityForm = new FormGroup({
       folioNumber: new FormControl(null, [Validators.required]),
       companyName: new FormControl(null, [Validators.required]),
@@ -21,7 +24,14 @@ export class AddEquityComponent implements OnInit {
         Validators.required,
       ]),
       purchaseDate: new FormControl(null, [Validators.required]),
+      isin: new FormControl({ value: null, disabled: true }, [
+        Validators.required,
+      ]),
+      symbol: new FormControl({ value: null, disabled: true }, [
+        Validators.required,
+      ]),
     });
+
     this.equityForm.get("quantity").valueChanges.subscribe((val) => {
       const rate = this.equityForm.get("rate").value;
       let amt = val * rate;
@@ -35,6 +45,15 @@ export class AddEquityComponent implements OnInit {
       amt = amt ? amt : null;
 
       this.equityForm.get("amt").setValue(amt);
+    });
+    this.equityForm.get("companyName").valueChanges.subscribe((val) => {
+      const index = this.listingJson.findIndex((item) => {
+        return item["Company"] == val;
+      });
+      const isin = this.listingJson[index]["ISIN"];
+      const symbol = this.listingJson[index]["Symbol"];
+      this.equityForm.get("isin").setValue(isin);
+      this.equityForm.get("symbol").setValue(symbol);
     });
   }
   onSubmit() {

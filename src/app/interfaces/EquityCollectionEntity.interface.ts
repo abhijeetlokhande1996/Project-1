@@ -10,6 +10,8 @@ export interface HoldingsEntity {
   rate?: number;
   amt: number;
   purchaseDate: Date | string;
+  isin: string;
+  symbol: string;
 }
 
 export interface IFEquityCollectionEntity {
@@ -20,4 +22,6 @@ export interface IFEquityCollectionEntity {
   rate?: number;
   amt: number;
   purchaseDate: Date | string;
+  isin: string;
+  symbol: string;
 }
