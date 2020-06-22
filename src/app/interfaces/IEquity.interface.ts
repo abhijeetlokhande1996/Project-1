@@ -4,6 +4,6 @@ export interface IAddEquity {
   companyName: string;
   quantity: number;
   rate: number;
-  amount: number;
+  amt: number;
   purchaseDate: Date | string;
 }

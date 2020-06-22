@@ -8,7 +8,7 @@ export interface HoldingsEntity {
   companyName: string;
   quantity: number;
   rate?: number;
-  amount: number;
+  amt: number;
   purchaseDate: Date | string;
 }
 
@@ -18,6 +18,6 @@ export interface IFEquityCollectionEntity {
   companyName: string;
   quantity: number;
   rate?: number;
-  amount: number;
+  amt: number;
   purchaseDate: Date | string;
 }
