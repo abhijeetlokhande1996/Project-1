@@ -10,6 +10,8 @@ ul {
   border: 1px solid #ccc;
   z-index: 1000;
   padding: 0;
+  border-top: 0;
+  margin-top: -5px;
 }
 
 li {
