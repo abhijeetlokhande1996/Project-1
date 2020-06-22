@@ -10,11 +10,13 @@ import listings from "./../../../../assets/json/listings.json";
 export class AddEquityComponent implements OnInit {
   listingJson: Array<{}>;
   equityForm: FormGroup;
+  filteredStock: Array<{}> = [];
   @Output() eqDataEventEmitter: EventEmitter<IAddEquity> = new EventEmitter();
   constructor() {}
 
   ngOnInit(): void {
     this.listingJson = listings;
+    this.filteredStock = this.listingJson;
     this.equityForm = new FormGroup({
       folioNumber: new FormControl(null, [Validators.required]),
       companyName: new FormControl(null, [Validators.required]),
@@ -47,15 +49,15 @@ export class AddEquityComponent implements OnInit {
       this.equityForm.get("amt").setValue(amt);
     });
     this.equityForm.get("companyName").valueChanges.subscribe((val) => {
-      const index = this.listingJson.findIndex((item) => {
-        return item["Company"] == val;
-      });
-      const isin = this.listingJson[index]["ISIN"];
-      const symbol = this.listingJson[index]["Symbol"];
-      this.equityForm.get("isin").setValue(isin);
-      this.equityForm.get("symbol").setValue(symbol);
+      this.filteredStock = this.listingJson.filter(
+        (item) =>
+          item["Symbol"].toLowerCase().includes(val.toLowerCase()) ||
+          item["Company"].toLowerCase().includes(val.toLowerCase())
+      );
+      console.log(this.listingJson);
     });
   }
+
   onSubmit() {
     const objToEmit: IAddEquity = this.equityForm.getRawValue();
     const purchaseDate = this.equityForm.get("purchaseDate").value;
@@ -66,4 +68,10 @@ export class AddEquityComponent implements OnInit {
 
     this.eqDataEventEmitter.emit(objToEmit);
   }
+
+  selectedScript = (script) => {
+    console.log(script);
+    this.equityForm.get("isin").setValue(script["ISIN"]);
+    this.equityForm.get("symbol").setValue(script["Symbol"]);
+  };
 }
