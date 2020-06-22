@@ -3,41 +3,30 @@
 <form [formGroup]="equityForm" (ngSubmit)="onSubmit()">
   <div class="form-group">
     <label>Enter ID</label>
-    <input
-      type="number"
-      class="form-control"
-      [formControlName]="'folioNumber'"
-    />
+    <input type="number" class="form-control" [formControlName]="'folioNumber'" />
   </div>
 
   <div class="form-group">
     <label>Script/Stock Name</label>
-    <select class="form-control" [formControlName]="'companyName'">
-      <option [ngValue]="null" disabled>Select</option>
-      <option
-        *ngFor="let item of listingJson | sortBy: 'Company'"
-        [ngValue]="item['Company']"
-      >
-        {{ item["Company"] | uppercase }}
-      </option>
-    </select>
+    <input type="text" class="form-control" [formControlName]="'companyName'" />
+    <ng-container *ngIf="filteredStock.length > 0">
+      <ul>
+        <ng-container *ngFor="let item of filteredStock">
+          <li (click)="selectedScript(item)">
+            <strong>{{ item['Symbol'] }} - </strong> {{ item['Company'] }}
+          </li>
+        </ng-container>
+      </ul>
+    </ng-container>
   </div>
 
   <div class="form-group">
     <label>ISIN Number</label>
-    <input
-      type="text"
-      class="form-control disabled"
-      [formControlName]="'isin'"
-    />
+    <input type="text" class="form-control disabled" [formControlName]="'isin'" />
   </div>
   <div class="form-group">
     <label>Stock Symbol</label>
-    <input
-      type="text"
-      class="form-control disabled"
-      [formControlName]="'symbol'"
-    />
+    <input type="text" class="form-control disabled" [formControlName]="'symbol'" />
   </div>
   <div class="form-group">
     <label>Quantity</label>
@@ -49,35 +38,19 @@
   </div>
   <div class="form-group">
     <label>Total Amount</label>
-    <input
-      type="number"
-      class="form-control disabled"
-      [formControlName]="'amt'"
-    />
+    <input type="number" class="form-control disabled" [formControlName]="'amt'" />
   </div>
   <div class="form-group">
     <label>Select Purchase Date</label>
     <div class="input-group">
-      <input
-        class="form-control form-control-sm text-primary"
-        ngbDatepicker
-        #d1="ngbDatepicker"
-        [formControlName]="'purchaseDate'"
-      />
+      <input class="form-control form-control-sm text-primary" ngbDatepicker #d1="ngbDatepicker"
+        [formControlName]="'purchaseDate'" />
       <div class="input-group-append">
-        <i
-          class="fa fa-calendar pointer cal"
-          aria-hidden="true"
-          (click)="d1.toggle()"
-        ></i>
+        <i class="fa fa-calendar pointer cal" aria-hidden="true" (click)="d1.toggle()"></i>
       </div>
     </div>
   </div>
-  <button
-    class="btn btn-success d-block mx-auto"
-    type="submit"
-    [disabled]="!equityForm.valid"
-  >
+  <button class="btn btn-success d-block mx-auto" type="submit" [disabled]="!equityForm.valid">
     Add
   </button>
 </form>
