@@ -327,7 +327,7 @@ export class MonthlySipComponent implements OnInit {
         align: "center",
       },
     ];
-    console.log(JSON.parse(JSON.stringify(this.unTransfilteredSipData)));
+
     const dataToSend: Array<{}> = [];
     for (const item of this.unTransfilteredSipData) {
       let nav = 0;
