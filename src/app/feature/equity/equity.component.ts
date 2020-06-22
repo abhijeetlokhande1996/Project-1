@@ -17,6 +17,8 @@ import * as pluginDataLabels from "chartjs-plugin-datalabels";
 
 import { ChartOptions, ChartType } from "chart.js";
 import { Label } from "ng2-charts";
+import { PDFGenerator } from "../../shared/lib/reuse-func";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-equity",
@@ -39,12 +41,16 @@ export class EquityComponent implements OnInit {
   chartColor: Array<{}>;
 
   chartPlugins = [pluginDataLabels];
-  constructor(private dbService: DatabaseService) {}
+  constructor(
+    private dbService: DatabaseService,
+    private toastrService: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.colHeaderMapArray = [
-      ["name", "Name"],
       ["folioNo", "Id"],
+      ["name", "Name"],
+
       ["companyName", "Company Name"],
       ["purchaseDate", "Purchase Date"],
       ["rate", "Rate"],
@@ -239,4 +245,27 @@ export class EquityComponent implements OnInit {
     //this.generateChartData(this.filteredMfData);
     this.filteredEqData = this.transformData(this.filteredEqData);
   }
+
+  generatePdf = () => {
+    let headers = [];
+    let data = [];
+    this.colHeaderMapArray.map((heads) => headers.push(heads[1]));
+    this.filteredEqData.map((value) => {
+      const nonNullData = Object.values(value).filter((data) => data);
+      data.push(nonNullData);
+    });
+    PDFGenerator([headers], data).then(
+      (res: { status: Boolean; message: string }) => {
+        if (res.status) {
+          setTimeout(() => {
+            this.toastrService.success(res.message);
+          }, 5000);
+        } else {
+          setTimeout(() => {
+            this.toastrService.error(res.message);
+          }, 5000);
+        }
+      }
+    );
+  };
 }
