@@ -11,11 +11,9 @@ import { NavModel } from "../../models/nav.model";
 import { DatabaseService } from "../../services/database.service";
 import { ToastRef, ToastrService } from "ngx-toastr";
 import { IClient } from "../../interfaces/IClient.interface";
-import { IContext } from "mocha";
+
 import { IAddScheme } from "../../interfaces/IAddScheme.interface";
-import { AngularFirestore } from "@angular/fire/firestore";
 import { IAddEquity } from "../../interfaces/IEquity.interface";
-import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
 @Component({
   selector: "app-admin-panel",
   templateUrl: "./admin-panel.component.html",

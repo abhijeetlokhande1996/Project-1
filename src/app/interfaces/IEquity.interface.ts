@@ -6,4 +6,6 @@ export interface IAddEquity {
   rate: number;
   amt: number;
   purchaseDate: Date | string;
+  isin: string;
+  symbol: string;
 }
