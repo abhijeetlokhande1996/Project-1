@@ -249,7 +249,7 @@ export class EquityComponent implements OnInit {
     let headers = [];
     let data = [];
     this.colHeaderMapArray.map((heads) => headers.push(heads[1]));
-    console.log(this.unTransfilteredEqData);
+
     for (const item of this.unTransfilteredEqData) {
       const nonNullData = [];
       for (const head of this.colHeaderMapArray) {

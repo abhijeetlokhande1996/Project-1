@@ -3,7 +3,6 @@ import { DatabaseService } from "./services/database.service";
 import { map } from "rxjs/operators";
 import { NavModel } from "./models/nav.model";
 import { NavDataService } from "./services/nav-data.service";
-
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",

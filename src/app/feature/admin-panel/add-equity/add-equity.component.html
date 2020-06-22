@@ -12,7 +12,29 @@
 
   <div class="form-group">
     <label>Script/Stock Name</label>
-    <input type="text" class="form-control" [formControlName]="'companyName'" />
+    <select class="form-control" [formControlName]="'companyName'">
+      <option [ngValue]="null" disabled>Select</option>
+      <option *ngFor="let item of listingJson" [ngValue]="item['Company']">
+        {{ item["Company"] | uppercase }}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>ISIN Number</label>
+    <input
+      type="text"
+      class="form-control disabled"
+      [formControlName]="'isin'"
+    />
+  </div>
+  <div class="form-group">
+    <label>Stock Symbol</label>
+    <input
+      type="text"
+      class="form-control disabled"
+      [formControlName]="'symbol'"
+    />
   </div>
   <div class="form-group">
     <label>Quantity</label>
