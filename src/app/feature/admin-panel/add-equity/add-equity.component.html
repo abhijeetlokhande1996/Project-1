@@ -14,7 +14,10 @@
     <label>Script/Stock Name</label>
     <select class="form-control" [formControlName]="'companyName'">
       <option [ngValue]="null" disabled>Select</option>
-      <option *ngFor="let item of listingJson" [ngValue]="item['Company']">
+      <option
+        *ngFor="let item of listingJson | sortBy: 'Company'"
+        [ngValue]="item['Company']"
+      >
         {{ item["Company"] | uppercase }}
       </option>
     </select>

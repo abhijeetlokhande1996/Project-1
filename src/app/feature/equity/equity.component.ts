@@ -17,8 +17,9 @@ import * as pluginDataLabels from "chartjs-plugin-datalabels";
 
 import { ChartOptions, ChartType } from "chart.js";
 import { Label } from "ng2-charts";
-import { PDFGenerator } from "../../shared/lib/reuse-func";
+import { PDFGenerator, GetQuote } from "../../shared/lib/reuse-func";
 import { ToastrService } from "ngx-toastr";
+import * as quote from "stock-quote";
 
 @Component({
   selector: "app-equity",
@@ -249,6 +250,7 @@ export class EquityComponent implements OnInit {
     let headers = [];
     let data = [];
     this.colHeaderMapArray.map((heads) => headers.push(heads[1]));
+    headers.push("Current Rate");
 
     for (const item of this.unTransfilteredEqData) {
       const nonNullData = [];
@@ -261,10 +263,11 @@ export class EquityComponent implements OnInit {
         }
         nonNullData.push(val);
       }
+
       data.push(JSON.parse(JSON.stringify(nonNullData)));
     }
 
-    PDFGenerator([headers], data).then(
+    PDFGenerator([headers], data, "Equity").then(
       (res: { status: Boolean; message: string }) => {
         if (res.status) {
           setTimeout(() => {

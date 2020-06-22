@@ -126,9 +126,6 @@ export class AdminPanelComponent implements OnInit {
       });
   }
   getEqDataToInsert(obj: IAddEquity) {
-    delete obj["isin"];
-    delete obj["symbol"];
-
     this.isLoading = true;
     this.dbService
       .addSchemes(obj.folioNumber, "equities", obj)
