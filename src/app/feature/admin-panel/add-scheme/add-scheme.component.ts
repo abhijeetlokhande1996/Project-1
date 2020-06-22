@@ -19,7 +19,7 @@ import { IAddScheme } from "./../../..//interfaces/IAddScheme.interface";
 export class AddSchemeComponent implements OnInit {
   schemeForm: FormGroup;
   schemeNameArr: Array<string>;
-  collectionArr = ["Mutual Fund", "SIP", "Equity"];
+  collectionArr = ["Mutual Fund", "SIP"];
   freqType = ["Monthly", "Yearly", "Quaterly"];
   @Input() navData: Array<NavModel>;
   @Input() mFundAndSchemeMapping: {};
@@ -44,9 +44,7 @@ export class AddSchemeComponent implements OnInit {
       startDate: new FormControl({ year: 2020, month: 6, day: 6 }, [
         Validators.required,
       ]),
-      freqType: new FormControl({ value: "Monthly", disabled: true }, [
-        Validators.required,
-      ]),
+
       mFundFamily: new FormControl(null, [Validators.required]),
       amt: new FormControl(null, [Validators.required]),
       nav: new FormControl(null, [Validators.required]),
@@ -61,20 +59,24 @@ export class AddSchemeComponent implements OnInit {
     this.schemeForm
       .get("schemeName")
       .valueChanges.subscribe((selectedSchemeName: string) => {
-        this.filteredFunds = this.mFundAndSchemeMapping[
-          this.selectedFundFamily
-        ].filter((item) =>
-          item.toLowerCase().includes(selectedSchemeName.toLowerCase())
-        );
+        if (selectedSchemeName) {
+          this.filteredFunds = this.mFundAndSchemeMapping[
+            this.selectedFundFamily
+          ].filter((item) =>
+            item.toLowerCase().includes(selectedSchemeName.toLowerCase())
+          );
+        }
       });
     this.schemeForm
       .get("mFundFamily")
       .valueChanges.subscribe((selectedFundName: string) => {
+        this.selectedFundFamily = selectedFundName;
         this.filteredMFFamily = Object.keys(
           this.mFundAndSchemeMapping
         ).filter((item) =>
           item.toLowerCase().includes(selectedFundName.toLowerCase())
         );
+        this.schemeForm.get("schemeName").setValue(null);
       });
 
     this.schemeForm.get("amt").valueChanges.subscribe((amt) => {
@@ -114,7 +116,7 @@ export class AddSchemeComponent implements OnInit {
     this.filteredFunds = this.mFundAndSchemeMapping[item].sort();
   };
 
-  selectedFund = (fund: string) => {
+  selectedSchmeName = (fund: string) => {
     this.schemeForm.patchValue({ schemeName: fund });
     this.filteredFunds = [];
     const item: NavModel = this.navData.filter(

@@ -3,7 +3,7 @@ export interface IAddScheme {
   schemeName: string;
   schemeCode: string;
   startDate: Date;
-  freqType: string;
+
   amt: number;
   nav: number;
   mFundFamily: string;

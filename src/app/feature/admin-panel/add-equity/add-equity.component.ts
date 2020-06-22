@@ -1,7 +1,13 @@
-import { Component, OnInit, Output, EventEmitter } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Output,
+  EventEmitter,
+  IterableDiffers,
+} from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { IAddEquity } from "../../../interfaces/IEquity.interface";
-import listings from "./../../../../assets/json/listings.json";
+
 @Component({
   selector: "app-add-equity",
   templateUrl: "./add-equity.component.html",
@@ -15,7 +21,8 @@ export class AddEquityComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.listingJson = listings;
+    this.listingJson = this.readJsonFile();
+
     this.filteredStock = this.listingJson;
     this.equityForm = new FormGroup({
       folioNumber: new FormControl(null, [Validators.required]),
@@ -54,7 +61,6 @@ export class AddEquityComponent implements OnInit {
           item["Symbol"].toLowerCase().includes(val.toLowerCase()) ||
           item["Company"].toLowerCase().includes(val.toLowerCase())
       );
-      console.log(this.listingJson);
     });
   }
 
@@ -68,10 +74,20 @@ export class AddEquityComponent implements OnInit {
 
     this.eqDataEventEmitter.emit(objToEmit);
   }
+  readJsonFile() {
+    const path = window.require("path");
+    const fs = window.require("fs");
+    const filePath = path.resolve("C:\\Lincoln Tech\\listings.json");
+    let rawdata = fs.readFileSync(filePath);
+    const listingsArr = JSON.parse(rawdata);
+
+    return JSON.parse(JSON.stringify(listingsArr));
+  }
 
   selectedScript = (script) => {
-    console.log(script);
+    this.equityForm.get("companyName").setValue(script["Company"]);
     this.equityForm.get("isin").setValue(script["ISIN"]);
     this.equityForm.get("symbol").setValue(script["Symbol"]);
+    this.filteredStock.length = 0;
   };
 }

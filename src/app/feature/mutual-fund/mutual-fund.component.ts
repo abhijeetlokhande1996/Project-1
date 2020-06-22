@@ -65,7 +65,7 @@ export class MutualFundComponent implements OnInit {
 
       ["folioNo", "Folio Number"],
       ["schemeName", "Scheme Name"],
-      ["freqType", "Frequency Type"],
+
       ["startDate", "Start Date"],
       ["amt", "Amount"],
     ];
@@ -199,7 +199,7 @@ export class MutualFundComponent implements OnInit {
       if (item["schemes"]) {
         for (const el of item.schemes) {
           objToPush["schemeName"] = el["schemeName"];
-          objToPush["freqType"] = el["freqType"];
+
           objToPush["startDate"] = el["startDate"];
 
           objToPush["amt"] = el["amt"];
@@ -233,7 +233,7 @@ export class MutualFundComponent implements OnInit {
       item["regDate"] = datePipe.transform(item["regDate"], "dd-MMM-yyyy");
       item["folioNo"] = item["folioNo"];
       item["schemeName"] = tcPipe.transform(item["schemeName"]);
-      item["freqType"] = tcPipe.transform(item["freqType"]);
+
       item["startDate"] = datePipe.transform(item["startDate"], "dd-MMM-yyyy");
       item["endDate"] = datePipe.transform(item["endDate"], "dd-MMM-yyyy");
       item["amt"] = cp.transform(item["amt"], "INR");
