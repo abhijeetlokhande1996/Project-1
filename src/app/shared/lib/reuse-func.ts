@@ -2,7 +2,7 @@ import * as jsPDF from "jspdf";
 import "jspdf-autotable";
 import { imageURIs } from "./data-buffer";
 
-export const PDFGenerator = (headers, data) => {
+export const PDFGenerator = (headers, data, type?: string) => {
   return new Promise((resolve, reject) => {
     try {
       const doc = new jsPDF();
@@ -48,7 +48,7 @@ export const PDFGenerator = (headers, data) => {
       // Download PDF document
       const date = Date().toLocaleString().split(" ");
       const fileName = `${date[2]}-${date[1]}-${date[3]}(${date[4]})`;
-      doc.save(`${fileName}.pdf`);
+      doc.save(`${type}-${fileName}.pdf`);
       resolve({
         status: true,
         message: "Download started ...",
