@@ -2,7 +2,6 @@ import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { IAddEquity } from "../../../interfaces/IEquity.interface";
 
-import listings from "C:\\Lincoln Tech\\listings.json";
 @Component({
   selector: "app-add-equity",
   templateUrl: "./add-equity.component.html",
@@ -15,7 +14,7 @@ export class AddEquityComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.listingJson = listings;
+    this.listingJson = this.readJsonFile();
     this.equityForm = new FormGroup({
       folioNumber: new FormControl(null, [Validators.required]),
       companyName: new FormControl(null, [Validators.required]),
@@ -66,5 +65,14 @@ export class AddEquityComponent implements OnInit {
     objToEmit.purchaseDate = new Date(year, month, day).toString();
 
     this.eqDataEventEmitter.emit(objToEmit);
+  }
+  readJsonFile() {
+    const path = window.require("path");
+    const fs = window.require("fs");
+    const filePath = path.resolve("C:\\Lincoln Tech\\listings.json");
+    let rawdata = fs.readFileSync(filePath);
+    const listingsArr = JSON.parse(rawdata);
+
+    return JSON.parse(JSON.stringify(listingsArr));
   }
 }

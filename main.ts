@@ -85,25 +85,10 @@ try {
   // Catch Error
   // throw e;
 } finally {
-  console.log(__dirname);
   downloadCSV()
     .then((d) => {
       const data: Array<{}> = [];
       const dir = "C:Lincoln Tech";
-      // const readPath = path.resolve(
-      //   __dirname,
-      //   "src",
-      //   "assets",
-      //   "csv",
-      //   "listings.csv"
-      // );
-      // const writePath = path.resolve(
-      //   __dirname,
-      //   "src",
-      //   "assets",
-      //   "json",
-      //   "listings.json"
-      // );
       fs.createReadStream(path.resolve(dir, "listings.csv"))
         .pipe(csv())
         .on("data", (row) => {
@@ -116,11 +101,19 @@ try {
               JSON.stringify(data, null, 2)
             );
           } catch {
-            console.log("unable to write listings.json file");
+            fs.writeFileSync(
+              path.resolve(__dirname, "error.txt"),
+              "Error in writing json file"
+            );
           }
         });
     })
-    .catch((e) => console.log("unable to download listings.csv for NSE"));
+    .catch((e) => {
+      fs.writeFileSync(
+        path.resolve(__dirname, "error.txt"),
+        "Error in downloading"
+      );
+    });
 }
 
 async function downloadCSV() {
