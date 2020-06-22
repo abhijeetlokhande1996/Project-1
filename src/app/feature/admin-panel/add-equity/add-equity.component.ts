@@ -88,6 +88,6 @@ export class AddEquityComponent implements OnInit {
     this.equityForm.get("companyName").setValue(script["Company"]);
     this.equityForm.get("isin").setValue(script["ISIN"]);
     this.equityForm.get("symbol").setValue(script["Symbol"]);
-    this.filteredStock.length = 0;
+    this.filteredStock = [];
   };
 }
