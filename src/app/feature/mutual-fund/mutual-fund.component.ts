@@ -340,7 +340,7 @@ export class MutualFundComponent implements OnInit {
       for (const el of item.schemes) {
         if (
           new Date(el.startDate) >= minDate &&
-          new Date(el.startDate) < maxDate
+          new Date(el.startDate) <= maxDate
         ) {
           objToProcess.schemes.push(el);
         }
