@@ -2,52 +2,41 @@
 <form [formGroup]="schemeForm" (ngSubmit)="onSchemeFormSubmit()">
   <div class="form-group">
     <label>Enter Folio Number</label>
-    <input
-      type="number"
-      class="form-control"
-      [formControlName]="'folioNumber'"
-    />
+    <input type="number" class="form-control" [formControlName]="'folioNumber'" />
   </div>
   <div class="form-group">
     <label>Select Collection</label>
     <select class="form-control" [formControlName]="'collection'">
       <option class="form-control" [ngValue]="null" disabled>Select</option>
-      <option
-        class="form-control"
-        *ngFor="let cName of collectionArr"
-        [ngValue]="cName"
-        >{{ cName }}</option
-      >
+      <option class="form-control" *ngFor="let cName of collectionArr" [ngValue]="cName">{{ cName }}</option>
     </select>
   </div>
   <div class="form-group">
     <label>Select Fund Family</label>
-    <select class="form-control" [formControlName]="'mFundFamily'">
-      <option [ngValue]="null" disabled>Select</option>
-      <option
-        *ngFor="let key of mFundAndSchemeMapping | keys"
-        [ngValue]="key"
-        >{{ key | uppercase }}</option
-      >
-    </select>
+    <input type="text" class="form-control" [formControlName]="'mFundFamily'" />
+    <ng-container *ngIf="filteredMFFamily">
+      <ul>
+        <ng-container *ngFor="let item of filteredMFFamily">
+          <li (click)="selectedMF(item)">{{ item }}</li>
+        </ng-container>
+      </ul>
+    </ng-container>
   </div>
-  <div class="form-group" *ngIf="schemeForm.get('mFundFamily').value">
+  <div class="form-group" *ngIf="selectedFundFamily">
     <label>Select Scheme</label>
-    <select class="form-control" [formControlName]="'schemeName'">
-      <option [ngValue]="null" disabled>Select</option>
-      <option *ngFor="let sn of schemeNameArr" [ngValue]="sn">{{
-        sn | uppercase
-      }}</option>
-    </select>
+    <input type="text" class="form-control" [formControlName]="'schemeName'" />
+    <ng-container *ngIf="filteredMFFamily">
+      <ul>
+        <ng-container *ngFor="let item of filteredFunds">
+          <li (click)="selectedFund(item)">{{ item }}</li>
+        </ng-container>
+      </ul>
+    </ng-container>
   </div>
 
   <div class="form-group" *ngIf="schemeForm.get('schemeName').value">
     <label>Scheme Code</label>
-    <input
-      type="number"
-      class="form-control"
-      [formControlName]="'schemeCode'"
-    />
+    <input type="number" class="form-control disabled" [formControlName]="'schemeCode'" />
   </div>
   <div class="form-group">
     <label>Select Frequency Type</label>
@@ -59,18 +48,10 @@
   <div class="form-group">
     <label>Select Start Date</label>
     <div class="input-group">
-      <input
-        class="form-control form-control-sm text-primary"
-        ngbDatepicker
-        #d1="ngbDatepicker"
-        [formControlName]="'startDate'"
-      />
+      <input class="form-control form-control-sm text-primary" ngbDatepicker #d1="ngbDatepicker"
+        [formControlName]="'startDate'" />
       <div class="input-group-append">
-        <i
-          class="fa fa-calendar pointer cal"
-          aria-hidden="true"
-          (click)="d1.toggle()"
-        ></i>
+        <i class="fa fa-calendar pointer cal" aria-hidden="true" (click)="d1.toggle()"></i>
       </div>
     </div>
   </div>
@@ -86,11 +67,7 @@
     <label>Units</label>
     <input type="number" class="form-control" [formControlName]="'units'" />
   </div>
-  <button
-    class="btn btn-success d-block mx-auto"
-    type="submit"
-    [disabled]="!schemeForm.valid"
-  >
+  <button class="btn btn-success d-block mx-auto" type="submit" [disabled]="!schemeForm.valid">
     Add Scheme
   </button>
 </form>

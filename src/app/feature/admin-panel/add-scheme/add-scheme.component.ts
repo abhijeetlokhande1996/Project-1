@@ -1,4 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  QueryList,
+  ElementRef,
+} from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { NavModel } from "../../../models/nav.model";
 import { IAddScheme } from "./../../..//interfaces/IAddScheme.interface";
@@ -14,6 +23,10 @@ export class AddSchemeComponent implements OnInit {
   freqType = ["Monthly", "Yearly", "Quaterly"];
   @Input() navData: Array<NavModel>;
   @Input() mFundAndSchemeMapping: {};
+  filteredMFFamily: Array<string> = [];
+  filteredFunds: Array<string> = [];
+  selectedFundFamily: string = null;
+  selectedFundType: string = null;
 
   @Output() schemeDataEventEmitter: EventEmitter<
     IAddScheme
@@ -21,6 +34,7 @@ export class AddSchemeComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
+    this.filteredMFFamily = Object.keys(this.mFundAndSchemeMapping);
     this.schemeForm = new FormGroup({
       schemeName: new FormControl(null, [Validators.required]),
       schemeCode: new FormControl({ value: null, disabled: true }, [
@@ -47,23 +61,20 @@ export class AddSchemeComponent implements OnInit {
     this.schemeForm
       .get("schemeName")
       .valueChanges.subscribe((selectedSchemeName: string) => {
-        if (selectedSchemeName) {
-          const item: NavModel = this.navData.filter(
-            (item: NavModel) =>
-              item.schemeName.toLowerCase() == selectedSchemeName.toLowerCase()
-          )[0];
-
-          this.schemeForm.get("schemeCode").setValue(item.schemeCode);
-        }
+        this.filteredFunds = this.mFundAndSchemeMapping[
+          this.selectedFundFamily
+        ].filter((item) =>
+          item.toLowerCase().includes(selectedSchemeName.toLowerCase())
+        );
       });
     this.schemeForm
       .get("mFundFamily")
       .valueChanges.subscribe((selectedFundName: string) => {
-        this.schemeNameArr = this.mFundAndSchemeMapping[
-          selectedFundName
-        ].sort();
-        this.schemeForm.get("schemeName").setValue(null);
-        this.schemeForm.get("schemeCode").setValue(null);
+        this.filteredMFFamily = Object.keys(
+          this.mFundAndSchemeMapping
+        ).filter((item) =>
+          item.toLowerCase().includes(selectedFundName.toLowerCase())
+        );
       });
 
     this.schemeForm.get("amt").valueChanges.subscribe((amt) => {
@@ -85,6 +96,7 @@ export class AddSchemeComponent implements OnInit {
     }
     return units;
   }
+
   onSchemeFormSubmit() {
     const objToSend = JSON.parse(JSON.stringify(this.schemeForm.getRawValue()));
     const year = objToSend["startDate"]["year"];
@@ -94,4 +106,20 @@ export class AddSchemeComponent implements OnInit {
 
     this.schemeDataEventEmitter.emit(objToSend);
   }
+
+  selectedMF = (item: string) => {
+    this.selectedFundFamily = item;
+    this.schemeForm.patchValue({ mFundFamily: item });
+    this.filteredMFFamily = [];
+    this.filteredFunds = this.mFundAndSchemeMapping[item].sort();
+  };
+
+  selectedFund = (fund: string) => {
+    this.schemeForm.patchValue({ schemeName: fund });
+    this.filteredFunds = [];
+    const item: NavModel = this.navData.filter(
+      (item: NavModel) => item.schemeName.toLowerCase() === fund.toLowerCase()
+    )[0];
+    this.schemeForm.get("schemeCode").setValue(item.schemeCode);
+  };
 }
