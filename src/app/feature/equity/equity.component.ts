@@ -162,7 +162,7 @@ export class EquityComponent implements OnInit {
       for (const el of item.holdings) {
         if (
           new Date(el.purchaseDate) >= minDate &&
-          new Date(el.purchaseDate) < maxDate
+          new Date(el.purchaseDate) <= maxDate
         ) {
           objToProcess.holdings.push(el);
         }
