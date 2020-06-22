@@ -1,4 +1,10 @@
-import { Component, OnInit, Output, EventEmitter } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Output,
+  EventEmitter,
+  IterableDiffers,
+} from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { IAddEquity } from "../../../interfaces/IEquity.interface";
 
@@ -15,12 +21,9 @@ export class AddEquityComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-<<<<<<< HEAD
     this.listingJson = this.readJsonFile();
-=======
-    this.listingJson = listings;
+
     this.filteredStock = this.listingJson;
->>>>>>> a0664a80b00a2651296dc61fc39966151ba79735
     this.equityForm = new FormGroup({
       folioNumber: new FormControl(null, [Validators.required]),
       companyName: new FormControl(null, [Validators.required]),
@@ -58,7 +61,6 @@ export class AddEquityComponent implements OnInit {
           item["Symbol"].toLowerCase().includes(val.toLowerCase()) ||
           item["Company"].toLowerCase().includes(val.toLowerCase())
       );
-      console.log(this.listingJson);
     });
   }
 
@@ -83,8 +85,9 @@ export class AddEquityComponent implements OnInit {
   }
 
   selectedScript = (script) => {
-    console.log(script);
+    this.equityForm.get("companyName").setValue(script["Company"]);
     this.equityForm.get("isin").setValue(script["ISIN"]);
     this.equityForm.get("symbol").setValue(script["Symbol"]);
+    this.filteredStock.length = 0;
   };
 }
