@@ -61,8 +61,9 @@ export class MutualFundComponent implements OnInit {
 
   ngOnInit(): void {
     this.colHeaderMapArray = [
-      ["name", "Name"],
       ["id", "id"],
+      ["name", "Name"],
+
       ["folioNumber", "Folio Number"],
       ["schemeName", "Scheme Name"],
       ["startDate", "Start Date"],

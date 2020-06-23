@@ -37,7 +37,7 @@ export class AddSchemeComponent implements OnInit {
     this.dbService.getClientDetails().subscribe((res) => {
       const allUser = res.map((item) => item.payload.doc.data());
       allUser.forEach((item) => {
-        return this.clientsArr.push({ id: item["id"], name: item["name"] });
+        this.clientsArr.push({ id: item["id"], name: item["name"] });
       });
       this.filteredClients = this.clientsArr;
       this.isLoading = false;

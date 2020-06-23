@@ -37,7 +37,7 @@ export class MonthlySipComponent implements OnInit {
   sipData: Array<SipInterface> = [];
   filteredSipData: Array<IFSipInterface> = [];
   unTransfilteredSipData: Array<IFSipInterface> = [];
-  folioForm: FormGroup;
+  idForm: FormGroup;
   chartOptions: ChartOptions;
   chartType: ChartType;
   chartLegend: boolean;
@@ -58,9 +58,10 @@ export class MonthlySipComponent implements OnInit {
 
   ngOnInit(): void {
     this.colHeaderMapArray = [
-      ["clientName", "Name"],
+      ["id", "ID"],
+      ["name", "Name"],
 
-      ["folioNo", "Folio Number"],
+      ["folioNumber", "Folio Number"],
       ["schemeName", "Scheme Name"],
 
       ["startDate", "Start Date"],
@@ -78,17 +79,17 @@ export class MonthlySipComponent implements OnInit {
         position: "top",
       },
     };
-    this.folioForm = new FormGroup({
-      folioNo: new FormControl(null, [Validators.required]),
+    this.idForm = new FormGroup({
+      id: new FormControl(null, [Validators.required]),
     });
-    this.folioForm
-      .get("folioNo")
+    this.idForm
+      .get("id")
       .valueChanges.pipe(delay(100), distinctUntilChanged())
-      .subscribe((folioNo: number) => {
+      .subscribe((id: number) => {
         if (this.startDate && this.endDate) {
           this.onEndDateSelect(this.endDate);
         } else {
-          const fData: Array<SipInterface> = this.distillSipData(folioNo);
+          const fData: Array<SipInterface> = this.distillSipData(id);
           this.filteredSipData = this.getFlattenData(fData);
           this.unTransfilteredSipData = JSON.parse(
             JSON.stringify(this.filteredSipData)
@@ -107,21 +108,18 @@ export class MonthlySipComponent implements OnInit {
         const fNumbersArr = this.getAllFolioNumbers(this.getDeepCopy(resp));
         this.getAllClientDetails(this.getDeepCopy(fNumbersArr)).then(
           (data: Array<{}>) => {
-            console.log("Data ", JSON.parse(JSON.stringify(data)));
             for (const el of data) {
               if (el["isActive"]) {
-                const fNumber = el["folioNo"];
+                const id = el["id"];
                 const clientName = el["name"];
                 let itemArr: Array<SipInterface> = resp.filter(
-                  (item) => item["folioNo"] == fNumber
+                  (item) => item["id"] == id
                 );
 
                 itemArr.forEach((item) => {
-                  const idx = this.sipData.findIndex(
-                    (item) => item.id == fNumber
-                  );
+                  const idx = this.sipData.findIndex((item) => item.id == id);
                   if (idx < 0) {
-                    item["clientName"] = clientName;
+                    item["name"] = clientName;
                     this.sipData.push(item);
                   } else {
                     const sItem = this.sipData[idx];
@@ -130,7 +128,7 @@ export class MonthlySipComponent implements OnInit {
                 });
               }
             }
-            console.log(this.sipData);
+
             const fData: Array<SipInterface> = this.distillSipData(null);
 
             this.filteredSipData = this.getFlattenData(fData);
@@ -202,8 +200,8 @@ export class MonthlySipComponent implements OnInit {
     const result = [];
     for (const item of dataToFlat) {
       const objToPush = {};
-      objToPush["clientName"] = item["clientName"];
-      objToPush["regDate"] = item["regDate"];
+      objToPush["name"] = item["name"];
+
       objToPush["id"] = item["id"];
       if (item["schemes"]) {
         for (const el of item.schemes) {
@@ -211,19 +209,20 @@ export class MonthlySipComponent implements OnInit {
 
           objToPush["startDate"] = el["startDate"];
           objToPush["amt"] = el["amt"];
-          objToPush["folioNo"] = item["folioNo"];
+          objToPush["folioNumber"] = el["folioNumber"];
           result.push(this.getDeepCopy(objToPush));
         }
       }
     }
+
     return result;
   }
 
-  distillSipData(folioNo: number) {
+  distillSipData(id: number) {
     let dataToReturn = [];
-    if (folioNo) {
+    if (id) {
       dataToReturn = this.getDeepCopy(
-        this.sipData.filter((item) => item.id == folioNo)
+        this.sipData.filter((item) => item.id == id)
       );
     } else {
       dataToReturn = this.getDeepCopy(this.sipData);
@@ -236,9 +235,8 @@ export class MonthlySipComponent implements OnInit {
     const cp = new CurrencyPipe("en");
     const datePipe = new DatePipe("en");
     for (const item of data) {
-      item["clientName"] = tcPipe.transform(item["clientName"]);
-      item["regDate"] = datePipe.transform(item["regDate"], "dd-MMM-yyyy");
-      item["folioNo"] = item["folioNo"];
+      item["name"] = tcPipe.transform(item["name"]);
+
       item["schemeName"] = tcPipe.transform(item["schemeName"]);
 
       item["startDate"] = datePipe.transform(item["startDate"], "dd-MMM-yyyy");
@@ -334,8 +332,8 @@ export class MonthlySipComponent implements OnInit {
     this.filteredSipData = this.transformFilteredData(this.filteredSipData);
   }
   distillRecordsAccordingToRange(minDate: Date, maxDate: Date) {
-    const folioNumber = this.folioForm.get("folioNo").value;
-    let fData: Array<SipInterface> = this.distillSipData(folioNumber);
+    const id = this.idForm.get("id").value;
+    let fData: Array<SipInterface> = this.distillSipData(id);
 
     let dataToReturn = [];
     for (const item of fData) {
@@ -358,8 +356,8 @@ export class MonthlySipComponent implements OnInit {
   resetFilters() {
     this.startDate = null;
     this.endDate = null;
-    const folioNumber = this.folioForm.get("folioNo").value;
-    const fData: Array<SipInterface> = this.distillSipData(folioNumber);
+    this.idForm.get("id").setValue(null);
+    const fData: Array<SipInterface> = this.distillSipData(null);
     this.filteredSipData = null;
     this.filteredSipData = this.getFlattenData(fData);
     this.generateChartData(this.filteredSipData);

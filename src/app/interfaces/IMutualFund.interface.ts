@@ -1,7 +1,7 @@
 import { Scheme } from "./sip.interface";
 
 export interface IMutualFund {
-  clientName: string;
+  name: string;
   regDate?: Date;
   id: number;
   schemes: Array<Scheme>;
@@ -13,7 +13,7 @@ export interface IFMutualFund {
   startDate: Date | string;
   endDate: Date | string;
 
-  clientName: string;
+  name: string;
   regDate: Date | string;
   folioNo: number | string;
   amt: number | string;
