@@ -4,9 +4,11 @@ import {
   Output,
   EventEmitter,
   IterableDiffers,
+  Input,
 } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { IAddEquity } from "../../../interfaces/IEquity.interface";
+import { IClient } from "../../../interfaces/IClient.interface";
 
 @Component({
   selector: "app-add-equity",
@@ -17,7 +19,21 @@ export class AddEquityComponent implements OnInit {
   listingJson: Array<{}>;
   equityForm: FormGroup;
   filteredStock: Array<{}> = [];
+  clientsArr: Array<{}>;
+  fileredClientsArr: Array<{}>;
   @Output() eqDataEventEmitter: EventEmitter<IAddEquity> = new EventEmitter();
+
+  @Input()
+  set clientDetails(cd: Array<IClient>) {
+    if (cd) {
+      this.clientsArr = cd.map((item) => {
+        return {
+          name: item.name,
+          id: item.id,
+        };
+      });
+    }
+  }
   constructor() {}
 
   ngOnInit(): void {
@@ -25,7 +41,11 @@ export class AddEquityComponent implements OnInit {
 
     this.filteredStock = this.listingJson;
     this.equityForm = new FormGroup({
-      folioNumber: new FormControl(null, [Validators.required]),
+      id: new FormControl({ value: null, disabled: true }, [
+        Validators.required,
+      ]),
+      clientName: new FormControl(null, [Validators.required]),
+
       companyName: new FormControl(null, [Validators.required]),
       quantity: new FormControl(null, [Validators.required]),
       rate: new FormControl(null, [Validators.required]),
@@ -62,6 +82,11 @@ export class AddEquityComponent implements OnInit {
           item["Company"].toLowerCase().includes(val.toLowerCase())
       );
     });
+    this.equityForm.get("clientName").valueChanges.subscribe((val: string) => {
+      this.fileredClientsArr = this.clientsArr.filter((item) =>
+        item["name"].toLowerCase().startsWith(val.toLowerCase())
+      );
+    });
   }
 
   onSubmit() {
@@ -90,4 +115,9 @@ export class AddEquityComponent implements OnInit {
     this.equityForm.get("symbol").setValue(script["Symbol"]);
     this.filteredStock = [];
   };
+  onClickClientName(item) {
+    this.equityForm.get("id").setValue(item["id"]);
+    this.equityForm.get("clientName").setValue(item["name"]);
+    this.fileredClientsArr = [];
+  }
 }

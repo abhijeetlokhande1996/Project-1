@@ -1,5 +1,5 @@
 export interface IAddEquity {
-  folioNumber: number;
+  id: number;
   clientName: string;
   companyName: string;
   quantity: number;

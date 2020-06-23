@@ -99,6 +99,7 @@ export class AdminPanelComponent implements OnInit {
     this.isLoading = true;
     const data = { ...schemeData };
     delete data.id;
+    delete data.clientName;
     let cName = null;
     if (schemeData.collection.toLowerCase() == "mutual fund") {
       cName = "mfs";
@@ -123,6 +124,7 @@ export class AdminPanelComponent implements OnInit {
         if (res["id"]) {
           this.isLoading = false;
           this.toastrService.success(res["message"]);
+          this.getAllClients();
         } else {
           this.isLoading = false;
           this.toastrService.error(res["message"]);
@@ -136,8 +138,11 @@ export class AdminPanelComponent implements OnInit {
   }
   getEqDataToInsert(obj: IAddEquity) {
     this.isLoading = true;
+    const data = { ...obj };
+    delete data.id;
+    delete data.clientName;
     this.dbService
-      .addSchemes(obj.folioNumber, "equities", obj)
+      .addSchemes(obj.id, "equities", data)
       .then((res: { status: boolean; message: string; data?: any }) => {
         this.isLoading = false;
         res.status

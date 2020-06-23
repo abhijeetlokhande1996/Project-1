@@ -81,7 +81,7 @@ export class DatabaseService {
           resolve({
             status: false,
             message:
-              "Folio number is associated to another user. Please choose unique folio number.",
+              "ID is associated to another user. Please choose unique ID.",
             id: null,
           });
         } else {

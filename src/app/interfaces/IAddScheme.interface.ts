@@ -1,5 +1,6 @@
 export interface IAddScheme {
   id: number;
+  clientName: string;
   folioNumber: number;
   schemeName: string;
   schemeCode: string;
