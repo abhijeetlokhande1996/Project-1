@@ -80,7 +80,7 @@ export class AddSchemeComponent implements OnInit {
   }
   triggerValueChanges() {
     this.schemeForm.get("clientName").valueChanges.subscribe((val: string) => {
-      this.fileredClientsArr = this.clientsArr.filter((item) =>
+      this.filteredClients = this.clientsArr.filter((item) =>
         item["name"].toLowerCase().startsWith(val.toLowerCase())
       );
     });
