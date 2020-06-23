@@ -47,6 +47,7 @@ export class AdminPanelComponent implements OnInit {
       .getClients()
       .pipe(take(1))
       .subscribe((resp) => {
+        this.clientDetails = null;
         this.clientDetails = resp;
       });
   }

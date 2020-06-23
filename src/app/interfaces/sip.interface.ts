@@ -5,6 +5,9 @@ export interface Scheme {
   endDate: Date;
   installmentAmt: number;
   folioNo: number;
+  amt: number | string;
+  units: number;
+  nav: number;
 }
 export interface SipInterface {
   id: number;
@@ -23,4 +26,6 @@ export interface IFSipInterface {
   startDate: Date | string;
   endDate: Date | string;
   amt: number | string;
+  units: number;
+  nav: number;
 }

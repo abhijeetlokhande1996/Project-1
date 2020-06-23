@@ -2,8 +2,8 @@ import { Scheme } from "./sip.interface";
 
 export interface IMutualFund {
   clientName: string;
-  regDate: Date;
-  folioNo: number;
+  regDate?: Date;
+  id: number;
   schemes: Array<Scheme>;
 }
 
@@ -12,8 +12,11 @@ export interface IFMutualFund {
   freqType: string;
   startDate: Date | string;
   endDate: Date | string;
-  amt: number | string;
+
   clientName: string;
   regDate: Date | string;
   folioNo: number | string;
+  amt: number | string;
+  units: number;
+  nav: number | string;
 }
