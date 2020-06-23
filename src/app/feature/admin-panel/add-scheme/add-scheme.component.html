@@ -1,28 +1,23 @@
 <pre class="text-danger"> All fields are mandatory</pre>
 <form [formGroup]="schemeForm" (ngSubmit)="onSchemeFormSubmit()">
   <div class="form-group">
-    <label>Search User (Client ID or Name) </label>
-    <input type="text" class="form-control" [formControlName]="'folioNumber'" />
-    <div
-      *ngIf="isLoading"
-      class="row justify-content-center spinner-size overlay"
-    >
-      <div class="spinner-border text-dark spinner" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-    </div>
-    <div *ngIf="!isLoading" class="">
-      <sub *ngIf="clientName">{{ clientName }} </sub>
-      <ng-container *ngIf="filteredClients.length > 0">
-        <ul>
-          <ng-container *ngFor="let item of filteredClients">
-            <li (click)="selectedUser(item)">
-              <strong> {{ item["id"] }} - </strong> {{ item["name"] }}
-            </li>
-          </ng-container>
-        </ul>
-      </ng-container>
-    </div>
+    <label>Search User ( Enter Name) </label>
+    <input type="text" class="form-control" [formControlName]="'clientName'" />
+    <ng-container *ngIf="schemeForm.get('clientName').value">
+      <ul>
+        <li *ngFor="let cn of filteredClients" (click)="selectedUser(cn)">
+          {{ cn.name }}
+        </li>
+      </ul>
+    </ng-container>
+  </div>
+  <div class="form-group">
+    <label>Enter ID</label>
+    <input
+      type="number"
+      class="form-control disabled"
+      [formControlName]="'id'"
+    />
   </div>
   <div class="form-group">
     <label>Select Collection</label>

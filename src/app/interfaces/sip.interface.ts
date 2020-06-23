@@ -18,7 +18,7 @@ export interface SipInterface {
 
 export interface IFSipInterface {
   id: number;
-  clientName: string;
+  name: string;
   regDate: Date | string;
   folioNo: number | string;
   schemeName: string;
