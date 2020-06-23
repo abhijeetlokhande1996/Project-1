@@ -285,16 +285,20 @@ export class MonthlySipComponent implements OnInit {
     let headers = [];
     let data = [];
     this.colHeaderMapArray.map((heads) => headers.push(heads[1]));
-    this.getDeepCopy(this.unTransfilteredSipData).map((value) => {
-      const nonNullData = Object.values(value).filter((data) => data);
+    this.getDeepCopy(this.unTransfilteredSipData).forEach((item) => {
+      const nonNullData = [];
+      for (const head of this.colHeaderMapArray) {
+        nonNullData.push(item[head[0]]);
+      }
       data.push(nonNullData);
     });
+
     data = data.map((item) => {
-      item[3] = new DatePipe("en").transform(item[3], "longDate");
-      item[4] = new DecimalPipe("en").transform(item[4]);
+      item[4] = new DatePipe("en").transform(item[4], "longDate");
+      item[5] = new DecimalPipe("en").transform(item[5]);
       return item;
     });
-
+    console.log(headers);
     PDFGenerator([headers], data, "SIP").then(
       (res: { status: Boolean; message: string }) => {
         if (res.status) {
