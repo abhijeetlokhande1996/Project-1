@@ -1,16 +1,8 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter,
-  ViewChild,
-  QueryList,
-  ElementRef,
-} from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { NavModel } from "../../../models/nav.model";
 import { IAddScheme } from "./../../..//interfaces/IAddScheme.interface";
+import { DatabaseService } from "../../../services/database.service";
 @Component({
   selector: "app-add-scheme",
   templateUrl: "./add-scheme.component.html",
@@ -18,6 +10,7 @@ import { IAddScheme } from "./../../..//interfaces/IAddScheme.interface";
 })
 export class AddSchemeComponent implements OnInit {
   schemeForm: FormGroup;
+  isLoading: boolean = false;
   schemeNameArr: Array<string>;
   collectionArr = ["Mutual Fund", "SIP"];
   freqType = ["Monthly", "Yearly", "Quaterly"];
@@ -27,14 +20,28 @@ export class AddSchemeComponent implements OnInit {
   filteredFunds: Array<string> = [];
   selectedFundFamily: string = null;
   selectedFundType: string = null;
+  clientsArr: Array<{ id: number; name: string }> = [];
+  filteredClients: Array<{ id: number; name: string }> = [];
+  clientName: string = null;
 
   @Output() schemeDataEventEmitter: EventEmitter<
     IAddScheme
   > = new EventEmitter();
-  constructor() {}
+  constructor(private dbService: DatabaseService) {}
 
   ngOnInit(): void {
     this.filteredMFFamily = Object.keys(this.mFundAndSchemeMapping);
+    this.isLoading = true;
+
+    this.dbService.getClientDetails().subscribe((res) => {
+      const allUser = res.map((item) => item.payload.doc.data());
+      allUser.forEach((item) => {
+        return this.clientsArr.push({ id: item["id"], name: item["name"] });
+      });
+      this.filteredClients = this.clientsArr;
+      this.isLoading = false;
+    });
+
     this.schemeForm = new FormGroup({
       schemeName: new FormControl(null, [Validators.required]),
       schemeCode: new FormControl({ value: null, disabled: true }, [
@@ -54,6 +61,17 @@ export class AddSchemeComponent implements OnInit {
       collection: new FormControl(null, [Validators.required]),
     });
     this.triggerValueChanges();
+
+    this.schemeForm.get("folioNumber").valueChanges.subscribe((res) => {
+      this.clientName = null;
+      this.filteredClients = this.clientsArr.filter((client) => {
+        if (parseInt(res)) {
+          return client.id.toString().includes(res);
+        } else {
+          return client.name.toLowerCase().includes(res.toLowerCase());
+        }
+      });
+    });
   }
   triggerValueChanges() {
     this.schemeForm
@@ -116,12 +134,18 @@ export class AddSchemeComponent implements OnInit {
     this.filteredFunds = this.mFundAndSchemeMapping[item].sort();
   };
 
-  selectedSchmeName = (fund: string) => {
+  selectedSchemeName = (fund: string) => {
     this.schemeForm.patchValue({ schemeName: fund });
     this.filteredFunds = [];
     const item: NavModel = this.navData.filter(
       (item: NavModel) => item.schemeName.toLowerCase() === fund.toLowerCase()
     )[0];
     this.schemeForm.get("schemeCode").setValue(item.schemeCode);
+  };
+
+  selectedUser = (user) => {
+    this.schemeForm.get("folioNumber").setValue(user.id);
+    this.filteredClients = [];
+    this.clientName = user.name;
   };
 }

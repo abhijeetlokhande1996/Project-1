@@ -54,6 +54,10 @@ export class DatabaseService {
     );
   }
 
+  getClientDetails = () => {
+    return this.firestore.collection("clients").snapshotChanges();
+  };
+
   isExists = (collection: string, folioNo: number) => {
     return this.firestore
       .collection(collection, (ref) => ref.where("folioNo", "==", folioNo))
