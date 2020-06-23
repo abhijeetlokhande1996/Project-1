@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { NavModel } from "../../../models/nav.model";
 import { IAddScheme } from "./../../..//interfaces/IAddScheme.interface";
+import { IClient } from "../../../interfaces/IClient.interface";
 import { DatabaseService } from "../../../services/database.service";
 @Component({
   selector: "app-add-scheme",
@@ -22,8 +23,8 @@ export class AddSchemeComponent implements OnInit {
   selectedFundType: string = null;
   clientsArr: Array<{ id: number; name: string }> = [];
   filteredClients: Array<{ id: number; name: string }> = [];
-  clientName: string = null;
 
+  @Input() clientDetails;
   @Output() schemeDataEventEmitter: EventEmitter<
     IAddScheme
   > = new EventEmitter();
@@ -43,6 +44,10 @@ export class AddSchemeComponent implements OnInit {
     });
 
     this.schemeForm = new FormGroup({
+      clientName: new FormControl(null, [Validators.required]),
+      id: new FormControl({ value: null, disabled: true }, [
+        Validators.required,
+      ]),
       schemeName: new FormControl(null, [Validators.required]),
       schemeCode: new FormControl({ value: null, disabled: true }, [
         Validators.required,
@@ -62,18 +67,22 @@ export class AddSchemeComponent implements OnInit {
     });
     this.triggerValueChanges();
 
-    this.schemeForm.get("folioNumber").valueChanges.subscribe((res) => {
-      this.clientName = null;
-      this.filteredClients = this.clientsArr.filter((client) => {
-        if (parseInt(res)) {
-          return client.id.toString().includes(res);
-        } else {
-          return client.name.toLowerCase().includes(res.toLowerCase());
-        }
-      });
-    });
+    // this.schemeForm.get("id").valueChanges.subscribe((res) => {
+    //   this.filteredClients = this.clientsArr.filter((client) => {
+    //     if (parseInt(res)) {
+    //       return client.id.toString().includes(res);
+    //     } else {
+    //       return client.name.toLowerCase().includes(res.toLowerCase());
+    //     }
+    //   });
+    // });
   }
   triggerValueChanges() {
+    this.schemeForm.get("clientName").valueChanges.subscribe((val: string) => {
+      this.filteredClients = this.clientsArr.filter((item) =>
+        item["name"].toLowerCase().startsWith(val.toLowerCase())
+      );
+    });
     this.schemeForm
       .get("schemeName")
       .valueChanges.subscribe((selectedSchemeName: string) => {
@@ -144,8 +153,9 @@ export class AddSchemeComponent implements OnInit {
   };
 
   selectedUser = (user) => {
-    this.schemeForm.get("folioNumber").setValue(user.id);
+    this.schemeForm.get("clientName").setValue(user.name);
+    console.log(user);
+    this.schemeForm.get("id").setValue(user["id"]);
     this.filteredClients = [];
-    this.clientName = user.name;
   };
 }

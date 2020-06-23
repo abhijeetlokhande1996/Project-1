@@ -118,7 +118,7 @@ export class MonthlySipComponent implements OnInit {
 
                 itemArr.forEach((item) => {
                   const idx = this.sipData.findIndex(
-                    (item) => item.folioNo == fNumber
+                    (item) => item.id == fNumber
                   );
                   if (idx < 0) {
                     item["clientName"] = clientName;
@@ -194,7 +194,7 @@ export class MonthlySipComponent implements OnInit {
   getAllFolioNumbers(mData: Array<SipInterface>) {
     const fNumbers: Array<number> = [];
     for (const item of mData) {
-      fNumbers.push(item.folioNo);
+      fNumbers.push(item.id);
     }
     return Array.from(new Set(fNumbers));
   }
@@ -204,13 +204,14 @@ export class MonthlySipComponent implements OnInit {
       const objToPush = {};
       objToPush["clientName"] = item["clientName"];
       objToPush["regDate"] = item["regDate"];
-      objToPush["folioNo"] = item["folioNo"];
+      objToPush["id"] = item["id"];
       if (item["schemes"]) {
         for (const el of item.schemes) {
           objToPush["schemeName"] = el["schemeName"];
 
           objToPush["startDate"] = el["startDate"];
           objToPush["amt"] = el["amt"];
+          objToPush["folioNo"] = item["folioNo"];
           result.push(this.getDeepCopy(objToPush));
         }
       }
@@ -222,7 +223,7 @@ export class MonthlySipComponent implements OnInit {
     let dataToReturn = [];
     if (folioNo) {
       dataToReturn = this.getDeepCopy(
-        this.sipData.filter((item) => item.folioNo == folioNo)
+        this.sipData.filter((item) => item.id == folioNo)
       );
     } else {
       dataToReturn = this.getDeepCopy(this.sipData);

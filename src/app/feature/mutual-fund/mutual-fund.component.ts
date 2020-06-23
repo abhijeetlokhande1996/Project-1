@@ -40,7 +40,7 @@ export class MutualFundComponent implements OnInit {
   mfData: Array<IMutualFund> = [];
   filteredMfData: Array<IFMutualFund> = [];
   unTransFilteredMfData: Array<IFMutualFund> = [];
-  folioForm: FormGroup;
+  idForm: FormGroup;
   chartOptions: ChartOptions;
   chartType: ChartType;
   chartLegend: boolean;
@@ -61,12 +61,14 @@ export class MutualFundComponent implements OnInit {
 
   ngOnInit(): void {
     this.colHeaderMapArray = [
-      ["clientName", "Name"],
-
-      ["folioNo", "Folio Number"],
+      ["name", "Name"],
+      ["id", "id"],
+      ["folioNumber", "Folio Number"],
       ["schemeName", "Scheme Name"],
-
       ["startDate", "Start Date"],
+      ["units", "Units"],
+      ["nav", "NAV"],
+
       ["amt", "Amount"],
     ];
 
@@ -80,17 +82,17 @@ export class MutualFundComponent implements OnInit {
         position: "top",
       },
     };
-    this.folioForm = new FormGroup({
-      folioNo: new FormControl(null, [Validators.required]),
+    this.idForm = new FormGroup({
+      id: new FormControl(null, [Validators.required]),
     });
-    this.folioForm
-      .get("folioNo")
+    this.idForm
+      .get("id")
       .valueChanges.pipe(delay(100), distinctUntilChanged())
-      .subscribe((folioNo: number) => {
+      .subscribe((id: number) => {
         if (this.startDate && this.endDate) {
           this.onEndDateSelect(this.endDate);
         } else {
-          const fData: Array<SipInterface> = this.distillMFData(folioNo);
+          const fData: Array<SipInterface> = this.distillMFData(id);
           this.filteredMfData = this.getFlattenData(fData);
           this.unTransFilteredMfData = this.getDeepCopy(this.filteredMfData);
           this.generateChartData(this.filteredMfData);
@@ -101,22 +103,20 @@ export class MutualFundComponent implements OnInit {
       .getMFs()
       .pipe(take(1))
       .subscribe((resp) => {
-        const fNumbersArr = this.getAllFolioNumbers(this.getDeepCopy(resp));
+        const idArr = this.getAllID(this.getDeepCopy(resp));
 
-        this.getAllClientDetails(this.getDeepCopy(fNumbersArr)).then(
+        this.getAllClientDetails(this.getDeepCopy(idArr)).then(
           (data: Array<{}>) => {
             for (const el of data) {
               if (el["isActive"]) {
-                const fNumber = el["folioNo"];
+                const id = el["id"];
                 const clientName = el["name"];
-                let itemArr = resp.filter((item) => item["folioNo"] == fNumber);
+                let itemArr = resp.filter((item) => item["id"] == id);
 
                 itemArr.forEach((item) => {
-                  const idx = this.mfData.findIndex(
-                    (item) => item.folioNo == fNumber
-                  );
+                  const idx = this.mfData.findIndex((item) => item.id == id);
                   if (idx < 0) {
-                    item["clientName"] = clientName;
+                    item["name"] = clientName;
                     this.mfData.push(item);
                   } else {
                     const sItem = this.mfData[idx];
@@ -129,6 +129,7 @@ export class MutualFundComponent implements OnInit {
             const fData: Array<SipInterface> = this.distillMFData(null);
 
             this.filteredMfData = this.getFlattenData(fData);
+
             this.unTransFilteredMfData = this.getDeepCopy(this.filteredMfData);
             this.generateChartData(this.filteredMfData);
             this.filteredMfData = this.transformFilteredData(
@@ -182,26 +183,27 @@ export class MutualFundComponent implements OnInit {
         );
     });
   }
-  getAllFolioNumbers(mData: Array<IMutualFund>) {
+  getAllID(mData: Array<IMutualFund>) {
     const fNumbers: Array<number> = [];
     for (const item of mData) {
-      fNumbers.push(item.folioNo);
+      fNumbers.push(item.id);
     }
     return fNumbers;
   }
-  getFlattenData(dataToFlat: Array<SipInterface>) {
+  getFlattenData(dataToFlat: Array<IMutualFund>) {
     const result = [];
     for (const item of dataToFlat) {
       const objToPush = {};
-      objToPush["clientName"] = item["clientName"];
-      objToPush["regDate"] = item["regDate"];
-      objToPush["folioNo"] = item["folioNo"];
+      objToPush["name"] = item["name"];
+
+      objToPush["id"] = item["id"];
       if (item["schemes"]) {
         for (const el of item.schemes) {
           objToPush["schemeName"] = el["schemeName"];
-
+          objToPush["units"] = el.units;
+          objToPush["nav"] = el.nav;
           objToPush["startDate"] = el["startDate"];
-
+          objToPush["folioNumber"] = el["folioNumber"];
           objToPush["amt"] = el["amt"];
           result.push(this.getDeepCopy(objToPush));
         }
@@ -210,16 +212,15 @@ export class MutualFundComponent implements OnInit {
     return result;
   }
 
-  distillMFData(folioNo: number) {
+  distillMFData(id: number) {
     let dataToReturn = [];
-    if (folioNo) {
+    if (id) {
       dataToReturn = this.getDeepCopy(
-        this.mfData.filter((item) => item.folioNo == folioNo)
+        this.mfData.filter((item) => item.id == id)
       );
     } else {
       dataToReturn = this.getDeepCopy(this.mfData);
     }
-    // temporary code to be deleted
 
     return dataToReturn;
   }
@@ -229,14 +230,15 @@ export class MutualFundComponent implements OnInit {
     const cp = new CurrencyPipe("en");
     const datePipe = new DatePipe("en");
     for (const item of data) {
-      item["clientName"] = tcPipe.transform(item["clientName"]);
+      item["name"] = tcPipe.transform(item["name"]);
       item["regDate"] = datePipe.transform(item["regDate"], "dd-MMM-yyyy");
-      item["folioNo"] = item["folioNo"];
+
       item["schemeName"] = tcPipe.transform(item["schemeName"]);
 
       item["startDate"] = datePipe.transform(item["startDate"], "dd-MMM-yyyy");
       item["endDate"] = datePipe.transform(item["endDate"], "dd-MMM-yyyy");
       item["amt"] = cp.transform(item["amt"], "INR");
+      item["nav"] = cp.transform(item["nav"], "INR");
     }
     return data;
   }
@@ -328,9 +330,10 @@ export class MutualFundComponent implements OnInit {
     this.unTransFilteredMfData = this.getDeepCopy(this.filteredMfData);
     this.generateChartData(this.filteredMfData);
     this.filteredMfData = this.transformFilteredData(this.filteredMfData);
+    console.log("filter ", this.filteredMfData);
   }
   distillRecordsAccordingToRange(minDate: Date, maxDate: Date) {
-    const folioNumber = this.folioForm.get("folioNo").value;
+    const folioNumber = this.idForm.get("id").value;
     let fData: Array<SipInterface> = this.distillMFData(folioNumber);
 
     let dataToReturn = [];
@@ -354,8 +357,8 @@ export class MutualFundComponent implements OnInit {
   resetFilters() {
     this.startDate = null;
     this.endDate = null;
-    const folioNumber = this.folioForm.get("folioNo").value;
-    const fData: Array<SipInterface> = this.distillMFData(folioNumber);
+    this.idForm.get("id").setValue(null);
+    const fData: Array<SipInterface> = this.distillMFData(null);
     this.filteredMfData = null;
     this.filteredMfData = this.getFlattenData(fData);
     this.unTransFilteredMfData = this.getDeepCopy(this.filteredMfData);

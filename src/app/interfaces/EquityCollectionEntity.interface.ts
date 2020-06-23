@@ -1,5 +1,5 @@
 export interface IEquityCollectionEntity {
-  folioNo: number;
+  id: number;
   name: string;
   holdings: HoldingsEntity[];
 }
@@ -15,7 +15,7 @@ export interface HoldingsEntity {
 }
 
 export interface IFEquityCollectionEntity {
-  folioNo: number;
+  id: number;
   name: string;
   companyName: string;
   quantity: number;

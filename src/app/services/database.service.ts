@@ -21,6 +21,11 @@ export class DatabaseService {
     private firestore: AngularFirestore
   ) {}
 
+  getClients = (): Observable<Array<IClient>> => {
+    return this.firestore.collection("clients").valueChanges() as Observable<
+      Array<IClient>
+    >;
+  };
   getSipData = (): Observable<Array<SipInterface>> => {
     return this.firestore.collection("sips").valueChanges() as Observable<
       Array<SipInterface>
@@ -58,9 +63,9 @@ export class DatabaseService {
     return this.firestore.collection("clients").snapshotChanges();
   };
 
-  isExists = (collection: string, folioNo: number) => {
+  isExists = (collection: string, id: number) => {
     return this.firestore
-      .collection(collection, (ref) => ref.where("folioNo", "==", folioNo))
+      .collection(collection, (ref) => ref.where("id", "==", id))
       .snapshotChanges();
   };
 
@@ -71,7 +76,7 @@ export class DatabaseService {
    */
   addClient = (client: IClient) => {
     return new Promise(async (resolve, reject) => {
-      const user = await this.isExists("clients", client.folioNo);
+      const user = await this.isExists("clients", client.id);
       user.pipe(take(1)).subscribe(async (res) => {
         let data = res.map((item) => {
           return item.payload.doc.data();
@@ -80,7 +85,7 @@ export class DatabaseService {
           resolve({
             status: false,
             message:
-              "Folio number is associated to another user. Please choose unique folio number.",
+              "ID is associated to another user. Please choose unique ID.",
             id: null,
           });
         } else {
@@ -108,10 +113,10 @@ export class DatabaseService {
    * @param sip Give SIP information to be added
    * TODO: Pass a SIP info object as mentioned in demo
    */
-  addSchemes = (folioNo: number, type: string, schemeDetails: any) => {
+  addSchemes = (id: number, type: string, schemeDetails: any) => {
     let clientName: string = "";
     return new Promise((resolve, reject) => {
-      this.isExists("clients", folioNo)
+      this.isExists("clients", id)
         .pipe(take(1))
         .subscribe((res) => {
           if (
@@ -120,7 +125,7 @@ export class DatabaseService {
           ) {
             clientName = res[0].payload.doc.data()["name"];
             if (res[0].payload.doc.data()["isActive"]) {
-              this.isExists(type, folioNo)
+              this.isExists(type, id)
                 .pipe(take(1))
                 .subscribe((res) => {
                   if (
@@ -145,7 +150,7 @@ export class DatabaseService {
                       this.firestore
                         .collection(type)
                         .add({
-                          folioNo: folioNo,
+                          id: id,
                           name: clientName,
                           holdings: [schemeDetails],
                         })
@@ -159,7 +164,7 @@ export class DatabaseService {
                       this.firestore
                         .collection(type)
                         .add({
-                          folioNo: folioNo,
+                          id: id,
                           name: clientName,
                           schemes: [schemeDetails],
                         })

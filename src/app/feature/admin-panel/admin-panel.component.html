@@ -41,11 +41,13 @@
           [mFundAndSchemeMapping]="mFundAndSchemeMapping"
           [navData]="navData"
           (schemeDataEventEmitter)="getSchemeDataToInsert($event)"
+          [clientDetails]="clientDetails"
         ></app-add-scheme>
       </ng-container>
       <app-add-equity
         *ngIf="selectedTemplate === 'add-equity'"
         (eqDataEventEmitter)="getEqDataToInsert($event)"
+        [clientDetails]="clientDetails"
       ></app-add-equity>
     </div>
   </div>

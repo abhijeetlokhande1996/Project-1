@@ -49,7 +49,7 @@ export class EquityComponent implements OnInit {
 
   ngOnInit(): void {
     this.colHeaderMapArray = [
-      ["folioNo", "Id"],
+      ["id", "ID"],
       ["name", "Name"],
       ["companyName", "Company Name"],
       ["purchaseDate", "Purchase Date"],
@@ -108,17 +108,17 @@ export class EquityComponent implements OnInit {
     const dataToReturn: Array<IFEquityCollectionEntity> = [];
     for (const item of data) {
       const name = item.name;
-      const folioNumber = item.folioNo;
+      const id = item.id;
       for (const el of item.holdings) {
-        const objToPush = { ...{ folioNo: folioNumber, name: name }, ...el };
+        const objToPush = { ...{ id: id, name: name }, ...el };
         dataToReturn.push(objToPush);
       } // for
     } // for
     return dataToReturn;
   }
-  filterData(folioNo: number | null, data: Array<IEquityCollectionEntity>) {
-    if (folioNo) {
-      return data.filter((item) => item.folioNo == folioNo);
+  filterData(id: number | null, data: Array<IEquityCollectionEntity>) {
+    if (id) {
+      return data.filter((item) => item.id == id);
     }
     return data;
   }
@@ -132,7 +132,7 @@ export class EquityComponent implements OnInit {
     for (const item of data) {
       const objToPush = {};
       objToPush["name"] = tp.transform(item.name);
-      objToPush["folioNo"] = item.folioNo;
+      objToPush["id"] = item.id;
       objToPush["companyName"] = up.transform(item.companyName);
       objToPush["quantity"] = item.quantity;
       objToPush["rate"] = cp.transform(item.rate, "INR");

@@ -31,6 +31,7 @@ export class AdminPanelComponent implements OnInit {
   selectedCollection: string;
   isLoading: boolean = false;
   selectedTemplate: string = "add-client";
+  clientDetails: Array<IClient>;
 
   constructor(
     private navModelService: NavDataService,
@@ -40,6 +41,15 @@ export class AdminPanelComponent implements OnInit {
 
   ngOnInit(): void {
     this.isAuthenticated = false;
+  }
+  getAllClients() {
+    this.dbService
+      .getClients()
+      .pipe(take(1))
+      .subscribe((resp) => {
+        this.clientDetails = null;
+        this.clientDetails = resp;
+      });
   }
   getNavData() {
     this.navModelService
@@ -83,13 +93,14 @@ export class AdminPanelComponent implements OnInit {
       this.isAuthenticated = true;
 
       this.getNavData();
+      this.getAllClients();
     }
   }
   getSchemeDataToInsert(schemeData: IAddScheme) {
     this.isLoading = true;
     const data = { ...schemeData };
-    delete data.folioNumber;
-
+    delete data.id;
+    delete data.clientName;
     let cName = null;
     if (schemeData.collection.toLowerCase() == "mutual fund") {
       cName = "mfs";
@@ -98,7 +109,7 @@ export class AdminPanelComponent implements OnInit {
     }
 
     this.dbService
-      .addSchemes(schemeData.folioNumber, cName, data)
+      .addSchemes(schemeData.id, cName, data)
       .then((res: { status: boolean; message: string; data?: any }) => {
         this.isLoading = false;
         res.status
@@ -114,6 +125,7 @@ export class AdminPanelComponent implements OnInit {
         if (res["id"]) {
           this.isLoading = false;
           this.toastrService.success(res["message"]);
+          this.getAllClients();
         } else {
           this.isLoading = false;
           this.toastrService.error(res["message"]);
@@ -127,8 +139,11 @@ export class AdminPanelComponent implements OnInit {
   }
   getEqDataToInsert(obj: IAddEquity) {
     this.isLoading = true;
+    const data = { ...obj };
+    delete data.id;
+    delete data.clientName;
     this.dbService
-      .addSchemes(obj.folioNumber, "equities", obj)
+      .addSchemes(obj.id, "equities", data)
       .then((res: { status: boolean; message: string; data?: any }) => {
         this.isLoading = false;
         res.status
