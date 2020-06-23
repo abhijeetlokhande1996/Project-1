@@ -2,11 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { NavModel } from "../../../models/nav.model";
 import { IAddScheme } from "./../../..//interfaces/IAddScheme.interface";
-<<<<<<< HEAD
 import { IClient } from "../../../interfaces/IClient.interface";
-=======
 import { DatabaseService } from "../../../services/database.service";
->>>>>>> eb2e1286d46611e8b163e5e347f6e4c4c2041b42
 @Component({
   selector: "app-add-scheme",
   templateUrl: "./add-scheme.component.html",
@@ -24,28 +21,27 @@ export class AddSchemeComponent implements OnInit {
   filteredFunds: Array<string> = [];
   selectedFundFamily: string = null;
   selectedFundType: string = null;
-  clientsArr: Array<{}>;
-  fileredClientsArr: Array<{}>;
-  selectedClientId: Array<number>;
+  clientsArr: Array<{ id: number; name: string }> = [];
+  filteredClients: Array<{ id: number; name: string }> = [];
+  clientName: string = null;
+
   @Output() schemeDataEventEmitter: EventEmitter<
     IAddScheme
   > = new EventEmitter();
-
-  @Input()
-  set clientDetails(cd: Array<IClient>) {
-    if (cd) {
-      this.clientsArr = cd.map((item) => {
-        return {
-          name: item.name,
-          id: item.id,
-        };
-      });
-    }
-  }
-  constructor() {}
+  constructor(private dbService: DatabaseService) {}
 
   ngOnInit(): void {
     this.filteredMFFamily = Object.keys(this.mFundAndSchemeMapping);
+    this.isLoading = true;
+
+    this.dbService.getClientDetails().subscribe((res) => {
+      const allUser = res.map((item) => item.payload.doc.data());
+      allUser.forEach((item) => {
+        return this.clientsArr.push({ id: item["id"], name: item["name"] });
+      });
+      this.filteredClients = this.clientsArr;
+      this.isLoading = false;
+    });
 
     this.schemeForm = new FormGroup({
       clientName: new FormControl(null, [Validators.required]),
@@ -157,17 +153,9 @@ export class AddSchemeComponent implements OnInit {
     this.schemeForm.get("schemeCode").setValue(item.schemeCode);
   };
 
-<<<<<<< HEAD
-  onSelectClient(item) {
-    this.schemeForm.get("id").setValue(item["id"]);
-    this.schemeForm.get("clientName").setValue(item["name"]);
-    this.fileredClientsArr = [];
-  }
-=======
   selectedUser = (user) => {
     this.schemeForm.get("folioNumber").setValue(user.id);
     this.filteredClients = [];
     this.clientName = user.name;
   };
->>>>>>> eb2e1286d46611e8b163e5e347f6e4c4c2041b42
 }
