@@ -49,7 +49,7 @@ export class EquityComponent implements OnInit {
 
   ngOnInit(): void {
     this.colHeaderMapArray = [
-      ["folioNo", "Id"],
+      ["id", "ID"],
       ["name", "Name"],
       ["companyName", "Company Name"],
       ["purchaseDate", "Purchase Date"],
