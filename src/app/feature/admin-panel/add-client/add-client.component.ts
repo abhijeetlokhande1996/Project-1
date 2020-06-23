@@ -16,7 +16,7 @@ export class AddClientComponent implements OnInit {
   ngOnInit(): void {
     this.clientForm = new FormGroup({
       name: new FormControl(null, [Validators.required]),
-      folioNumber: new FormControl(null, [Validators.required]),
+      id: new FormControl(null, [Validators.required]),
       regDate: new FormControl(null, [Validators.required]),
     });
   }
@@ -28,7 +28,7 @@ export class AddClientComponent implements OnInit {
 
     const client: IClient = {
       name: this.clientForm.get("name").value,
-      folioNo: this.clientForm.get("folioNumber").value,
+      id: this.clientForm.get("id").value,
       isActive: true,
       regDate: new Date(year, month, day).toString(),
     };

@@ -4,15 +4,17 @@ export interface Scheme {
   startDate: Date;
   endDate: Date;
   installmentAmt: number;
+  folioNo: number;
 }
 export interface SipInterface {
+  id: number;
   clientName: string;
   regDate: Date;
-  folioNo: number;
   schemes: Array<Scheme>;
 }
 
 export interface IFSipInterface {
+  id: number;
   clientName: string;
   regDate: Date | string;
   folioNo: number | string;

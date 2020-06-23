@@ -21,6 +21,11 @@ export class DatabaseService {
     private firestore: AngularFirestore
   ) {}
 
+  getClients = (): Observable<Array<IClient>> => {
+    return this.firestore.collection("clients").valueChanges() as Observable<
+      Array<IClient>
+    >;
+  };
   getSipData = (): Observable<Array<SipInterface>> => {
     return this.firestore.collection("sips").valueChanges() as Observable<
       Array<SipInterface>
@@ -54,9 +59,9 @@ export class DatabaseService {
     );
   }
 
-  isExists = (collection: string, folioNo: number) => {
+  isExists = (collection: string, id: number) => {
     return this.firestore
-      .collection(collection, (ref) => ref.where("folioNo", "==", folioNo))
+      .collection(collection, (ref) => ref.where("id", "==", id))
       .snapshotChanges();
   };
 
@@ -67,7 +72,7 @@ export class DatabaseService {
    */
   addClient = (client: IClient) => {
     return new Promise(async (resolve, reject) => {
-      const user = await this.isExists("clients", client.folioNo);
+      const user = await this.isExists("clients", client.id);
       user.pipe(take(1)).subscribe(async (res) => {
         let data = res.map((item) => {
           return item.payload.doc.data();
