@@ -1,17 +1,12 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter,
-  ViewChild,
-  QueryList,
-  ElementRef,
-} from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { NavModel } from "../../../models/nav.model";
 import { IAddScheme } from "./../../..//interfaces/IAddScheme.interface";
+<<<<<<< HEAD
 import { IClient } from "../../../interfaces/IClient.interface";
+=======
+import { DatabaseService } from "../../../services/database.service";
+>>>>>>> eb2e1286d46611e8b163e5e347f6e4c4c2041b42
 @Component({
   selector: "app-add-scheme",
   templateUrl: "./add-scheme.component.html",
@@ -19,6 +14,7 @@ import { IClient } from "../../../interfaces/IClient.interface";
 })
 export class AddSchemeComponent implements OnInit {
   schemeForm: FormGroup;
+  isLoading: boolean = false;
   schemeNameArr: Array<string>;
   collectionArr = ["Mutual Fund", "SIP"];
   freqType = ["Monthly", "Yearly", "Quaterly"];
@@ -74,6 +70,17 @@ export class AddSchemeComponent implements OnInit {
       collection: new FormControl(null, [Validators.required]),
     });
     this.triggerValueChanges();
+
+    this.schemeForm.get("folioNumber").valueChanges.subscribe((res) => {
+      this.clientName = null;
+      this.filteredClients = this.clientsArr.filter((client) => {
+        if (parseInt(res)) {
+          return client.id.toString().includes(res);
+        } else {
+          return client.name.toLowerCase().includes(res.toLowerCase());
+        }
+      });
+    });
   }
   triggerValueChanges() {
     this.schemeForm.get("clientName").valueChanges.subscribe((val: string) => {
@@ -141,7 +148,7 @@ export class AddSchemeComponent implements OnInit {
     this.filteredFunds = this.mFundAndSchemeMapping[item].sort();
   };
 
-  selectedSchmeName = (fund: string) => {
+  selectedSchemeName = (fund: string) => {
     this.schemeForm.patchValue({ schemeName: fund });
     this.filteredFunds = [];
     const item: NavModel = this.navData.filter(
@@ -150,9 +157,17 @@ export class AddSchemeComponent implements OnInit {
     this.schemeForm.get("schemeCode").setValue(item.schemeCode);
   };
 
+<<<<<<< HEAD
   onSelectClient(item) {
     this.schemeForm.get("id").setValue(item["id"]);
     this.schemeForm.get("clientName").setValue(item["name"]);
     this.fileredClientsArr = [];
   }
+=======
+  selectedUser = (user) => {
+    this.schemeForm.get("folioNumber").setValue(user.id);
+    this.filteredClients = [];
+    this.clientName = user.name;
+  };
+>>>>>>> eb2e1286d46611e8b163e5e347f6e4c4c2041b42
 }
