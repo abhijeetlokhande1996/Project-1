@@ -1,30 +1,29 @@
 export interface Scheme {
   schemeName: string;
-  freqType: string;
+  freqType?: string;
   startDate: Date;
-  endDate: Date;
+  endDate?: Date;
   installmentAmt: number;
-  folioNo: number;
+  folioNumber: number;
   amt: number | string;
   units: number;
   nav: number;
 }
 export interface SipInterface {
   id: number;
-  clientName: string;
-  regDate: Date;
+  name: string;
+
   schemes: Array<Scheme>;
 }
 
 export interface IFSipInterface {
   id: number;
   name: string;
-  regDate: Date | string;
-  folioNo: number | string;
+
+  folioNumber: number | string;
   schemeName: string;
-  freqType: string;
   startDate: Date | string;
-  endDate: Date | string;
+  endDate?: Date | string;
   amt: number | string;
   units: number;
   nav: number;

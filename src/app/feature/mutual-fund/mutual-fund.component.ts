@@ -61,14 +61,13 @@ export class MutualFundComponent implements OnInit {
 
   ngOnInit(): void {
     this.colHeaderMapArray = [
-      ["name", "Name"],
       ["id", "id"],
+      ["name", "Name"],
       ["folioNumber", "Folio Number"],
       ["schemeName", "Scheme Name"],
       ["startDate", "Start Date"],
       ["units", "Units"],
       ["nav", "NAV"],
-
       ["amt", "Amount"],
     ];
 
@@ -95,6 +94,7 @@ export class MutualFundComponent implements OnInit {
           const fData: Array<SipInterface> = this.distillMFData(id);
           this.filteredMfData = this.getFlattenData(fData);
           this.unTransFilteredMfData = this.getDeepCopy(this.filteredMfData);
+          console.log(this.unTransFilteredMfData);
           this.generateChartData(this.filteredMfData);
           this.filteredMfData = this.transformFilteredData(this.filteredMfData);
         }
@@ -131,6 +131,7 @@ export class MutualFundComponent implements OnInit {
             this.filteredMfData = this.getFlattenData(fData);
 
             this.unTransFilteredMfData = this.getDeepCopy(this.filteredMfData);
+            console.log(this.unTransFilteredMfData);
             this.generateChartData(this.filteredMfData);
             this.filteredMfData = this.transformFilteredData(
               this.filteredMfData
@@ -282,17 +283,18 @@ export class MutualFundComponent implements OnInit {
     let headers = [];
     let data = [];
     this.colHeaderMapArray.map((heads) => headers.push(heads[1]));
-    this.getDeepCopy(this.unTransFilteredMfData).map((value) => {
-      const nonNullData = Object.values(value).filter((data) => {
-        return data;
-      });
+    this.getDeepCopy(this.unTransFilteredMfData).forEach((item) => {
+      const nonNullData = [];
+      for (const head of this.colHeaderMapArray) {
+        nonNullData.push(item[head[0]]);
+      }
 
       data.push(nonNullData);
     });
 
     data = data.map((item) => {
-      item[3] = new DatePipe("en").transform(item[3], "longDate");
-      item[4] = new DecimalPipe("en").transform(item[4]);
+      item[4] = new DatePipe("en").transform(item[4], "longDate");
+      item[7] = new DecimalPipe("en").transform(item[7]);
       return item;
     });
     PDFGenerator([headers], data, "MF").then(
@@ -328,6 +330,7 @@ export class MutualFundComponent implements OnInit {
     this.filteredMfData = null;
     this.filteredMfData = this.getFlattenData(fData);
     this.unTransFilteredMfData = this.getDeepCopy(this.filteredMfData);
+    console.log(this.unTransFilteredMfData);
     this.generateChartData(this.filteredMfData);
     this.filteredMfData = this.transformFilteredData(this.filteredMfData);
     console.log("filter ", this.filteredMfData);

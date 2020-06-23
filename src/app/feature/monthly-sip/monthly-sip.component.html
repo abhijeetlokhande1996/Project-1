@@ -1,13 +1,13 @@
 <div class="container-fluid p-3">
   <div class="row justify-content-center text-center">
     <div class="col-3">
-      <form [formGroup]="folioForm">
+      <form [formGroup]="idForm">
         <div class="form-group">
-          <label>Search Client (Folio Number)</label>
+          <label>Search Client (ID)</label>
           <input
             type="number"
             class="form-control form-control-sm"
-            [formControlName]="'folioNo'"
+            [formControlName]="'id'"
             appAutoFocus
           />
         </div>
@@ -71,8 +71,8 @@
   >
     <div
       [ngClass]="{
-        'col-8': folioForm.get('folioNo')?.value,
-        col: !folioForm.get('folioNo')?.value
+        'col-8': idForm.get('id')?.value,
+        col: !idForm.get('id')?.value
       }"
     >
       <app-prime-table
@@ -80,7 +80,7 @@
         [colHeaderMapArray]="colHeaderMapArray"
       ></app-prime-table>
     </div>
-    <div class="col-4" *ngIf="folioForm.get('folioNo')?.value">
+    <div class="col-4" *ngIf="idForm.get('id')?.value">
       <app-chart
         [chartOptions]="chartOptions"
         [chartType]="chartType"
