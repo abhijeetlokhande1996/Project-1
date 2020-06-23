@@ -25,6 +25,7 @@ export class AddSchemeComponent implements OnInit {
   filteredClients: Array<{ id: number; name: string }> = [];
   clientName: string = null;
 
+  @Input() clientDetails;
   @Output() schemeDataEventEmitter: EventEmitter<
     IAddScheme
   > = new EventEmitter();
