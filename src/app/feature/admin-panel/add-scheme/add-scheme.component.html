@@ -1,14 +1,23 @@
 <pre class="text-danger"> All fields are mandatory</pre>
 <form [formGroup]="schemeForm" (ngSubmit)="onSchemeFormSubmit()">
-  <div class="form-group">
+  <div class="form-group" *ngIf="clientsArr">
     <label>Enter Client Name</label>
     <input type="text" class="form-control" [formControlName]="'clientName'" />
+    <ng-container *ngIf="schemeForm.get('clientName').value">
+      <ul>
+        <li *ngFor="let cd of fileredClientsArr" (click)="onSelectClient(cd)">
+          {{ cd["name"] }}
+        </li>
+      </ul>
+    </ng-container>
   </div>
   <div class="form-group">
-    <label>Select Id</label>
-    <select class="form-control">
-      <option [ngValue]="null" disabled>Select</option>
-    </select>
+    <label>Enter Id</label>
+    <input
+      type="number"
+      class="form-control disabled"
+      [formControlName]="'id'"
+    />
   </div>
   <div class="form-group">
     <label>Enter Folio Number</label>
@@ -31,9 +40,9 @@
     </select>
   </div>
   <div class="form-group">
-    <label>Select Fund Family</label>
+    <label>Enter Fund Family</label>
     <input type="text" class="form-control" [formControlName]="'mFundFamily'" />
-    <ng-container *ngIf="filteredMFFamily">
+    <ng-container *ngIf="schemeForm.get('mFundFamily').value">
       <ul>
         <ng-container *ngFor="let item of filteredMFFamily">
           <li (click)="selectedMF(item)">{{ item }}</li>
@@ -42,9 +51,9 @@
     </ng-container>
   </div>
   <div class="form-group" *ngIf="selectedFundFamily">
-    <label>Select Scheme</label>
+    <label>Enter Scheme</label>
     <input type="text" class="form-control" [formControlName]="'schemeName'" />
-    <ng-container *ngIf="filteredMFFamily">
+    <ng-container *ngIf="schemeForm.get('schemeName').value">
       <ul>
         <ng-container *ngFor="let item of filteredFunds">
           <li (click)="selectedSchmeName(item)">{{ item }}</li>

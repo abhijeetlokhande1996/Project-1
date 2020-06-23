@@ -109,10 +109,10 @@ export class DatabaseService {
    * @param sip Give SIP information to be added
    * TODO: Pass a SIP info object as mentioned in demo
    */
-  addSchemes = (folioNo: number, type: string, schemeDetails: any) => {
+  addSchemes = (id: number, type: string, schemeDetails: any) => {
     let clientName: string = "";
     return new Promise((resolve, reject) => {
-      this.isExists("clients", folioNo)
+      this.isExists("clients", id)
         .pipe(take(1))
         .subscribe((res) => {
           if (
@@ -121,7 +121,7 @@ export class DatabaseService {
           ) {
             clientName = res[0].payload.doc.data()["name"];
             if (res[0].payload.doc.data()["isActive"]) {
-              this.isExists(type, folioNo)
+              this.isExists(type, id)
                 .pipe(take(1))
                 .subscribe((res) => {
                   if (
@@ -146,7 +146,7 @@ export class DatabaseService {
                       this.firestore
                         .collection(type)
                         .add({
-                          folioNo: folioNo,
+                          id: id,
                           name: clientName,
                           holdings: [schemeDetails],
                         })
@@ -160,7 +160,7 @@ export class DatabaseService {
                       this.firestore
                         .collection(type)
                         .add({
-                          folioNo: folioNo,
+                          id: id,
                           name: clientName,
                           schemes: [schemeDetails],
                         })

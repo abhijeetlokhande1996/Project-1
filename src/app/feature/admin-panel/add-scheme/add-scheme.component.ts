@@ -11,6 +11,7 @@ import {
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { NavModel } from "../../../models/nav.model";
 import { IAddScheme } from "./../../..//interfaces/IAddScheme.interface";
+import { IClient } from "../../../interfaces/IClient.interface";
 @Component({
   selector: "app-add-scheme",
   templateUrl: "./add-scheme.component.html",
@@ -27,17 +28,34 @@ export class AddSchemeComponent implements OnInit {
   filteredFunds: Array<string> = [];
   selectedFundFamily: string = null;
   selectedFundType: string = null;
-
+  clientsArr: Array<{}>;
+  fileredClientsArr: Array<{}>;
+  selectedClientId: Array<number>;
   @Output() schemeDataEventEmitter: EventEmitter<
     IAddScheme
   > = new EventEmitter();
+
+  @Input()
+  set clientDetails(cd: Array<IClient>) {
+    if (cd) {
+      this.clientsArr = cd.map((item) => {
+        return {
+          name: item.name,
+          id: item.id,
+        };
+      });
+    }
+  }
   constructor() {}
 
   ngOnInit(): void {
     this.filteredMFFamily = Object.keys(this.mFundAndSchemeMapping);
+
     this.schemeForm = new FormGroup({
       clientName: new FormControl(null, [Validators.required]),
-      id: new FormControl(null, [Validators.required]),
+      id: new FormControl({ value: null, disabled: true }, [
+        Validators.required,
+      ]),
       schemeName: new FormControl(null, [Validators.required]),
       schemeCode: new FormControl({ value: null, disabled: true }, [
         Validators.required,
@@ -58,6 +76,11 @@ export class AddSchemeComponent implements OnInit {
     this.triggerValueChanges();
   }
   triggerValueChanges() {
+    this.schemeForm.get("clientName").valueChanges.subscribe((val: string) => {
+      this.fileredClientsArr = this.clientsArr.filter((item) =>
+        item["name"].toLowerCase().startsWith(val.toLowerCase())
+      );
+    });
     this.schemeForm
       .get("schemeName")
       .valueChanges.subscribe((selectedSchemeName: string) => {
@@ -126,4 +149,10 @@ export class AddSchemeComponent implements OnInit {
     )[0];
     this.schemeForm.get("schemeCode").setValue(item.schemeCode);
   };
+
+  onSelectClient(item) {
+    this.schemeForm.get("id").setValue(item["id"]);
+    this.schemeForm.get("clientName").setValue(item["name"]);
+    this.fileredClientsArr = [];
+  }
 }
