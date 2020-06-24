@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, ViewChild } from "@angular/core";
 import { SipInterface } from "../../interfaces/sip.interface";
 
 @Component({
@@ -7,6 +7,8 @@ import { SipInterface } from "../../interfaces/sip.interface";
   styleUrls: ["./prime-table.component.css"],
 })
 export class PrimeTableComponent implements OnInit {
+  @ViewChild("dt") dt;
+
   _dataToShow: Array<any>;
   filterFields: Array<string>;
   _colHeaderMapArray: [];
@@ -39,5 +41,12 @@ export class PrimeTableComponent implements OnInit {
       sum += amtToAdd;
     }
     return sum;
+  }
+  onFilterTable(event) {
+    if (event["filteredValue"]) {
+      this.totalSum = this.calculateTotalAmountInvested(
+        JSON.parse(JSON.stringify(event["filteredValue"]))
+      );
+    }
   }
 }
