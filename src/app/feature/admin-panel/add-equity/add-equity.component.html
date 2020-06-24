@@ -27,7 +27,13 @@
   <div class="form-group">
     <label>Script/Stock Name</label>
     <input type="text" class="form-control" [formControlName]="'companyName'" />
-    <ng-container *ngIf="filteredStock && filteredStock.length > 0">
+    <ng-container
+      *ngIf="
+        equityForm.get('companyName').value &&
+        filteredStock &&
+        filteredStock.length > 0
+      "
+    >
       <ul>
         <ng-container *ngFor="let item of filteredStock">
           <li (click)="selectedScript(item)">

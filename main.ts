@@ -117,31 +117,35 @@ try {
 }
 
 async function downloadCSV() {
-  const url =
-    "https://www1.nseindia.com/corporates/datafiles/LDE_EQUITIES_MORE_THAN_5_YEARS.csv";
-  const dir = "C:Lincoln Tech";
+  try {
+    const url =
+      "https://www1.nseindia.com/corporates/datafiles/LDE_EQUITIES_MORE_THAN_5_YEARS.csv";
+    const dir = "C:Lincoln Tech";
 
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+    const pathName = path.resolve(
+      dir,
+      // "src",
+      // "assets",
+      // "csv",
+      "listings.csv"
+    );
+
+    const writer = fs.createWriteStream(pathName);
+    const response = await axios({
+      url: url,
+      method: "GET",
+      responseType: "stream",
+    });
+    response.data.pipe(writer);
+
+    return new Promise((resolve, reject) => {
+      writer.on("finish", resolve);
+      writer.on("error", reject);
+    });
+  } catch (err) {
+    fs.writeFileSync(path.resolve(__dirname, "error.txt"), err);
   }
-  const pathName = path.resolve(
-    dir,
-    // "src",
-    // "assets",
-    // "csv",
-    "listings.csv"
-  );
-
-  const writer = fs.createWriteStream(pathName);
-  const response = await axios({
-    url: url,
-    method: "GET",
-    responseType: "stream",
-  });
-  response.data.pipe(writer);
-
-  return new Promise((resolve, reject) => {
-    writer.on("finish", resolve);
-    writer.on("error", reject);
-  });
 }
