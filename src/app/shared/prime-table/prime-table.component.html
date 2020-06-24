@@ -7,10 +7,12 @@
   #dt
   [globalFilterFields]="filterFields"
   [rowsPerPageOptions]="[5, 10, 15, 20]"
+  (onFilter)="onFilterTable($event)"
 >
   <ng-template pTemplate="caption">
     <div style="text-align: right;">
       <i class="fa fa-search" style="margin: 4px 4px 0 0;"></i>
+
       <input
         type="text"
         pInputText

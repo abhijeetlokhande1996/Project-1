@@ -65,7 +65,7 @@ export class MutualFundComponent implements OnInit {
       ["name", "Name"],
       ["folioNumber", "Folio Number"],
       ["schemeName", "Scheme Name"],
-      ["startDate", "Start Date"],
+      ["startDate", "Purchase Date"],
       ["units", "Units"],
       ["nav", "NAV"],
       ["amt", "Amount"],
