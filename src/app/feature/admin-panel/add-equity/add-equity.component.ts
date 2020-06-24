@@ -20,7 +20,8 @@ export class AddEquityComponent implements OnInit {
   equityForm: FormGroup;
   filteredStock: Array<{}> = [];
   clientsArr: Array<{}>;
-  fileredClientsArr: Array<{}>;
+  filteredClientsArr: Array<{}>;
+  isLoading: boolean = false;
   @Output() eqDataEventEmitter: EventEmitter<IAddEquity> = new EventEmitter();
 
   @Input()
@@ -33,6 +34,7 @@ export class AddEquityComponent implements OnInit {
         };
       });
     }
+    this.filteredClientsArr = this.clientsArr;
   }
   constructor() {}
 
@@ -118,6 +120,6 @@ export class AddEquityComponent implements OnInit {
   onClickClientName(item) {
     this.equityForm.get("id").setValue(item["id"]);
     this.equityForm.get("clientName").setValue(item["name"]);
-    this.fileredClientsArr = [];
+    this.filteredClientsArr = [];
   }
 }
