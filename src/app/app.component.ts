@@ -45,6 +45,7 @@ export class AppComponent implements OnInit {
       .subscribe(
         (resp: Array<NavModel>) => {
           this.navDataService.setNavData(resp);
+          console.log(resp);
         },
         (err) => {
           console.error(

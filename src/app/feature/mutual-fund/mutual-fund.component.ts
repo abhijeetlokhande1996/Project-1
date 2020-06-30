@@ -61,7 +61,7 @@ export class MutualFundComponent implements OnInit {
 
   ngOnInit(): void {
     this.colHeaderMapArray = [
-      ["id", "id"],
+      ["id", "ID"],
       ["name", "Name"],
       ["folioNumber", "Folio Number"],
       ["schemeName", "Scheme Name"],
@@ -69,6 +69,7 @@ export class MutualFundComponent implements OnInit {
       ["units", "Units"],
       ["nav", "NAV"],
       ["amt", "Amount"],
+      ["currentNav", "Current NAV"],
     ];
 
     this.chartType = "doughnut";
@@ -240,8 +241,33 @@ export class MutualFundComponent implements OnInit {
       item["endDate"] = datePipe.transform(item["endDate"], "dd-MMM-yyyy");
       item["amt"] = cp.transform(item["amt"], "INR");
       item["nav"] = cp.transform(item["nav"], "INR");
+      item["currentNav"] = cp.transform(this.getCurrentNav(item), "INR");
     }
     return data;
+  }
+  getCurrentNav(item: IFMutualFund) {
+    let cNav = 0;
+    let tmp: Array<NavModel> = this.navData.filter(
+      (el) => el.schemeName.toLowerCase() == item.schemeName.toLowerCase()
+    );
+    if (tmp.length == 1) {
+      cNav = tmp[0].netAssetValue;
+    } else {
+      let cNav = 0;
+      tmp.sort((a, b) => {
+        const aDate = new Date(a.date);
+        const bDate = new Date(b.date);
+        if (aDate > bDate) {
+          return 1;
+        } else if (aDate < bDate) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+      cNav = tmp[tmp.length - 1].netAssetValue;
+    }
+    return cNav;
   }
   generateChartData(data: Array<{}>) {
     this.chartColor = null;
@@ -283,20 +309,25 @@ export class MutualFundComponent implements OnInit {
     let headers = [];
     let data = [];
     this.colHeaderMapArray.map((heads) => headers.push(heads[1]));
-    this.getDeepCopy(this.unTransFilteredMfData).forEach((item) => {
-      const nonNullData = [];
-      for (const head of this.colHeaderMapArray) {
-        nonNullData.push(item[head[0]]);
-      }
+    this.getDeepCopy(this.unTransFilteredMfData).forEach(
+      (item: IFMutualFund) => {
+        item.currentNav = this.getCurrentNav(item);
+        const nonNullData = [];
+        for (const head of this.colHeaderMapArray) {
+          nonNullData.push(item[head[0]]);
+        }
 
-      data.push(nonNullData);
-    });
+        data.push(nonNullData);
+      }
+    );
 
     data = data.map((item) => {
       item[4] = new DatePipe("en").transform(item[4], "longDate");
       item[7] = new DecimalPipe("en").transform(item[7]);
+
       return item;
     });
+
     PDFGenerator([headers], data, "MF").then(
       (res: { status: Boolean; message: string }) => {
         if (res.status) {
@@ -333,7 +364,6 @@ export class MutualFundComponent implements OnInit {
     console.log(this.unTransFilteredMfData);
     this.generateChartData(this.filteredMfData);
     this.filteredMfData = this.transformFilteredData(this.filteredMfData);
-    console.log("filter ", this.filteredMfData);
   }
   distillRecordsAccordingToRange(minDate: Date, maxDate: Date) {
     const folioNumber = this.idForm.get("id").value;
