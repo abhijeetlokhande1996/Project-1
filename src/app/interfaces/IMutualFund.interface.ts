@@ -19,4 +19,5 @@ export interface IFMutualFund {
   amt: number | string;
   units: number;
   nav: number | string;
+  currentNav?: number | string;
 }
